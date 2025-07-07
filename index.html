@@ -242,6 +242,10 @@
                             <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
                         </div>
                     </div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="reset-match-checkbox" class="ml-2 block text-lg text-gray-900 mr-auto">إعادة تعيين المباراة (قادمة)</label>
+                    </div>
                     <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md">تحديث النتيجة</button>
                 </form>
             </div>
@@ -379,8 +383,8 @@
                     renderStandings();
                 }
                 if (document.getElementById('admin').classList.contains('active') && adminAuthenticated) {
-                    populateAdminMatchSelector();
-                    updateScoreLabels();
+                    populateAdminMatchSelector(); // Refresh the selector to show all matches
+                    updateScoreLabels(); // Update labels based on selected match
                 }
             }, (error) => {
                 console.error("Error listening to matches data:", error);
@@ -441,18 +445,19 @@
         /**
          * Updates a match's score and status in Firestore.
          * @param {string} matchId - The ID of the match document to update.
-         * @param {number} score1 - The score for team 1.
-         * @param {number} score2 - The score for team 2.
+         * @param {number|null} score1 - The score for team 1 (can be null for upcoming).
+         * @param {number|null} score2 - The score for team 2 (can be null for upcoming).
+         * @param {string} status - The new status of the match ('upcoming' or 'finished').
          */
-        async function updateMatchInFirestore(matchId, score1, score2) {
+        async function updateMatchInFirestore(matchId, score1, score2, status) {
             try {
                 const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
                 await updateDoc(matchRef, {
                     score1: score1,
                     score2: score2,
-                    status: 'finished'
+                    status: status
                 });
-                console.log(`Match ${matchId} updated successfully in Firestore.`);
+                console.log(`Match ${matchId} updated successfully to status: ${status} in Firestore.`);
             } catch (error) {
                 console.error("Error updating match in Firestore:", error);
                 showModal("خطأ في تحديث نتيجة المباراة: " + error.message);
@@ -700,78 +705,68 @@
         }
 
         /**
-         * Renders the league standings table in the 'Standings' section.
-         * Teams are sorted by points, then goal difference, then goals for.
-         * Uses the `teamsData` array, which is updated by Firestore listener.
-         */
-        function renderStandings() {
-            const tableBody = document.getElementById('standings-table-body');
-            tableBody.innerHTML = ''; // Clear previous content
-            if (teamsData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات ترتيب متاحة حالياً.</td></tr>`;
-                return;
-            }
-
-            // Sort teams based on league rules
-            const sortedTeams = [...teamsData].sort((a, b) => {
-                if (b.points !== a.points) return b.points - a.points; // Sort by points (descending)
-                if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference; // Then by goal difference (descending)
-                return b.goalsFor - a.goalsFor; // Then by goals for (descending)
-            });
-
-            // Populate the table rows
-            sortedTeams.forEach((team, index) => {
-                tableBody.innerHTML += `
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.matchesPlayed}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.wins}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.draws}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.losses}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalsFor}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalsAgainst}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalDifference}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-800">${team.points}</td>
-                    </tr>`;
-            });
-        }
-
-        /**
-         * Populates the match selection dropdown in the Admin section with upcoming matches.
+         * Populates the match selection dropdown in the Admin section with all matches (upcoming and finished).
+         * Includes status and current score for finished matches.
          * Uses the `matchesData` array, which is updated by Firestore listener.
          */
         function populateAdminMatchSelector() {
             const matchSelect = document.getElementById('match-select');
             matchSelect.innerHTML = '<option value="">-- اختر مباراة لتحديثها --</option>'; // Default option
-            const upcomingMatches = matchesData.filter(m => m.status === 'upcoming');
-            upcomingMatches.forEach(match => {
-                matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})</option>`;
+            
+            // Sort matches by date for better readability in the dropdown
+            const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            sortedMatches.forEach(match => {
+                const statusText = match.status === 'upcoming' ? ' (قادمة)' : ' (انتهت)';
+                const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
+                matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})${scoreText}${statusText}</option>`;
             });
         }
         
         /**
          * Updates the labels for score input fields in the Admin section
-         * to reflect the names of the selected teams.
+         * to reflect the names of the selected teams and their current scores.
+         * Also controls the state of the "Reset Match" checkbox.
          */
         function updateScoreLabels() {
             const matchSelect = document.getElementById('match-select');
             const selectedMatchId = matchSelect.value;
             const score1Label = document.getElementById('score1-label');
             const score2Label = document.getElementById('score2-label');
+            const score1Input = document.getElementById('score1');
+            const score2Input = document.getElementById('score2');
+            const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
+
 
             if (selectedMatchId) {
                 const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
                 if (selectedMatch) {
                     score1Label.textContent = `نتيجة ${selectedMatch.team1}`;
                     score2Label.textContent = `نتيجة ${selectedMatch.team2}`;
+                    
+                    // Populate current scores if the match is finished
+                    if (selectedMatch.status === 'finished') {
+                        score1Input.value = selectedMatch.score1;
+                        score2Input.value = selectedMatch.score2;
+                        resetMatchCheckbox.checked = false; // Uncheck reset if it's a finished match
+                    } else {
+                        score1Input.value = ''; // Clear for upcoming matches
+                        score2Input.value = ''; // Clear for upcoming matches
+                        resetMatchCheckbox.checked = true; // Check reset if it's an upcoming match (default for new)
+                    }
                 } else {
                     score1Label.textContent = 'نتيجة الفريق الأول';
                     score2Label.textContent = 'نتيجة الفريق الثاني';
+                    score1Input.value = '';
+                    score2Input.value = '';
+                    resetMatchCheckbox.checked = false;
                 }
             } else {
                 score1Label.textContent = 'نتيجة الفريق الأول';
                 score2Label.textContent = 'نتيجة الفريق الثاني';
+                score1Input.value = '';
+                score2Input.value = '';
+                resetMatchCheckbox.checked = false;
             }
         }
 
@@ -826,7 +821,7 @@
             }
         });
         
-        // Listen for changes in the match selection dropdown to update score labels
+        // Listen for changes in the match selection dropdown to update score labels and input values
         document.getElementById('match-select').addEventListener('change', updateScoreLabels);
 
         // Form submission listener for updating match scores
@@ -834,12 +829,30 @@
             e.preventDefault(); // Prevent default form submission
 
             const matchId = document.getElementById('match-select').value;
-            const score1 = parseInt(document.getElementById('score1').value, 10);
-            const score2 = parseInt(document.getElementById('score2').value, 10);
+            const score1Input = document.getElementById('score1');
+            const score2Input = document.getElementById('score2');
+            const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
 
-            // Validate inputs
-            if (!matchId || isNaN(score1) || isNaN(score2)) {
-                showModal('الرجاء اختيار مباراة وإدخال نتيجة صحيحة.'); // Use custom modal
+            let newScore1 = parseInt(score1Input.value, 10);
+            let newScore2 = parseInt(score2Input.value, 10);
+            let newStatus = 'finished';
+
+            // If reset checkbox is checked, set status to 'upcoming' and scores to null
+            if (resetMatchCheckbox.checked) {
+                newStatus = 'upcoming';
+                newScore1 = null;
+                newScore2 = null;
+            } else {
+                // If not resetting, validate scores
+                if (isNaN(newScore1) || isNaN(newScore2)) {
+                    showModal('الرجاء إدخال نتيجة صحيحة للمباراة.');
+                    return;
+                }
+            }
+
+            // Validate match selection
+            if (!matchId) {
+                showModal('الرجاء اختيار مباراة لتحديثها.');
                 return;
             }
 
@@ -847,12 +860,14 @@
             const match = matchesData.find(m => m.id == matchId);
             if (match) {
                 // Update the match in Firestore
-                await updateMatchInFirestore(match.id, score1, score2);
+                await updateMatchInFirestore(match.id, newScore1, newScore2, newStatus);
 
-                // Clear form fields after successful update
+                // Clear form fields
                 document.getElementById('update-score-form').reset();
+                // Ensure checkbox is unchecked after submission if it was for a finished match
+                resetMatchCheckbox.checked = false;
 
-                showModal('تم تحديث النتيجة بنجاح!'); // Use custom modal
+                showModal('تم تحديث حالة ونتيجة المباراة بنجاح!'); // Use custom modal
             } else {
                 showModal('المباراة المختارة غير موجودة.');
             }
