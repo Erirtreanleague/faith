@@ -41,7 +41,13 @@
         /* Ensure table cells have appropriate padding and alignment */
         th, td {
             text-align: right;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.5rem; /* Default for larger screens */
+        }
+        /* Responsive table cell padding */
+        @media (max-width: 640px) { /* Small screens (sm breakpoint) */
+            th, td {
+                padding: 0.5rem 0.75rem; /* Reduced padding for mobile */
+            }
         }
         th {
             font-size: 0.8rem;
@@ -129,7 +135,9 @@
     <!-- Navigation Bar -->
     <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
+            <!-- Adjusted title size for mobile -->
             <a href="#" class="text-white text-xl sm:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
+            <!-- Adjusted button padding and text size for mobile -->
             <div class="space-x-2 sm:space-x-4 space-x-reverse flex items-center">
                 <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="home">الرئيسية</button>
                 <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="teams">الفرق</button>
@@ -141,6 +149,7 @@
     </nav>
 
     <!-- Main Content Area -->
+    <!-- Adjusted padding for mobile -->
     <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
 
         <!-- User ID Display -->
@@ -149,6 +158,7 @@
         </div>
 
         <!-- Home Section -->
+        <!-- Adjusted padding and font sizes for mobile -->
         <section id="home" class="page-section active bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12 text-center">
             <h2 class="text-3xl sm:text-5xl font-extrabold text-eritrea-red mb-4 sm:mb-6">أهلاً بك في Eritrean International League!</h2>
             <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
@@ -172,31 +182,112 @@
         </section>
 
         <!-- Teams Section -->
+        <!-- Adjusted padding and heading size for mobile -->
         <section id="teams" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
-            <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8"></div>
+            <!-- Changed grid columns for mobile to stack vertically -->
+            <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+                <!-- Team card structure adjusted for mobile -->
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/ADD8E6/000000?text=9D" alt="9D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9D</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">أحمد</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/FFD700/000000?text=12D" alt="12D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">12D</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">خالد</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/C0C0C0/000000?text=12A" alt="12A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">12A</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">محمد</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/FFB6C1/000000?text=11D" alt="11D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11D</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">يوسف</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/A2D9CE/000000?text=10D" alt="10D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">10D</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">فهد</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/D7BDE2/000000?text=10E" alt="10E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">10E</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">علي</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/FAD7A0/000000?text=9C" alt="9C Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9C</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">سعيد</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/A9CCE3/000000?text=9E" alt="9E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9E</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">ناصر</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/F5CBA7/000000?text=11A" alt="11A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11A</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">محمود</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/AED6F1/000000?text=11E" alt="11E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11E</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">عمر</span></p>
+                </div>
+                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <img src="https://placehold.co/100x100/F1948A/000000?text=11B" alt="11B Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11B</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">بدر</span></p>
+                </div>
+            </div>
         </section>
 
         <!-- Matches Section -->
+        <!-- Adjusted padding and heading size for mobile -->
         <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
             <div class="mb-6 sm:mb-8">
                 <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>
-                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
+                <!-- Changed grid columns for mobile to stack vertically -->
+                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <!-- Match card structure adjusted for mobile -->
+                    <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01 - 09:00 صباحاً</p>
+                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">9D <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> 12D</p>
+                        <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
+                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: الملعب الرئيسي</p>
+                    </div>
+                </div>
             </div>
             <div>
                 <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-red mb-4 sm:mb-6">نتائج المباريات</h3>
-                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
+                <!-- Changed grid columns for mobile to stack vertically -->
+                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <!-- Past match card structure adjusted for mobile -->
+                    <div class="bg-red-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-red-300">
+                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01</p>
+                        <p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">
+                            9D <span class="text-red-600">2 - 1</span> 12D
+                        </p>
+                        <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Standings Section -->
+        <!-- Adjusted padding and heading size for mobile -->
         <section id="standings" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
             <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden table-responsive">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-eritrea-green text-white">
                         <tr>
+                            <!-- Adjusted padding and font size for table headers on mobile -->
                             <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
                             <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
                             <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
@@ -209,12 +300,27 @@
                             <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
                         </tr>
                     </thead>
-                    <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Table row structure adjusted for mobile -->
+                        <tr>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">1</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">9D</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
+                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">0</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </section>
 
         <!-- Admin Section -->
+        <!-- Adjusted padding and heading size for mobile -->
         <section id="admin" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
             <!-- Password Prompt -->
@@ -254,6 +360,7 @@
     </main>
 
     <!-- Footer -->
+    <!-- Adjusted padding and font size for mobile -->
     <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
         <div class="container mx-auto">
             <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
@@ -261,6 +368,7 @@
     </footer>
 
     <!-- Custom Modal for Messages -->
+    <!-- Adjusted padding and font size for mobile -->
     <div id="message-modal" class="modal">
         <div class="modal-content p-4 sm:p-6">
             <span class="close-button" id="close-modal-button">&times;</span>
@@ -541,7 +649,7 @@
                     allMatches.push({
                         team1: team1,
                         team2: team2,
-                        date: currentDate.toISOString().slice(0, 10), // Format date asYYYY-MM-DD
+                        date: currentDate.toISOString().slice(0, 10), // Format date as YYYY-MM-DD
                         time: times[timeIndex],
                         location: "الملعب الرئيسي",
                         status: "upcoming", // All generated matches are initially upcoming
@@ -931,3 +1039,4 @@
     </script>
 </body>
 </html>
+
