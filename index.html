@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -244,19 +244,8 @@
         <!-- Adjusted padding and heading size for mobile -->
         <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
-            <div class="mb-6 sm:mb-8">
-                <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>
-                <!-- Changed grid columns for mobile to stack vertically -->
-                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <!-- Match card structure adjusted for mobile -->
-                    <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
-                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01 - 09:00 صباحاً</p>
-                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
-                        <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
-                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
-                    </div>
-                </div>
-            </div>
+            
+            <!-- Past Matches Section - Moved to top -->
             <div>
                 <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-red mb-4 sm:mb-6">نتائج المباريات</h3>
                 <!-- Changed grid columns for mobile to stack vertically -->
@@ -268,6 +257,20 @@
                             ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
                         </p>
                         <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Matches Section - Moved below Past Matches -->
+            <div class="mt-6 sm:mt-8"> <!-- Added margin-top to separate from past matches -->
+                <!-- The heading for upcoming matches is now conditionally rendered inside renderMatches() -->
+                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <!-- Match card structure adjusted for mobile -->
+                    <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01 - 09:00 صباحاً</p>
+                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
+                        <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
+                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
                     </div>
                 </div>
             </div>
@@ -770,24 +773,7 @@
             const upcomingMatches = matchesData.filter(m => m.status === 'upcoming');
             const pastMatches = matchesData.filter(m => m.status === 'finished');
 
-            // Render upcoming matches
-            if (upcomingMatches.length === 0) {
-                upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`;
-            } else {
-                upcomingMatches.forEach(match => {
-                   const matchDate = new Date(match.date);
-                   const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' }); // Get day of week in Arabic
-                   upcomingContainer.innerHTML += `
-                        <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
-                            <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
-                            <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
-                            <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
-                            <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
-                        </div>`;
-                });
-            }
-
-            // Render past matches
+            // Render past matches first
             if (pastMatches.length === 0) {
                 pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة حالياً.</p>`;
             } else {
@@ -803,6 +789,28 @@
                             <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
                         </div>`;
                 });
+            }
+
+            // Render upcoming matches section header and matches if available
+            if (upcomingMatches.length > 0) {
+                upcomingContainer.innerHTML += `
+                    <div class="col-span-full mt-6 sm:mt-8"> <!-- Added margin-top to separate from past matches -->
+                        <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>
+                    </div>`;
+                upcomingMatches.forEach(match => {
+                   const matchDate = new Date(match.date);
+                   const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' }); // Get day of week in Arabic
+                   upcomingContainer.innerHTML += `
+                        <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                            <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
+                            <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
+                            <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
+                            <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
+                        </div>`;
+                });
+            } else if (pastMatches.length > 0) {
+                // If there are no upcoming matches but there are past matches, still show a message for upcoming
+                upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full mt-6 sm:mt-8">لا توجد مباريات قادمة.</p>`;
             }
         }
 
