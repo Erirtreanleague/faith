@@ -380,13 +380,20 @@
         let matchesData = [];
 
         // App ID for Firestore collections (use a fixed ID for GitHub Pages)
-        // This should be a unique identifier for your application's data in Firestore.
-        // It's dynamically set by the Canvas environment.
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // هذا معرف التطبيق الخاص بمسارات Firestore
+        const appId = 'eritrea-league-app-gh'; 
 
         // Firebase config for your project.
-        // This is dynamically provided by the Canvas environment.
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        // تم استبدال القيم هنا بالقيم التي قدمتها من مشروع Firebase الخاص بك.
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
+            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
+            projectId: "eritrean-international-l-7bc64",
+            storageBucket: "eritrean-international-l-7bc64.firebasestorage.app",
+            messagingSenderId: "188029452555",
+            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
+        };
+
 
         // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
         /**
@@ -404,11 +411,9 @@
                 console.log("Firestore DB instance after getFirestore:", db); // Debugging log
 
                 // Authenticate user using custom token if available, otherwise anonymously.
-                if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Reverted to signInAnonymously as custom token might not be always available in this context
+                await signInAnonymously(auth);
+
 
                 // Listen for auth state changes
                 onAuthStateChanged(auth, (user) => {
