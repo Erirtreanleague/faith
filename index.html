@@ -268,8 +268,8 @@
     <script type="module">
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL VARIABLES ---
         let app;
@@ -282,12 +282,21 @@
         let teamsData = [];
         let matchesData = [];
 
-        // App ID from the Canvas environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        // Firebase config from the Canvas environment
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        // Initial auth token from the Canvas environment
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // App ID for Firestore collections (use a fixed ID for GitHub Pages)
+        // This should be a unique identifier for your application's data in Firestore.
+        // You can change 'eritrea-league-app-gh' to something more specific to your project.
+        const appId = 'eritrea-league-app-gh'; // هذا معرف التطبيق الخاص بمسارات Firestore
+
+        // Firebase config for your project.
+        // تم استبدال القيم هنا بالقيم التي قدمتها من مشروع Firebase الخاص بك.
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
+            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
+            projectId: "eritrean-international-l-7bc64",
+            storageBucket: "eritrean-international-l-7bc64.firebasestorage.app",
+            messagingSenderId: "188029452555",
+            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
+        };
 
         // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
         /**
@@ -304,12 +313,8 @@
                 auth = getAuth(app);
                 console.log("Firestore DB instance after getFirestore:", db); // Debugging log
 
-                // Authenticate user
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Authenticate user anonymously. This allows read/write based on Firestore rules.
+                await signInAnonymously(auth);
 
                 // Listen for auth state changes
                 onAuthStateChanged(auth, (user) => {
@@ -321,18 +326,19 @@
                         setupFirestoreListeners();
                         initializeDefaultData(); // Call here after auth state is confirmed
                     } else {
-                        userId = crypto.randomUUID(); // Fallback for unauthenticated users
+                        // This case should ideally not be reached if signInAnonymously is successful
+                        userId = 'anonymous-user'; // Fallback
                         document.getElementById('user-id-display').textContent = userId;
-                        console.log("Signed in anonymously or no user:", userId);
-                        // Even for anonymous, we can still set up listeners and initialize default data
+                        console.log("No user authenticated, using anonymous fallback.");
+                        // Still try to set up listeners and initialize data, but data access might be restricted by rules
                         setupFirestoreListeners();
-                        initializeDefaultData(); // Call here after auth state is confirmed
+                        initializeDefaultData();
                     }
                 });
 
             } catch (error) {
                 console.error("Error initializing Firebase or authenticating:", error);
-                showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message);
+                showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message + ". يرجى التأكد من إعدادات Firebase.");
             }
         }
 
@@ -872,4 +878,3 @@
     </script>
 </body>
 </html>
-
