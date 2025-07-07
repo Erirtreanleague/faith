@@ -39,15 +39,9 @@
             display: block;
         }
         /* Ensure table cells have appropriate padding and alignment */
+        /* Default padding for larger screens handled by Tailwind classes directly on th/td */
         th, td {
             text-align: right;
-            padding: 0.75rem 1.5rem; /* Default for larger screens */
-        }
-        /* Responsive table cell padding */
-        @media (max-width: 640px) { /* Small screens (sm breakpoint) */
-            th, td {
-                padding: 0.5rem 0.75rem; /* Reduced padding for mobile */
-            }
         }
         th {
             font-size: 0.8rem;
@@ -190,58 +184,58 @@
                 <!-- Team card structure adjusted for mobile -->
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/ADD8E6/000000?text=9D" alt="9D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9D</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">أحمد</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/FFD700/000000?text=12D" alt="12D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">12D</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">خالد</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/C0C0C0/000000?text=12A" alt="12A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">12A</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">محمد</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/FFB6C1/000000?text=11D" alt="11D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11D</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">يوسف</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/A2D9CE/000000?text=10D" alt="10D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">10D</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">فهد</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/D7BDE2/000000?text=10E" alt="10E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">10E</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">علي</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/FAD7A0/000000?text=9C" alt="9C Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9C</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">سعيد</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/A9CCE3/000000?text=9E" alt="9E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">9E</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">ناصر</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/F5CBA7/000000?text=11A" alt="11A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11A</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">محمود</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/AED6F1/000000?text=11E" alt="11E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11E</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">عمر</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
                 <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
                     <img src="https://placehold.co/100x100/F1948A/000000?text=11B" alt="11B Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">11B</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">بدر</span></p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                 </div>
             </div>
         </section>
@@ -257,9 +251,9 @@
                     <!-- Match card structure adjusted for mobile -->
                     <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
                         <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01 - 09:00 صباحاً</p>
-                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">9D <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> 12D</p>
+                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
                         <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
-                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: الملعب الرئيسي</p>
+                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
                     </div>
                 </div>
             </div>
@@ -271,7 +265,7 @@
                     <div class="bg-red-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-red-300">
                         <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01</p>
                         <p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">
-                            9D <span class="text-red-600">2 - 1</span> 12D
+                            ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
                         </p>
                         <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
                     </div>
@@ -288,31 +282,31 @@
                     <thead class="bg-eritrea-green text-white">
                         <tr>
                             <!-- Adjusted padding and font size for table headers on mobile -->
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">فاز</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">تعادل</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">خسر</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">له</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">عليه</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفرق</th>
-                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">فاز</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">تعادل</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">خسر</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">له</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">عليه</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفرق</th>
+                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
                         <!-- Table row structure adjusted for mobile -->
                         <tr>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">1</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">9D</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">0</td>
-                            <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">0</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.wins}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.draws}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.losses}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsFor}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsAgainst}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalDifference}</td>
+                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">${team.points}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -649,7 +643,7 @@
                     allMatches.push({
                         team1: team1,
                         team2: team2,
-                        date: currentDate.toISOString().slice(0, 10), // Format date as YYYY-MM-DD
+                        date: currentDate.toISOString().slice(0, 10), // Format date asYYYY-MM-DD
                         time: times[timeIndex],
                         location: "الملعب الرئيسي",
                         status: "upcoming", // All generated matches are initially upcoming
@@ -836,16 +830,16 @@
             sortedTeams.forEach((team, index) => {
                 tableBody.innerHTML += `
                     <tr>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.wins}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.draws}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.losses}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsFor}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsAgainst}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalDifference}</td>
-                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">${team.points}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.wins}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.draws}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.losses}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsFor}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsAgainst}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalDifference}</td>
+                        <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">${team.points}</td>
                     </tr>`;
             });
         }
@@ -1039,4 +1033,5 @@
     </script>
 </body>
 </html>
+
 
