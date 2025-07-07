@@ -302,6 +302,7 @@
                 db = getFirestore(app);
                 // Get Auth instance
                 auth = getAuth(app);
+                console.log("Firestore DB instance after getFirestore:", db); // Debugging log
 
                 // Authenticate user
                 if (initialAuthToken) {
@@ -316,14 +317,16 @@
                         userId = user.uid;
                         document.getElementById('user-id-display').textContent = userId;
                         console.log("User authenticated:", userId);
-                        // Once authenticated, start listening for data
+                        // Once authenticated, start listening for data and initialize default data
                         setupFirestoreListeners();
+                        initializeDefaultData(); // Call here after auth state is confirmed
                     } else {
                         userId = crypto.randomUUID(); // Fallback for unauthenticated users
                         document.getElementById('user-id-display').textContent = userId;
                         console.log("Signed in anonymously or no user:", userId);
-                        // Even for anonymous, we can still set up listeners for public data
+                        // Even for anonymous, we can still set up listeners and initialize default data
                         setupFirestoreListeners();
+                        initializeDefaultData(); // Call here after auth state is confirmed
                     }
                 });
 
@@ -388,6 +391,7 @@
                 const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
                 const teamsSnapshot = await getDocs(teamsCollectionRef);
 
+                let currentTeamsInDb = [];
                 if (teamsSnapshot.empty) {
                     console.log("Initializing default teams data in Firestore...");
                     const defaultTeams = [
@@ -406,6 +410,9 @@
                     for (const team of defaultTeams) {
                         await addDoc(teamsCollectionRef, team);
                     }
+                    currentTeamsInDb = defaultTeams; // Use the default teams for scheduling if just added
+                } else {
+                    currentTeamsInDb = teamsSnapshot.docs.map(doc => doc.data()); // Get existing teams
                 }
 
                 const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
@@ -413,7 +420,8 @@
 
                 if (matchesSnapshot.empty) {
                     console.log("Generating and initializing default matches data in Firestore...");
-                    const generatedMatches = generateRoundRobinSchedule();
+                    // Pass the teams from the DB (or default ones if just added) to the schedule generator
+                    const generatedMatches = generateRoundRobinSchedule(currentTeamsInDb.map(team => team.name));
                     for (const match of generatedMatches) {
                         await addDoc(matchesCollectionRef, match);
                     }
@@ -472,10 +480,11 @@
          * This function is primarily used for initial data population if Firestore is empty.
          * Handles odd number of teams by adding a 'BYE'.
          * Schedules matches on weekdays (Sunday to Thursday) with specific times.
+         * @param {Array<string>} teamNames - An array of team names to generate the schedule for.
          * @returns {Array<Object>} An array of match objects.
          */
-        function generateRoundRobinSchedule() {
-            const teams = teamsData.map(team => team.name);
+        function generateRoundRobinSchedule(teamNames) {
+            const teams = teamNames; // Use the passed team names
             const numTeams = teams.length;
             const allMatches = [];
             let matchIdCounter = 1;
@@ -857,9 +866,10 @@
         // Run initial setup when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', async () => {
             await initializeFirebase(); // Initialize Firebase and authenticate
-            await initializeDefaultData(); // Ensure default data exists in Firestore
+            // initializeDefaultData() is now called inside onAuthStateChanged
             showSection('home'); // Display the home section by default
         });
     </script>
 </body>
 </html>
+
