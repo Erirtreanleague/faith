@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -10,13 +10,14 @@ DOCTYPE html>
         /* Custom font for better Arabic display */
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #d0e8ff 100%);
+            /* Deeper, more vibrant gradient for the background */
+            background: linear-gradient(135deg, #e0f2fe 0%, #cce7ff 50%, #b3daff 100%);
             background-attachment: fixed;
             position: relative;
             z-index: 1;
         }
 
-        /* Watermark/Background Pattern */
+        /* Watermark/Background Pattern - Enhanced with a subtle geometric pattern */
         body::before {
             content: '';
             position: fixed;
@@ -24,9 +25,10 @@ DOCTYPE html>
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://placehold.co/50x50/E0F2FE/C0D9EF?text=.');
+            /* Subtle geometric pattern using SVG data URI with a slightly darker blue tint */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237bb6e3' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM2 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM36 0v-4h-2v4h-4v2h4v4h2V6h4V4h-4zM2 0v-4h-2v4h-4v2h4v4h2V6h4V4h-4zM36 60v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 60v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM0 36v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4zM0 60v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4zM0 0v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             background-repeat: repeat;
-            opacity: 0.3;
+            opacity: 0.25; /* Slightly increased opacity for more presence */
             z-index: -1;
             pointer-events: none;
         }
@@ -39,7 +41,6 @@ DOCTYPE html>
             display: block;
         }
         /* Ensure table cells have appropriate padding and alignment */
-        /* Default padding for larger screens handled by Tailwind classes directly on th/td */
         th, td {
             text-align: right;
         }
@@ -65,10 +66,41 @@ DOCTYPE html>
         .text-eritrea-blue { color: #4682B4; }
         .text-eritrea-yellow { color: #FFD700; }
 
-        /* Custom gradient for navigation bar */
+        /* Custom gradient for navigation bar - more vibrant */
         .nav-gradient {
-            background: linear-gradient(90deg, #008000 0%, #4682B4 100%);
+            background: linear-gradient(90deg, #006400 0%, #3a6b9a 100%); /* Darker green to slightly darker blue */
         }
+
+        /* Enhanced button styles */
+        .nav-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+        .nav-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease-in-out;
+            transform: skewX(-20deg);
+        }
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
         /* Hide admin content by default */
         #admin-content, #admin-password-error {
             display: none;
@@ -84,43 +116,93 @@ DOCTYPE html>
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            background-color: rgba(0,0,0,0.6); /* Darker overlay */
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px); /* Subtle blur effect */
         }
 
         .modal-content {
             background-color: #fefefe;
             margin: auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            max-width: 400px;
+            padding: 30px; /* Increased padding */
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Stronger shadow */
+            max-width: 450px; /* Slightly wider */
             text-align: center;
             position: relative;
-            animation: fadeIn 0.3s;
+            animation: fadeInScale 0.4s forwards; /* New animation */
+            border: 2px solid #4682B4; /* Blue border */
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .close-button {
-            color: #aaa;
+            color: #888;
             float: right;
-            font-size: 28px;
+            font-size: 32px; /* Larger close button */
             font-weight: bold;
             position: absolute;
             top: 10px;
             right: 15px;
+            transition: color 0.2s ease;
         }
 
         .close-button:hover,
         .close-button:focus {
-            color: black;
+            color: #333;
             text-decoration: none;
             cursor: pointer;
+        }
+
+        /* Enhanced card styles */
+        .card-shadow {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Specific styles for home section buttons */
+        .home-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .home-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+        .home-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease-in-out;
+            transform: skewX(-30deg);
+        }
+        .home-button:hover::before {
+            left: 100%;
+        }
+
+        /* Table row hover effect */
+        .standings-table-row:hover {
+            background-color: #f0f9ff;
+        }
+
+        /* Input and Select focus styles */
+        input:focus, select:focus {
+            border-color: #4682B4 !important;
+            box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.3) !important;
         }
     </style>
 </head>
@@ -129,9 +211,7 @@ DOCTYPE html>
     <!-- Navigation Bar -->
     <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <!-- Adjusted title size for mobile: text-base for smallest, then sm:text-xl, md:text-3xl -->
             <a href="#" class="text-white text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
-            <!-- Adjusted button padding and text size for mobile: p-1 text-xs for smallest, then sm:p-2 sm:text-sm, lg:p-3 lg:text-lg -->
             <div class="space-x-1 sm:space-x-2 md:space-x-4 space-x-reverse flex items-center">
                 <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition duration-300 font-semibold" data-target="home">الرئيسية</button>
                 <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition duration-300 font-semibold" data-target="teams">الفرق</button>
@@ -143,7 +223,6 @@ DOCTYPE html>
     </nav>
 
     <!-- Main Content Area -->
-    <!-- Adjusted padding for mobile -->
     <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
 
         <!-- User ID Display -->
@@ -152,139 +231,63 @@ DOCTYPE html>
         </div>
 
         <!-- Home Section -->
-        <!-- Adjusted padding and font sizes for mobile -->
-        <section id="home" class="page-section active bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12 text-center">
+        <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
             <h2 class="text-3xl sm:text-5xl font-extrabold text-eritrea-red mb-4 sm:mb-6">أهلاً بك في Eritrean International League!</h2>
             <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
-                <div class="bg-blue-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-blue-500">
+                <div class="bg-blue-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-blue-500">
                     <h3 class="text-xl sm:text-3xl font-bold text-blue-700 mb-2 sm:mb-3">الفرق</h3>
                     <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
-                    <button class="nav-button bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md" data-target="teams">عرض الفرق</button>
+                    <button class="nav-button home-button bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md" data-target="teams">عرض الفرق</button>
                 </div>
-                <div class="bg-green-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-green-500">
+                <div class="bg-green-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-green-500">
                     <h3 class="text-xl sm:text-3xl font-bold text-green-700 mb-2 sm:mb-3">المباريات</h3>
                     <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
-                    <button class="nav-button bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md" data-target="matches">عرض المباريات</button>
+                    <button class="nav-button home-button bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md" data-target="matches">عرض المباريات</button>
                 </div>
-                <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-yellow-500">
+                <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-yellow-500">
                     <h3 class="text-xl sm:text-3xl font-bold text-yellow-700 mb-2 sm:mb-3">ترتيب الدوري</h3>
                     <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
-                    <button class="nav-button bg-yellow-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-yellow-700 transition duration-300 shadow-md" data-target="standings">عرض الترتيب</button>
+                    <button class="nav-button home-button bg-yellow-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-yellow-700 transition duration-300 shadow-md" data-target="standings">عرض الترتيب</button>
                 </div>
             </div>
         </section>
 
         <!-- Teams Section -->
-        <!-- Adjusted padding and heading size for mobile -->
-        <section id="teams" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+        <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
-            <!-- Changed grid columns for mobile to stack vertically -->
             <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-                <!-- Team card structure adjusted for mobile -->
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/ADD8E6/000000?text=9D" alt="9D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/FFD700/000000?text=12D" alt="12D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/C0C0C0/000000?text=12A" alt="12A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/FFB6C1/000000?text=11D" alt="11D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/A2D9CE/000000?text=10D" alt="10D Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/D7BDE2/000000?text=10E" alt="10E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/FAD7A0/000000?text=9C" alt="9C Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/A9CCE3/000000?text=9E" alt="9E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/F5CBA7/000000?text=11A" alt="11A Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/AED6F1/000000?text=11E" alt="11E Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
-                <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                    <img src="https://placehold.co/100x100/F1948A/000000?text=11B" alt="11B Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
-                    <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
-                </div>
+                <!-- Team cards will be dynamically inserted here -->
             </div>
         </section>
 
         <!-- Matches Section -->
-        <!-- Adjusted padding and heading size for mobile -->
-        <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+        <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
             
             <!-- Past Matches Section - Moved to top -->
             <div>
                 <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-red mb-4 sm:mb-6">نتائج المباريات</h3>
-                <!-- Changed grid columns for mobile to stack vertically -->
                 <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <!-- Past match card structure adjusted for mobile -->
-                    <div class="bg-red-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-red-300">
-                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01</p>
-                        <p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">
-                            ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
-                        </p>
-                        <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
-                    </div>
+                    <!-- Past match cards will be dynamically inserted here -->
                 </div>
             </div>
 
             <!-- Upcoming Matches Section - Moved below Past Matches -->
-            <div class="mt-6 sm:mt-8"> <!-- Added margin-top to separate from past matches -->
-                <!-- The heading for upcoming matches is now conditionally rendered inside renderMatches() -->
+            <div class="mt-6 sm:mt-8">
                 <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                    <!-- Match card structure adjusted for mobile -->
-                    <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
-                        <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">الأحد، 2025-09-01 - 09:00 صباحاً</p>
-                        <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
-                        <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
-                        <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
-                    </div>
+                    <!-- Upcoming match cards will be dynamically inserted here -->
                 </div>
             </div>
         </section>
 
         <!-- Standings Section -->
-        <!-- Adjusted padding and heading size for mobile -->
-        <section id="standings" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+        <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
-            <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden table-responsive">
+            <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-eritrea-green text-white">
                         <tr>
-                            <!-- Adjusted padding and font size for table headers on mobile -->
                             <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
                             <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
                             <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
@@ -298,33 +301,20 @@ DOCTYPE html>
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Table row structure adjusted for mobile -->
-                        <tr>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.wins}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.draws}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.losses}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsFor}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsAgainst}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalDifference}</td>
-                            <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">${team.points}</td>
-                        </tr>
+                        <!-- Table rows will be dynamically inserted here -->
                     </tbody>
                 </table>
             </div>
         </section>
 
         <!-- Admin Section -->
-        <!-- Adjusted padding and heading size for mobile -->
-        <section id="admin" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+        <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
             <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
             <!-- Password Prompt -->
             <div id="admin-password-prompt" class="max-w-md mx-auto">
                 <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">الرجاء إدخال كلمة المرور</label>
                 <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg p-2 sm:p-3">
-                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">دخول</button>
+                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md home-button">دخول</button>
                 <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base">كلمة المرور غير صحيحة.</p>
             </div>
             <!-- Admin Content -->
@@ -349,7 +339,7 @@ DOCTYPE html>
                         <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                         <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900 mr-auto">إعادة تعيين المباراة (قادمة)</label>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md">تحديث النتيجة</button>
+                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md home-button">تحديث النتيجة</button>
                 </form>
             </div>
         </section>
@@ -357,7 +347,6 @@ DOCTYPE html>
     </main>
 
     <!-- Footer -->
-    <!-- Adjusted padding and font size for mobile -->
     <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
         <div class="container mx-auto">
             <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
@@ -365,19 +354,18 @@ DOCTYPE html>
     </footer>
 
     <!-- Custom Modal for Messages -->
-    <!-- Adjusted padding and font size for mobile -->
     <div id="message-modal" class="modal">
         <div class="modal-content p-4 sm:p-6">
             <span class="close-button" id="close-modal-button">&times;</span>
             <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
-            <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">موافق</button>
+            <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md home-button">موافق</button>
         </div>
     </div>
 
     <script type="module">
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL VARIABLES ---
@@ -393,19 +381,12 @@ DOCTYPE html>
 
         // App ID for Firestore collections (use a fixed ID for GitHub Pages)
         // This should be a unique identifier for your application's data in Firestore.
-        // You can change 'eritrea-league-app-gh' to something more specific to your project.
-        const appId = 'eritrea-league-app-gh'; // هذا معرف التطبيق الخاص بمسارات Firestore
+        // It's dynamically set by the Canvas environment.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         // Firebase config for your project.
-        // تم استبدال القيم هنا بالقيم التي قدمتها من مشروع Firebase الخاص بك.
-        const firebaseConfig = {
-            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
-            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
-            projectId: "eritrean-international-l-7bc64",
-            storageBucket: "eritrean-international-l-7bc64.firebasestorage.app",
-            messagingSenderId: "188029452555",
-            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
-        };
+        // This is dynamically provided by the Canvas environment.
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
 
         // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
         /**
@@ -422,8 +403,12 @@ DOCTYPE html>
                 auth = getAuth(app);
                 console.log("Firestore DB instance after getFirestore:", db); // Debugging log
 
-                // Authenticate user anonymously. This allows read/write based on Firestore rules.
-                await signInAnonymously(auth);
+                // Authenticate user using custom token if available, otherwise anonymously.
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
 
                 // Listen for auth state changes
                 onAuthStateChanged(auth, (user) => {
@@ -752,7 +737,7 @@ DOCTYPE html>
             }
             teamsData.forEach(team => {
                 teamsContainer.innerHTML += `
-                    <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                    <div class="bg-blue-50 rounded-xl card-shadow p-4 sm:p-6 text-center border-2 border-blue-200">
                         <img src="${team.logo}" alt="${team.name} Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
                         <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
                         <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
@@ -781,7 +766,7 @@ DOCTYPE html>
                     const matchDate = new Date(match.date);
                     const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' });
                     pastContainer.innerHTML += `
-                        <div class="bg-red-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-red-300">
+                        <div class="bg-red-50 rounded-xl card-shadow p-4 sm:p-6 border-2 border-red-300">
                             <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date}</p>
                             <p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">
                                 ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
@@ -793,15 +778,17 @@ DOCTYPE html>
 
             // Render upcoming matches section header and matches if available
             if (upcomingMatches.length > 0) {
-                upcomingContainer.innerHTML += `
-                    <div class="col-span-full mt-6 sm:mt-8"> <!-- Added margin-top to separate from past matches -->
-                        <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>
-                    </div>`;
+                // Only add the heading if there are upcoming matches to display
+                const upcomingHeadingDiv = document.createElement('div');
+                upcomingHeadingDiv.className = "col-span-full mt-6 sm:mt-8";
+                upcomingHeadingDiv.innerHTML = `<h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>`;
+                upcomingContainer.before(upcomingHeadingDiv); // Insert before the upcoming matches container
+
                 upcomingMatches.forEach(match => {
                    const matchDate = new Date(match.date);
                    const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' }); // Get day of week in Arabic
                    upcomingContainer.innerHTML += `
-                        <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                        <div class="bg-gray-50 rounded-xl card-shadow p-4 sm:p-6 border-2 border-blue-300">
                             <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
                             <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
                             <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
@@ -810,7 +797,11 @@ DOCTYPE html>
                 });
             } else if (pastMatches.length > 0) {
                 // If there are no upcoming matches but there are past matches, still show a message for upcoming
-                upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full mt-6 sm:mt-8">لا توجد مباريات قادمة.</p>`;
+                const upcomingHeadingDiv = document.createElement('div');
+                upcomingHeadingDiv.className = "col-span-full mt-6 sm:mt-8";
+                upcomingHeadingDiv.innerHTML = `<h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>`;
+                upcomingContainer.before(upcomingHeadingDiv); // Insert before the upcoming matches container
+                upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`;
             }
         }
 
@@ -837,7 +828,7 @@ DOCTYPE html>
             // Populate the table rows
             sortedTeams.forEach((team, index) => {
                 tableBody.innerHTML += `
-                    <tr>
+                    <tr class="standings-table-row">
                         <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
                         <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
                         <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
