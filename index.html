@@ -129,19 +129,19 @@
     <!-- Navigation Bar -->
     <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-white text-3xl font-bold rounded-md p-2">Eritrean International League</a>
-            <div class="space-x-4 space-x-reverse flex items-center">
-                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="home">الرئيسية</button>
-                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="teams">الفرق</button>
-                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="matches">المباريات</button>
-                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="standings">الترتيب</button>
-                <button class="nav-button text-white hover:text-yellow-300 p-3 rounded-lg transition duration-300 font-semibold text-lg border border-transparent hover:border-white" data-target="admin">المسؤول</button>
+            <a href="#" class="text-white text-xl sm:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
+            <div class="space-x-2 sm:space-x-4 space-x-reverse flex items-center">
+                <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="home">الرئيسية</button>
+                <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="teams">الفرق</button>
+                <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="matches">المباريات</button>
+                <button class="nav-button text-white hover:text-blue-200 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg" data-target="standings">الترتيب</button>
+                <button class="nav-button text-white hover:text-yellow-300 p-2 sm:p-3 rounded-lg transition duration-300 font-semibold text-sm sm:text-lg border border-transparent hover:border-white" data-target="admin">المسؤول</button>
             </div>
         </div>
     </nav>
 
     <!-- Main Content Area -->
-    <main class="container mx-auto py-8 px-4 flex-grow">
+    <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
 
         <!-- User ID Display -->
         <div class="text-center mb-4 text-gray-600 text-sm">
@@ -149,64 +149,64 @@
         </div>
 
         <!-- Home Section -->
-        <section id="home" class="page-section active bg-white rounded-xl shadow-lg p-8 md:p-12 text-center">
-            <h2 class="text-5xl font-extrabold text-eritrea-red mb-6">أهلاً بك في Eritrean International League!</h2>
-            <p class="text-xl text-gray-700 leading-relaxed mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-                <div class="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-blue-500">
-                    <h3 class="text-3xl font-bold text-blue-700 mb-3">الفرق</h3>
-                    <p class="text-gray-700 mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
-                    <button class="nav-button bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md" data-target="teams">عرض الفرق</button>
+        <section id="home" class="page-section active bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12 text-center">
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-eritrea-red mb-4 sm:mb-6">أهلاً بك في Eritrean International League!</h2>
+            <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
+                <div class="bg-blue-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-blue-500">
+                    <h3 class="text-xl sm:text-3xl font-bold text-blue-700 mb-2 sm:mb-3">الفرق</h3>
+                    <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
+                    <button class="nav-button bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md" data-target="teams">عرض الفرق</button>
                 </div>
-                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-green-500">
-                    <h3 class="text-3xl font-bold text-green-700 mb-3">المباريات</h3>
-                    <p class="text-gray-700 mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
-                    <button class="nav-button bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md" data-target="matches">عرض المباريات</button>
+                <div class="bg-green-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-green-500">
+                    <h3 class="text-xl sm:text-3xl font-bold text-green-700 mb-2 sm:mb-3">المباريات</h3>
+                    <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
+                    <button class="nav-button bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md" data-target="matches">عرض المباريات</button>
                 </div>
-                <div class="bg-yellow-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-yellow-500">
-                    <h3 class="text-3xl font-bold text-yellow-700 mb-3">ترتيب الدوري</h3>
-                    <p class="text-gray-700 mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
-                    <button class="nav-button bg-yellow-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-yellow-700 transition duration-300 shadow-md" data-target="standings">عرض الترتيب</button>
+                <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-yellow-500">
+                    <h3 class="text-xl sm:text-3xl font-bold text-yellow-700 mb-2 sm:mb-3">ترتيب الدوري</h3>
+                    <p class="text-sm sm:text-gray-700 mb-3 sm:mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
+                    <button class="nav-button bg-yellow-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-lg font-semibold hover:bg-yellow-700 transition duration-300 shadow-md" data-target="standings">عرض الترتيب</button>
                 </div>
             </div>
         </section>
 
         <!-- Teams Section -->
-        <section id="teams" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
-            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">الفرق المشاركة</h2>
-            <div id="teams-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <section id="teams" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+            <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
+            <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8"></div>
         </section>
 
         <!-- Matches Section -->
-        <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
-            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">جدول ونتائج المباريات</h2>
-            <div class="mb-8">
-                <h3 class="text-3xl font-semibold text-eritrea-green mb-6">المباريات القادمة</h3>
-                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+            <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
+            <div class="mb-6 sm:mb-8">
+                <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-green mb-4 sm:mb-6">المباريات القادمة</h3>
+                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
             </div>
             <div>
-                <h3 class="text-3xl font-semibold text-eritrea-red mb-6">نتائج المباريات</h3>
-                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                <h3 class="text-xl sm:text-3xl font-semibold text-eritrea-red mb-4 sm:mb-6">نتائج المباريات</h3>
+                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
             </div>
         </section>
 
         <!-- Standings Section -->
-        <section id="standings" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
-            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">ترتيب الدوري</h2>
+        <section id="standings" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+            <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
             <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden table-responsive">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-eritrea-green text-white">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">فاز</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">تعادل</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">خسر</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">له</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">عليه</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الفرق</th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">فاز</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">تعادل</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">خسر</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">له</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">عليه</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">الفرق</th>
+                            <th scope="col" class="px-3 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200"></tbody>
@@ -215,38 +215,38 @@
         </section>
 
         <!-- Admin Section -->
-        <section id="admin" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
-            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">لوحة تحكم المسؤول</h2>
+        <section id="admin" class="page-section bg-white rounded-xl shadow-lg p-4 sm:p-8 md:p-12">
+            <h2 class="text-2xl sm:text-4xl font-bold text-eritrea-blue text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
             <!-- Password Prompt -->
             <div id="admin-password-prompt" class="max-w-md mx-auto">
-                <label for="admin-password" class="block text-lg font-medium text-gray-700 mb-2">الرجاء إدخال كلمة المرور</label>
-                <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
-                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">دخول</button>
-                <p id="admin-password-error" class="text-red-500 mt-2 text-center">كلمة المرور غير صحيحة.</p>
+                <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">الرجاء إدخال كلمة المرور</label>
+                <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg p-2 sm:p-3">
+                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">دخول</button>
+                <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base">كلمة المرور غير صحيحة.</p>
             </div>
             <!-- Admin Content -->
             <div id="admin-content" class="max-w-2xl mx-auto">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">تحديث نتائج المباريات</h3>
+                <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">تحديث نتائج المباريات</h3>
                 <form id="update-score-form">
                     <div class="mb-4">
-                        <label for="match-select" class="block text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
-                        <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3"></select>
+                        <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
+                        <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg p-2 sm:p-3"></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label for="score1" id="score1-label" class="block text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
-                            <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                            <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
+                            <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg p-2 sm:p-3">
                         </div>
                         <div>
-                            <label for="score2" id="score2-label" class="block text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
-                            <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                            <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
+                            <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base sm:text-lg p-2 sm:p-3">
                         </div>
                     </div>
                     <div class="mb-4 flex items-center">
                         <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="reset-match-checkbox" class="ml-2 block text-lg text-gray-900 mr-auto">إعادة تعيين المباراة (قادمة)</label>
+                        <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900 mr-auto">إعادة تعيين المباراة (قادمة)</label>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md">تحديث النتيجة</button>
+                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md">تحديث النتيجة</button>
                 </form>
             </div>
         </section>
@@ -254,18 +254,18 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-6 text-center mt-auto">
+    <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
         <div class="container mx-auto">
-            <p>&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
+            <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <!-- Custom Modal for Messages -->
     <div id="message-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content p-4 sm:p-6">
             <span class="close-button" id="close-modal-button">&times;</span>
-            <p id="modal-message" class="text-lg text-gray-800 mb-4"></p>
-            <button id="modal-ok-button" class="bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">موافق</button>
+            <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
+            <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">موافق</button>
         </div>
     </div>
 
@@ -541,7 +541,7 @@
                     allMatches.push({
                         team1: team1,
                         team2: team2,
-                        date: currentDate.toISOString().slice(0, 10), // Format date as YYYY-MM-DD
+                        date: currentDate.toISOString().slice(0, 10), // Format date asYYYY-MM-DD
                         time: times[timeIndex],
                         location: "الملعب الرئيسي",
                         status: "upcoming", // All generated matches are initially upcoming
@@ -647,10 +647,10 @@
             }
             teamsData.forEach(team => {
                 teamsContainer.innerHTML += `
-                    <div class="bg-blue-50 rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
-                        <img src="${team.logo}" alt="${team.name} Logo" class="mx-auto mb-4 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
-                        <h3 class="text-2xl font-bold text-blue-800 mb-2">${team.name}</h3>
-                        <p class="text-gray-700 text-lg mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
+                    <div class="bg-blue-50 rounded-xl shadow-lg p-4 sm:p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                        <img src="${team.logo}" alt="${team.name} Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover">
+                        <h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3>
+                        <p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
                     </div>`;
             });
         }
@@ -676,11 +676,11 @@
                    const matchDate = new Date(match.date);
                    const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' }); // Get day of week in Arabic
                    upcomingContainer.innerHTML += `
-                        <div class="bg-gray-50 rounded-xl shadow-md p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
-                            <p class="text-sm text-gray-500 mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
-                            <p class="text-lg font-semibold text-gray-800 mb-3">${match.team1} <span class="text-blue-600 font-bold text-xl">VS</span> ${match.team2}</p>
-                            <p class="text-lg text-center text-blue-500 font-semibold mb-3">مباراة قادمة</p>
-                            <p class="text-gray-600 text-sm text-center">المكان: ${match.location}</p>
+                        <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                            <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
+                            <p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p>
+                            <p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p>
+                            <p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p>
                         </div>`;
                 });
             }
@@ -693,15 +693,53 @@
                     const matchDate = new Date(match.date);
                     const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' });
                     pastContainer.innerHTML += `
-                        <div class="bg-red-50 rounded-xl shadow-md p-6 border-2 border-red-300">
-                            <p class="text-sm text-gray-500 mb-2">${dayOfWeek}، ${match.date}</p>
-                            <p class="text-2xl font-bold text-center text-gray-800 mb-3">
+                        <div class="bg-red-50 rounded-xl shadow-md p-4 sm:p-6 border-2 border-red-300">
+                            <p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date}</p>
+                            <p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">
                                 ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
                             </p>
-                            <p class="text-lg text-center text-red-700 font-semibold">انتهت</p>
+                            <p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p>
                         </div>`;
                 });
             }
+        }
+
+        /**
+         * Renders the league standings table in the 'Standings' section.
+         * Teams are sorted by points, then goal difference, then goals for.
+         * Uses the `teamsData` array, which is updated by Firestore listener.
+         */
+        function renderStandings() {
+            const tableBody = document.getElementById('standings-table-body');
+            tableBody.innerHTML = ''; // Clear previous content
+            if (teamsData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات ترتيب متاحة حالياً.</td></tr>`;
+                return;
+            }
+
+            // Sort teams based on league rules
+            const sortedTeams = [...teamsData].sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points; // Sort by points (descending)
+                if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference; // Then by goal difference (descending)
+                return b.goalsFor - a.goalsFor; // Then by goals for (descending)
+            });
+
+            // Populate the table rows
+            sortedTeams.forEach((team, index) => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">${index + 1}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.name}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.matchesPlayed}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.wins}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.draws}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.losses}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsFor}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalsAgainst}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-700">${team.goalDifference}</td>
+                        <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-bold text-blue-800">${team.points}</td>
+                    </tr>`;
+            });
         }
 
         /**
