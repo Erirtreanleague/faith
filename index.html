@@ -17,7 +17,7 @@
             z-index: 1;
         }
 
-        /* Watermark/Background Pattern - Enhanced with a subtle geometric pattern */
+        /* Watermark/Background Pattern - Eritrean Emblem and Flag (Grayscale) in a chessboard-like pattern */
         body::before {
             content: '';
             position: fixed;
@@ -25,12 +25,25 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Subtle geometric pattern using SVG data URI with a slightly darker blue tint */
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237bb6e3' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM2 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM36 0v-4h-2v4h-4v2h4v4h2V6h4V4h-4zM2 0v-4h-2v4h-4v2h4v4h2V6h4V4h-4zM36 60v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 60v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM0 36v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4zM0 60v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4zM0 0v-2h4v-4h2v4h4v2h-4v4h-2v-4H0zm60-2v-2h4v-4h2v4h4v2h-4v4h-2v-4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            /* Combine both images with different positions and repeat patterns for a chessboard effect */
+            background-image:
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Coat_of_arms_of_Eritrea.svg/800px-Coat_of_arms_of_Eritrea.svg.png'), /* Emblem */
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Flag_of_Eritrea.svg/800px-Flag_of_Eritrea.svg.png'); /* Flag */
             background-repeat: repeat;
-            opacity: 0.25; /* Slightly increased opacity for more presence */
+            background-size: 200px auto; /* Size of each individual pattern square, adjust as needed */
+            /* Position them to create an alternating effect (offset by half the size) */
+            background-position:
+                0px 0px, /* Emblem starts at top-left of its "cell" */
+                100px 100px; /* Flag starts offset by half of background-size, creating a checkerboard */
+            opacity: 0.15; /* Increased opacity for better visibility of the camel and flag */
+            filter: grayscale(100%); /* Apply grayscale filter to both images */
             z-index: -1;
             pointer-events: none;
+        }
+
+        /* Remove body::after as body::before now handles both patterns */
+        body::after {
+            content: none;
         }
 
         /* Hide sections by default, show active one */
@@ -339,7 +352,7 @@
                         <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                         <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900 mr-auto">إعادة تعيين المباراة (قادمة)</label>
                     </div>
-                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md home-button">تحديث النتيجة</button>
+                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-600 transition duration-300 shadow-md home-button">تحديث النتيجة</button>
                 </form>
             </div>
         </section>
@@ -1037,4 +1050,3 @@
     </script>
 </body>
 </html>
-
