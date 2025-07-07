@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eritrean International League</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for better Arabic display */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #d0e8ff 100%);
+            background-attachment: fixed;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Watermark/Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://placehold.co/50x50/E0F2FE/C0D9EF?text=.');
+            background-repeat: repeat;
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Hide sections by default, show active one */
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+        /* Ensure table cells have appropriate padding and alignment */
+        th, td {
+            text-align: right;
+            padding: 0.75rem 1.5rem;
+        }
+        th {
+            font-size: 0.8rem;
+        }
+        td {
+            font-size: 0.9rem;
+        }
+        /* Responsive table scrolling for small screens */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Custom colors inspired by Eritrean flag */
+        .bg-eritrea-red { background-color: #FF0000; }
+        .bg-eritrea-green { background-color: #008000; }
+        .bg-eritrea-blue { background-color: #4682B4; }
+        .bg-eritrea-yellow { background-color: #FFD700; }
+
+        .text-eritrea-red { color: #FF0000; }
+        .text-eritrea-green { color: #008000; }
+        .text-eritrea-blue { color: #4682B4; }
+        .text-eritrea-yellow { color: #FFD700; }
+
+        /* Custom gradient for navigation bar */
+        .nav-gradient {
+            background: linear-gradient(90deg, #008000 0%, #4682B4 100%);
+        }
+        /* Hide admin content by default */
+        #admin-content, #admin-password-error {
+            display: none;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- Navigation Bar -->
+    <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-3xl font-bold rounded-md p-2">Eritrean International League</a>
+            <div class="space-x-4 space-x-reverse flex items-center">
+                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="home">الرئيسية</button>
+                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="teams">الفرق</button>
+                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="matches">المباريات</button>
+                <button class="nav-button text-white hover:text-blue-200 p-3 rounded-lg transition duration-300 font-semibold text-lg" data-target="standings">الترتيب</button>
+                <button class="nav-button text-white hover:text-yellow-300 p-3 rounded-lg transition duration-300 font-semibold text-lg border border-transparent hover:border-white" data-target="admin">المسؤول</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto py-8 px-4 flex-grow">
+
+        <!-- User ID Display -->
+        <div class="text-center mb-4 text-gray-600 text-sm">
+            معرف المستخدم: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">جار التحميل...</span>
+        </div>
+
+        <!-- Home Section -->
+        <section id="home" class="page-section active bg-white rounded-xl shadow-lg p-8 md:p-12 text-center">
+            <h2 class="text-5xl font-extrabold text-eritrea-red mb-6">أهلاً بك في Eritrean International League!</h2>
+            <p class="text-xl text-gray-700 leading-relaxed mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <div class="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-blue-500">
+                    <h3 class="text-3xl font-bold text-blue-700 mb-3">الفرق</h3>
+                    <p class="text-gray-700 mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
+                    <button class="nav-button bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md" data-target="teams">عرض الفرق</button>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-green-500">
+                    <h3 class="text-3xl font-bold text-green-700 mb-3">المباريات</h3>
+                    <p class="text-gray-700 mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
+                    <button class="nav-button bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md" data-target="matches">عرض المباريات</button>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300 border-b-4 border-yellow-500">
+                    <h3 class="text-3xl font-bold text-yellow-700 mb-3">ترتيب الدوري</h3>
+                    <p class="text-gray-700 mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
+                    <button class="nav-button bg-yellow-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-yellow-700 transition duration-300 shadow-md" data-target="standings">عرض الترتيب</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teams Section -->
+        <section id="teams" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">الفرق المشاركة</h2>
+            <div id="teams-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </section>
+
+        <!-- Matches Section -->
+        <section id="matches" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">جدول ونتائج المباريات</h2>
+            <div class="mb-8">
+                <h3 class="text-3xl font-semibold text-eritrea-green mb-6">المباريات القادمة</h3>
+                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+            <div>
+                <h3 class="text-3xl font-semibold text-eritrea-red mb-6">نتائج المباريات</h3>
+                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- Standings Section -->
+        <section id="standings" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">ترتيب الدوري</h2>
+            <div class="max-w-full mx-auto bg-white rounded-xl shadow-lg overflow-hidden table-responsive">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-eritrea-green text-white">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الترتيب</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الفريق</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">لعب</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">فاز</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">تعادل</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">خسر</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">له</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">عليه</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">الفرق</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">النقاط</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin" class="page-section bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <h2 class="text-4xl font-bold text-eritrea-blue text-center mb-10">لوحة تحكم المسؤول</h2>
+            <!-- Password Prompt -->
+            <div id="admin-password-prompt" class="max-w-md mx-auto">
+                <label for="admin-password" class="block text-lg font-medium text-gray-700 mb-2">الرجاء إدخال كلمة المرور</label>
+                <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">دخول</button>
+                <p id="admin-password-error" class="text-red-500 mt-2 text-center">كلمة المرور غير صحيحة.</p>
+            </div>
+            <!-- Admin Content -->
+            <div id="admin-content" class="max-w-2xl mx-auto">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">تحديث نتائج المباريات</h3>
+                <form id="update-score-form">
+                    <div class="mb-4">
+                        <label for="match-select" class="block text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
+                        <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3"></select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="score1" id="score1-label" class="block text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
+                            <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                        </div>
+                        <div>
+                            <label for="score2" id="score2-label" class="block text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
+                            <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg p-3">
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition duration-300 shadow-md">تحديث النتيجة</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 text-center mt-auto">
+        <div class="container mx-auto">
+            <p>&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Modal for Messages -->
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-button">&times;</span>
+            <p id="modal-message" class="text-lg text-gray-800 mb-4"></p>
+            <button id="modal-ok-button" class="bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-md">موافق</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- GLOBAL VARIABLES ---
+        let app;
+        let db;
+        let auth;
+        let userId;
+        let adminAuthenticated = false; // Flag to track admin authentication status
+
+        // Data arrays, will be populated from Firestore
+        let teamsData = [];
+        let matchesData = [];
+
+        // App ID from the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Firebase config from the Canvas environment
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        // Initial auth token from the Canvas environment
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+        /**
+         * Initializes Firebase and authenticates the user.
+         * Sets up Firestore and authentication listeners.
+         */
+        async function initializeFirebase() {
+            try {
+                // Initialize Firebase app
+                app = initializeApp(firebaseConfig);
+                // Get Firestore instance
+                db = getFirestore(app);
+                // Get Auth instance
+                auth = getAuth(app);
+
+                // Authenticate user
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Listen for auth state changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('user-id-display').textContent = userId;
+                        console.log("User authenticated:", userId);
+                        // Once authenticated, start listening for data
+                        setupFirestoreListeners();
+                    } else {
+                        userId = crypto.randomUUID(); // Fallback for unauthenticated users
+                        document.getElementById('user-id-display').textContent = userId;
+                        console.log("Signed in anonymously or no user:", userId);
+                        // Even for anonymous, we can still set up listeners for public data
+                        setupFirestoreListeners();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase or authenticating:", error);
+                showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message);
+            }
+        }
+
+        // --- FIRESTORE DATA MANAGEMENT ---
+        /**
+         * Sets up real-time listeners for teams and matches data from Firestore.
+         */
+        function setupFirestoreListeners() {
+            // Listen for teams data changes
+            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+            onSnapshot(teamsCollectionRef, (snapshot) => {
+                teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Teams data updated:", teamsData);
+                // Re-render relevant sections if they are active
+                if (document.getElementById('teams').classList.contains('active')) {
+                    renderTeams();
+                }
+                if (document.getElementById('standings').classList.contains('active')) {
+                    calculateStandings();
+                    renderStandings();
+                }
+            }, (error) => {
+                console.error("Error listening to teams data:", error);
+                showModal("خطأ في جلب بيانات الفرق: " + error.message);
+            });
+
+            // Listen for matches data changes
+            const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+            onSnapshot(matchesCollectionRef, (snapshot) => {
+                matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Matches data updated:", matchesData);
+                // Re-render relevant sections if they are active
+                if (document.getElementById('matches').classList.contains('active')) {
+                    renderMatches();
+                }
+                if (document.getElementById('standings').classList.contains('active')) {
+                    calculateStandings();
+                    renderStandings();
+                }
+                if (document.getElementById('admin').classList.contains('active') && adminAuthenticated) {
+                    populateAdminMatchSelector();
+                    updateScoreLabels();
+                }
+            }, (error) => {
+                console.error("Error listening to matches data:", error);
+                showModal("خطأ في جلب بيانات المباريات: " + error.message);
+            });
+        }
+
+        /**
+         * Initializes default data in Firestore if collections are empty.
+         * This function should only be called once, e.g., on first load.
+         */
+        async function initializeDefaultData() {
+            try {
+                const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+                const teamsSnapshot = await getDocs(teamsCollectionRef);
+
+                if (teamsSnapshot.empty) {
+                    console.log("Initializing default teams data in Firestore...");
+                    const defaultTeams = [
+                        { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                        { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }
+                    ];
+                    for (const team of defaultTeams) {
+                        await addDoc(teamsCollectionRef, team);
+                    }
+                }
+
+                const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+                const matchesSnapshot = await getDocs(matchesCollectionRef);
+
+                if (matchesSnapshot.empty) {
+                    console.log("Generating and initializing default matches data in Firestore...");
+                    const generatedMatches = generateRoundRobinSchedule();
+                    for (const match of generatedMatches) {
+                        await addDoc(matchesCollectionRef, match);
+                    }
+                }
+            } catch (error) {
+                console.error("Error initializing default data:", error);
+                showModal("حدث خطأ أثناء تهيئة البيانات الأولية: " + error.message);
+            }
+        }
+
+        /**
+         * Updates a match's score and status in Firestore.
+         * @param {string} matchId - The ID of the match document to update.
+         * @param {number} score1 - The score for team 1.
+         * @param {number} score2 - The score for team 2.
+         */
+        async function updateMatchInFirestore(matchId, score1, score2) {
+            try {
+                const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
+                await updateDoc(matchRef, {
+                    score1: score1,
+                    score2: score2,
+                    status: 'finished'
+                });
+                console.log(`Match ${matchId} updated successfully in Firestore.`);
+            } catch (error) {
+                console.error("Error updating match in Firestore:", error);
+                showModal("خطأ في تحديث نتيجة المباراة: " + error.message);
+            }
+        }
+
+        // --- HELPER FUNCTIONS FOR MODAL ---
+        /**
+         * Displays a custom modal with a given message.
+         * @param {string} message - The message to display in the modal.
+         */
+        function showModal(message) {
+            const modal = document.getElementById('message-modal');
+            const modalMessage = document.getElementById('modal-message');
+            modalMessage.textContent = message;
+            modal.style.display = 'flex'; // Use flex to center content
+        }
+
+        /**
+         * Hides the custom modal.
+         */
+        function hideModal() {
+            const modal = document.getElementById('message-modal');
+            modal.style.display = 'none';
+        }
+
+        // --- CORE FUNCTIONS (ADAPTED FOR FIRESTORE) ---
+
+        /**
+         * Generates a round-robin schedule for all teams.
+         * This function is primarily used for initial data population if Firestore is empty.
+         * Handles odd number of teams by adding a 'BYE'.
+         * Schedules matches on weekdays (Sunday to Thursday) with specific times.
+         * @returns {Array<Object>} An array of match objects.
+         */
+        function generateRoundRobinSchedule() {
+            const teams = teamsData.map(team => team.name);
+            const numTeams = teams.length;
+            const allMatches = [];
+            let matchIdCounter = 1;
+            const rotatingTeams = [...teams]; // Create a mutable copy for rotation
+
+            // If odd number of teams, add a 'BYE' to ensure even pairings
+            if (numTeams % 2 !== 0) {
+                rotatingTeams.push('BYE');
+            }
+
+            const N = rotatingTeams.length; // Number of teams including 'BYE' if added
+            let currentDate = new Date('2025-09-01T00:00:00'); // Start date for scheduling
+            const endDate = new Date('2025-12-15T23:59:59'); // End date for scheduling
+            const times = ['09:00 صباحاً', '09:40 صباحاً']; // Available match times per day
+            let timeIndex = 0; // Index for current time slot
+            let matchesOnCurrentDay = 0; // Counter for matches scheduled on the current day
+            let roundCounter = 1; // Tracks the current round number
+
+            // Loop through each round
+            for (let round = 0; round < N - 1; round++) {
+                // Loop to create pairs for the current round
+                for (let i = 0; i < N / 2; i++) {
+                    const team1 = rotatingTeams[i];
+                    const team2 = rotatingTeams[N - 1 - i];
+
+                    // Skip matches involving 'BYE'
+                    if (team1 === 'BYE' || team2 === 'BYE') continue;
+
+                    // Stop scheduling if we've passed the end date
+                    if (currentDate > endDate) {
+                        console.warn("Ran out of scheduling days!");
+                        break;
+                    }
+
+                    // Skip weekends (Friday: 5, Saturday: 6)
+                    while (currentDate.getDay() === 5 || currentDate.getDay() === 6) {
+                        currentDate.setDate(currentDate.getDate() + 1); // Move to next day
+                        timeIndex = 0; // Reset time index for new day
+                        matchesOnCurrentDay = 0; // Reset match counter for new day
+                    }
+
+                    // Add the match to the schedule
+                    allMatches.push({
+                        team1: team1,
+                        team2: team2,
+                        date: currentDate.toISOString().slice(0, 10), // Format date as YYYY-MM-DD
+                        time: times[timeIndex],
+                        location: "الملعب الرئيسي",
+                        status: "upcoming", // All generated matches are initially upcoming
+                        score1: null,
+                        score2: null,
+                        round: roundCounter
+                    });
+
+                    matchesOnCurrentDay++;
+                    // If two matches are scheduled for the current day, move to the next day
+                    if (matchesOnCurrentDay >= 2) {
+                        matchesOnCurrentDay = 0;
+                        timeIndex = 0;
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    } else {
+                        timeIndex++; // Move to the next time slot on the same day
+                    }
+                }
+                // Rotate teams for the next round (fixed first team, rotate others)
+                const lastTeam = rotatingTeams.pop();
+                rotatingTeams.splice(1, 0, lastTeam);
+                roundCounter++;
+            }
+            return allMatches;
+        }
+
+        /**
+         * Updates the statistics of two teams based on a match result.
+         * This function is called locally to calculate standings, not to update Firestore directly.
+         * @param {string} teamName - Name of the first team.
+         * @param {string} opponentName - Name of the second team.
+         * @param {number} scoreTeam - Score of the first team.
+         * @param {number} scoreOpponent - Score of the second team.
+         */
+        function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
+            const team = teamsData.find(t => t.name === teamName);
+            const opponent = teamsData.find(t => t.name === opponentName);
+            if (!team || !opponent) return; // Exit if teams not found
+
+            team.matchesPlayed++;
+            opponent.matchesPlayed++;
+            team.goalsFor += scoreTeam;
+            team.goalsAgainst += scoreOpponent;
+            opponent.goalsFor += scoreOpponent;
+            opponent.goalsAgainst += scoreTeam;
+
+            if (scoreTeam > scoreOpponent) {
+                team.wins++;
+                team.points += 3; // 3 points for a win
+                opponent.losses++;
+            } else if (scoreTeam < scoreOpponent) {
+                team.losses++;
+                opponent.wins++;
+                opponent.points += 3;
+            } else {
+                team.draws++;
+                opponent.draws++;
+                team.points += 1; // 1 point for a draw
+                opponent.points += 1;
+            }
+        }
+
+        /**
+         * Recalculates the standings for all teams based on finished matches.
+         * Resets all team stats before recalculating to ensure accuracy.
+         * This function operates on the local `teamsData` and `matchesData` which are kept in sync by Firestore listeners.
+         */
+        function calculateStandings() {
+            // Reset all team stats before recalculation
+            teamsData.forEach(team => {
+                team.matchesPlayed = 0;
+                team.wins = 0;
+                team.draws = 0;
+                team.losses = 0;
+                team.goalsFor = 0;
+                team.goalsAgainst = 0;
+                team.points = 0;
+            });
+
+            // Iterate through finished matches and update team stats
+            matchesData.forEach(match => {
+                if (match.status === 'finished') {
+                    updateTeamStats(match.team1, match.team2, match.score1, match.score2);
+                }
+            });
+
+            // Calculate goal difference for each team
+            teamsData.forEach(team => {
+                team.goalDifference = team.goalsFor - team.goalsAgainst;
+            });
+        }
+
+        /**
+         * Renders the list of participating teams in the 'Teams' section.
+         * Uses the `teamsData` array, which is updated by Firestore listener.
+         */
+        function renderTeams() {
+            const teamsContainer = document.getElementById('teams-container');
+            teamsContainer.innerHTML = ''; // Clear previous content
+            if (teamsData.length === 0) {
+                teamsContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد فرق متاحة حالياً.</p>`;
+                return;
+            }
+            teamsData.forEach(team => {
+                teamsContainer.innerHTML += `
+                    <div class="bg-blue-50 rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition duration-300 border-2 border-blue-200">
+                        <img src="${team.logo}" alt="${team.name} Logo" class="mx-auto mb-4 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-2">${team.name}</h3>
+                        <p class="text-gray-700 text-lg mb-2">القائد: <span class="font-semibold">${team.captain}</span></p>
+                    </div>`;
+            });
+        }
+
+        /**
+         * Renders upcoming and past matches in the 'Matches' section.
+         * Uses the `matchesData` array, which is updated by Firestore listener.
+         */
+        function renderMatches() {
+            const upcomingContainer = document.getElementById('upcoming-matches');
+            const pastContainer = document.getElementById('past-matches');
+            upcomingContainer.innerHTML = ''; // Clear previous content
+            pastContainer.innerHTML = ''; // Clear previous content
+
+            const upcomingMatches = matchesData.filter(m => m.status === 'upcoming');
+            const pastMatches = matchesData.filter(m => m.status === 'finished');
+
+            // Render upcoming matches
+            if (upcomingMatches.length === 0) {
+                upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`;
+            } else {
+                upcomingMatches.forEach(match => {
+                   const matchDate = new Date(match.date);
+                   const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' }); // Get day of week in Arabic
+                   upcomingContainer.innerHTML += `
+                        <div class="bg-gray-50 rounded-xl shadow-md p-6 border-2 border-blue-300 hover:shadow-lg transition duration-300">
+                            <p class="text-sm text-gray-500 mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p>
+                            <p class="text-lg font-semibold text-gray-800 mb-3">${match.team1} <span class="text-blue-600 font-bold text-xl">VS</span> ${match.team2}</p>
+                            <p class="text-lg text-center text-blue-500 font-semibold mb-3">مباراة قادمة</p>
+                            <p class="text-gray-600 text-sm text-center">المكان: ${match.location}</p>
+                        </div>`;
+                });
+            }
+
+            // Render past matches
+            if (pastMatches.length === 0) {
+                pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة حالياً.</p>`;
+            } else {
+                pastMatches.forEach(match => {
+                    const matchDate = new Date(match.date);
+                    const dayOfWeek = matchDate.toLocaleDateString('ar-SA', { weekday: 'long' });
+                    pastContainer.innerHTML += `
+                        <div class="bg-red-50 rounded-xl shadow-md p-6 border-2 border-red-300">
+                            <p class="text-sm text-gray-500 mb-2">${dayOfWeek}، ${match.date}</p>
+                            <p class="text-2xl font-bold text-center text-gray-800 mb-3">
+                                ${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}
+                            </p>
+                            <p class="text-lg text-center text-red-700 font-semibold">انتهت</p>
+                        </div>`;
+                });
+            }
+        }
+
+        /**
+         * Renders the league standings table in the 'Standings' section.
+         * Teams are sorted by points, then goal difference, then goals for.
+         * Uses the `teamsData` array, which is updated by Firestore listener.
+         */
+        function renderStandings() {
+            const tableBody = document.getElementById('standings-table-body');
+            tableBody.innerHTML = ''; // Clear previous content
+            if (teamsData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات ترتيب متاحة حالياً.</td></tr>`;
+                return;
+            }
+
+            // Sort teams based on league rules
+            const sortedTeams = [...teamsData].sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points; // Sort by points (descending)
+                if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference; // Then by goal difference (descending)
+                return b.goalsFor - a.goalsFor; // Then by goals for (descending)
+            });
+
+            // Populate the table rows
+            sortedTeams.forEach((team, index) => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.matchesPlayed}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.wins}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.draws}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.losses}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalsFor}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalsAgainst}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${team.goalDifference}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-800">${team.points}</td>
+                    </tr>`;
+            });
+        }
+
+        /**
+         * Populates the match selection dropdown in the Admin section with upcoming matches.
+         * Uses the `matchesData` array, which is updated by Firestore listener.
+         */
+        function populateAdminMatchSelector() {
+            const matchSelect = document.getElementById('match-select');
+            matchSelect.innerHTML = '<option value="">-- اختر مباراة لتحديثها --</option>'; // Default option
+            const upcomingMatches = matchesData.filter(m => m.status === 'upcoming');
+            upcomingMatches.forEach(match => {
+                matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})</option>`;
+            });
+        }
+        
+        /**
+         * Updates the labels for score input fields in the Admin section
+         * to reflect the names of the selected teams.
+         */
+        function updateScoreLabels() {
+            const matchSelect = document.getElementById('match-select');
+            const selectedMatchId = matchSelect.value;
+            const score1Label = document.getElementById('score1-label');
+            const score2Label = document.getElementById('score2-label');
+
+            if (selectedMatchId) {
+                const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+                if (selectedMatch) {
+                    score1Label.textContent = `نتيجة ${selectedMatch.team1}`;
+                    score2Label.textContent = `نتيجة ${selectedMatch.team2}`;
+                } else {
+                    score1Label.textContent = 'نتيجة الفريق الأول';
+                    score2Label.textContent = 'نتيجة الفريق الثاني';
+                }
+            } else {
+                score1Label.textContent = 'نتيجة الفريق الأول';
+                score2Label.textContent = 'نتيجة الفريق الثاني';
+            }
+        }
+
+        /**
+         * Controls which main content section is visible.
+         * Also handles the display logic for the admin section (password prompt vs. content).
+         * @param {string} sectionId - The ID of the section to show.
+         */
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            // Show the target section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Special handling for the admin section
+            if (sectionId === 'admin') {
+                if (adminAuthenticated) {
+                    document.getElementById('admin-password-prompt').style.display = 'none';
+                    document.getElementById('admin-content').style.display = 'block';
+                    populateAdminMatchSelector(); // Populate dropdown when admin content is shown
+                    updateScoreLabels(); // Update labels based on selected match
+                } else {
+                    document.getElementById('admin-password-prompt').style.display = 'block';
+                    document.getElementById('admin-content').style.display = 'none';
+                }
+            } else if (sectionId === 'teams') {
+                renderTeams(); // Render teams when the teams section is active
+            } else if (sectionId === 'matches') {
+                renderMatches(); // Render matches when the matches section is active
+            } else if (sectionId === 'standings') {
+                calculateStandings(); // Recalculate and render standings when active
+                renderStandings();
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        // Attach click listeners to all navigation buttons
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', (e) => showSection(e.target.dataset.target));
+        });
+
+        // Admin login button click listener
+        document.getElementById('admin-login-button').addEventListener('click', () => {
+            const password = document.getElementById('admin-password').value;
+            const errorMsg = document.getElementById('admin-password-error');
+            if (password === 'admin123') { // Simple hardcoded password for demonstration
+                adminAuthenticated = true;
+                errorMsg.style.display = 'none';
+                showSection('admin'); // Show admin content
+            } else {
+                errorMsg.style.display = 'block'; // Show error message
+            }
+        });
+        
+        // Listen for changes in the match selection dropdown to update score labels
+        document.getElementById('match-select').addEventListener('change', updateScoreLabels);
+
+        // Form submission listener for updating match scores
+        document.getElementById('update-score-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            const matchId = document.getElementById('match-select').value;
+            const score1 = parseInt(document.getElementById('score1').value, 10);
+            const score2 = parseInt(document.getElementById('score2').value, 10);
+
+            // Validate inputs
+            if (!matchId || isNaN(score1) || isNaN(score2)) {
+                showModal('الرجاء اختيار مباراة وإدخال نتيجة صحيحة.'); // Use custom modal
+                return;
+            }
+
+            // Find the match locally to get its current data
+            const match = matchesData.find(m => m.id == matchId);
+            if (match) {
+                // Update the match in Firestore
+                await updateMatchInFirestore(match.id, score1, score2);
+
+                // Clear form fields after successful update
+                document.getElementById('update-score-form').reset();
+
+                showModal('تم تحديث النتيجة بنجاح!'); // Use custom modal
+            } else {
+                showModal('المباراة المختارة غير موجودة.');
+            }
+        });
+
+        // Event listeners for the custom modal
+        document.getElementById('close-modal-button').addEventListener('click', hideModal);
+        document.getElementById('modal-ok-button').addEventListener('click', hideModal);
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('message-modal');
+            if (event.target === modal) {
+                hideModal();
+            }
+        });
+
+        // --- INITIALIZATION ---
+        // Run initial setup when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeFirebase(); // Initialize Firebase and authenticate
+            await initializeDefaultData(); // Ensure default data exists in Firestore
+            showSection('home'); // Display the home section by default
+        });
+    </script>
+</body>
+</html>
