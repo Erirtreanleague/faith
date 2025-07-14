@@ -105,7 +105,7 @@
             <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
             
             <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">دخول</button>
-            <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base">البريد الإلكتروني أو كلمة المرور غير صحيحة.</p>
+            <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base"></p>
         </div>
 
         <div id="admin-content" class="max-w-2xl mx-auto">
@@ -154,7 +154,7 @@
     // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // --- GLOBAL VARIABLES ---
     let app, db, auth;
@@ -162,8 +162,9 @@
     let adminAuthenticated = false;
     let teamsData = [];
     let matchesData = [];
+    const appId = 'eritrea-league-app-gh'; // Define appId globally
 
-    // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+    // --- FIREBASE INITIALIZATION AND AUTHENTICATION (CORRECTED) ---
     async function initializeFirebase() {
         try {
             const firebaseConfig = {
@@ -174,14 +175,13 @@
                 messagingSenderId: "188029452555",
                 appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
             };
-            const appId = 'eritrea-league-app-gh';
 
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
 
             onAuthStateChanged(auth, (user) => {
-                const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // UID الخاص بك
+                const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; 
 
                 if (user) {
                     userId = user.uid;
@@ -196,14 +196,17 @@
                         document.getElementById('admin-login-nav-button').style.display = 'block';
                         document.getElementById('admin-logout-button').style.display = 'none';
                     }
+                    console.log("User authenticated with UID:", userId);
+                    // (الخطوة الأهم) - استدعاء جلب البيانات بعد التأكد من وجود مستخدم
+                    setupFirestoreListeners();
+                    initializeDefaultData();
+
                 } else {
+                    // لا يوجد مستخدم، الآن قم بإنشاء مستخدم مجهول
+                    // onAuthStateChanged سوف تعمل مرة أخرى بعد نجاح هذه العملية
                     signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
                 }
             });
-
-            setupFirestoreListeners(appId);
-            // The rest of your functions like initializeDefaultData, render functions, etc.
-            // ... (I've omitted them for brevity, but they should be here)
 
         } catch (error) {
             console.error("Error initializing Firebase:", error);
@@ -212,7 +215,7 @@
     }
 
     // --- FIRESTORE DATA MANAGEMENT ---
-    function setupFirestoreListeners(appId) {
+    function setupFirestoreListeners() {
         const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
         onSnapshot(teamsCollectionRef, (snapshot) => {
             teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -226,14 +229,41 @@
         }, (error) => console.error("Error listening to matches:", error));
     }
 
+    async function initializeDefaultData() {
+        try {
+            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+            const teamsSnapshot = await getDocs(teamsCollectionRef);
+            let currentTeamsInDb = [];
+
+            if (teamsSnapshot.empty) {
+                console.log("Initializing default teams data...");
+                const defaultTeams = [ { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }];
+                for (const team of defaultTeams) { await addDoc(teamsCollectionRef, team); }
+                currentTeamsInDb = defaultTeams;
+            } else {
+                currentTeamsInDb = teamsSnapshot.docs.map(doc => doc.data());
+            }
+
+            const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+            const matchesSnapshot = await getDocs(matchesCollectionRef);
+
+            if (matchesSnapshot.empty && currentTeamsInDb.length > 0) {
+                console.log("Generating default matches...");
+                const generatedMatches = generateRoundRobinSchedule(currentTeamsInDb.map(team => team.name));
+                for (const match of generatedMatches) { await addDoc(matchesCollectionRef, match); }
+            }
+        } catch (error) {
+            console.error("Error initializing default data:", error);
+        }
+    }
+
     async function updateMatchInFirestore(matchId, score1, score2, status) {
         try {
-            const appId = 'eritrea-league-app-gh';
             const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
             await updateDoc(matchRef, { score1, score2, status });
         } catch (error) {
             console.error("Error updating match:", error);
-            showModal("خطأ في تحديث المباراة: " + error.message + ". تأكد أنك مسجل كمسؤول وأن قواعد الأمان صحيحة.");
+            showModal("فشل تحديث المباراة. تأكد أنك مسجل كمسؤول وأن قواعد الأمان صحيحة. الخطأ: " + error.message);
         }
     }
     
@@ -246,13 +276,149 @@
         document.getElementById('message-modal').style.display = 'none';
     }
 
+    // --- CORE LOGIC & RENDER FUNCTIONS ---
+    function generateRoundRobinSchedule(teamNames) {
+        const teams = [...teamNames];
+        if (teams.length % 2 !== 0) teams.push('BYE');
+        const numTeams = teams.length;
+        const allMatches = [];
+        let currentDate = new Date('2025-09-01T00:00:00');
+        const times = ['09:00 صباحاً', '09:40 صباحاً'];
+        let timeIndex = 0;
+        let matchesOnCurrentDay = 0;
+
+        for (let round = 0; round < numTeams - 1; round++) {
+            for (let i = 0; i < numTeams / 2; i++) {
+                const team1 = teams[i];
+                const team2 = teams[numTeams - 1 - i];
+                if (team1 === 'BYE' || team2 === 'BYE') continue;
+                while (currentDate.getDay() === 5 || currentDate.getDay() === 6) { 
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    timeIndex = 0; matchesOnCurrentDay = 0;
+                }
+                allMatches.push({ team1, team2, date: currentDate.toISOString().slice(0, 10), time: times[timeIndex], location: "الملعب الرئيسي", status: "upcoming", score1: null, score2: null, round: round + 1 });
+                matchesOnCurrentDay++;
+                if (matchesOnCurrentDay >= 2) {
+                    matchesOnCurrentDay = 0; timeIndex = 0; currentDate.setDate(currentDate.getDate() + 1);
+                } else {
+                    timeIndex++;
+                }
+            }
+            teams.splice(1, 0, teams.pop());
+        }
+        return allMatches;
+    }
+
+    function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
+        const team = teamsData.find(t => t.name === teamName);
+        const opponent = teamsData.find(t => t.name === opponentName);
+        if (!team || !opponent) return;
+        team.matchesPlayed++; opponent.matchesPlayed++;
+        team.goalsFor += scoreTeam; team.goalsAgainst += scoreOpponent;
+        opponent.goalsFor += scoreOpponent; opponent.goalsAgainst += scoreTeam;
+        if (scoreTeam > scoreOpponent) { team.wins++; team.points += 3; opponent.losses++; } 
+        else if (scoreTeam < scoreOpponent) { team.losses++; opponent.wins++; opponent.points += 3; } 
+        else { team.draws++; opponent.draws++; team.points += 1; opponent.points += 1; }
+    }
+
+    function calculateStandings() {
+        teamsData.forEach(team => {
+            team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0;
+            team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
+        });
+        matchesData.forEach(match => {
+            if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
+                updateTeamStats(match.team1, match.team2, match.score1, match.score2);
+            }
+        });
+        teamsData.forEach(team => { team.goalDifference = team.goalsFor - team.goalsAgainst; });
+    }
+
+    function renderTeams() {
+        const teamsContainer = document.getElementById('teams-container');
+        teamsContainer.innerHTML = '';
+        if (!teamsData || teamsData.length === 0) {
+            teamsContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد فرق متاحة حالياً.</p>`;
+            return;
+        }
+        teamsData.forEach(team => {
+            teamsContainer.innerHTML += `<div class="bg-blue-50 rounded-xl card-shadow p-4 sm:p-6 text-center border-2 border-blue-200"><img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 sm:mb-4 rounded-full border-4 border-blue-400 w-20 h-20 sm:w-24 sm:h-24 object-cover"><h3 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1 sm:mb-2">${team.name}</h3><p class="text-sm sm:text-lg text-gray-700 mb-2">القائد: <span class="font-semibold">${team.captain}</span></p></div>`;
+        });
+    }
+
+    function renderMatches() {
+        const upcomingContainer = document.getElementById('upcoming-matches');
+        const pastContainer = document.getElementById('past-matches');
+        const upcomingHeading = document.getElementById('upcoming-matches-heading');
+        upcomingContainer.innerHTML = ''; pastContainer.innerHTML = '';
+        if (!matchesData) return;
+        const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a,b) => new Date(a.date) - new Date(b.date));
+        const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        if (pastMatches.length === 0) { pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة.</p>`; } 
+        else { pastMatches.forEach(match => { const dayOfWeek = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' }); pastContainer.innerHTML += `<div class="bg-red-50 rounded-xl card-shadow p-4 sm:p-6 border-2 border-red-300"><p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date}</p><p class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-red-600">${match.score1} - ${match.score2}</span> ${match.team2}</p><p class="text-base sm:text-lg text-center text-red-700 font-semibold">انتهت</p></div>`; }); }
+
+        if (upcomingMatches.length === 0) { upcomingHeading.style.display = 'block'; upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`; } 
+        else { upcomingHeading.style.display = 'block'; upcomingMatches.forEach(match => { const dayOfWeek = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' }); upcomingContainer.innerHTML += `<div class="bg-gray-50 rounded-xl card-shadow p-4 sm:p-6 border-2 border-blue-300"><p class="text-xs sm:text-sm text-gray-500 mb-1 sm:mb-2">${dayOfWeek}، ${match.date} - ${match.time}</p><p class="text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">${match.team1} <span class="text-blue-600 font-bold text-lg sm:text-xl">VS</span> ${match.team2}</p><p class="text-base sm:text-lg text-center text-blue-500 font-semibold mb-2 sm:mb-3">مباراة قادمة</p><p class="text-xs sm:text-sm text-gray-600 text-center">المكان: ${match.location}</p></div>`; }); }
+    }
+
+    function renderStandings() {
+        const tableBody = document.getElementById('standings-table-body');
+        tableBody.innerHTML = '';
+        if (!teamsData || teamsData.length === 0) { tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات.</td></tr>`; return; }
+        const sortedTeams = [...teamsData].sort((a, b) => { if (b.points !== a.points) return b.points - a.points; if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference; return b.goalsFor - a.goalsFor; });
+        sortedTeams.forEach((team, index) => { tableBody.innerHTML += `<tr><td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td><td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${team.name}</td><td>${team.matchesPlayed}</td><td>${team.wins}</td><td>${team.draws}</td><td>${team.losses}</td><td>${team.goalsFor}</td><td>${team.goalsAgainst}</td><td>${team.goalDifference}</td><td class="font-bold text-blue-800">${team.points}</td></tr>`; });
+    }
+
+    function populateAdminMatchSelector() {
+        const matchSelect = document.getElementById('match-select');
+        const selectedValue = matchSelect.value;
+        matchSelect.innerHTML = '<option value="">-- اختر مباراة --</option>';
+        const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+        sortedMatches.forEach(match => {
+            const statusText = match.status === 'upcoming' ? ' (قادمة)' : ' (انتهت)';
+            const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
+            matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})${scoreText}${statusText}</option>`;
+        });
+        matchSelect.value = selectedValue;
+    }
+
+    function updateScoreLabels() {
+        const matchSelect = document.getElementById('match-select');
+        const selectedMatchId = matchSelect.value;
+        const score1Label = document.getElementById('score1-label');
+        const score2Label = document.getElementById('score2-label');
+        const score1Input = document.getElementById('score1');
+        const score2Input = document.getElementById('score2');
+        if (selectedMatchId) {
+            const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+            if (selectedMatch) {
+                score1Label.textContent = `نتيجة ${selectedMatch.team1}`;
+                score2Label.textContent = `نتيجة ${selectedMatch.team2}`;
+                score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 : '';
+                score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 : '';
+            }
+        } else {
+            score1Label.textContent = 'نتيجة الفريق الأول';
+            score2Label.textContent = 'نتيجة الفريق الثاني';
+            score1Input.value = ''; score2Input.value = '';
+        }
+    }
+
+    function renderAllActiveSections() {
+        const activeSection = document.querySelector('.page-section.active');
+        if (!activeSection) return;
+        const sectionId = activeSection.id;
+        if (sectionId === 'teams') renderTeams();
+        else if (sectionId === 'matches') renderMatches();
+        else if (sectionId === 'standings') { calculateStandings(); renderStandings(); }
+        else if (sectionId === 'admin' && adminAuthenticated) { populateAdminMatchSelector(); updateScoreLabels(); }
+    }
+
     // --- UI Navigation ---
     function showSection(sectionId) {
         document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-        }
+        document.getElementById(sectionId).classList.add('active');
 
         if (sectionId === 'admin') {
             if (adminAuthenticated) {
@@ -267,16 +433,6 @@
         } else {
             renderAllActiveSections();
         }
-    }
-
-    function renderAllActiveSections() {
-        const activeSection = document.querySelector('.page-section.active');
-        if (!activeSection) return;
-        const sectionId = activeSection.id;
-        if (sectionId === 'teams') renderTeams();
-        else if (sectionId === 'matches') renderMatches();
-        else if (sectionId === 'standings') { calculateStandings(); renderStandings(); }
-        else if (sectionId === 'admin' && adminAuthenticated) { populateAdminMatchSelector(); updateScoreLabels(); }
     }
 
     // --- EVENT LISTENERS ---
