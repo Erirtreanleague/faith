@@ -398,13 +398,21 @@
          */
         async function initializeFirebase() {
             try {
-                // Use the __firebase_config global variable provided by the platform.
-                const firebaseConfig = typeof __firebase_config !== 'undefined' 
+                // Use platform-provided config if available, otherwise use a hardcoded fallback.
+                // This ensures the app works both on the platform and on external sites like GitHub Pages.
+                const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config)
                     ? JSON.parse(__firebase_config)
-                    : { /* Add your local fallback config here if needed */ };
+                    : {
+                        apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
+                        authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
+                        projectId: "eritrean-international-l-7bc64",
+                        storageBucket: "eritrean-international-l-7bc64.appspot.com",
+                        messagingSenderId: "188029452555",
+                        appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
+                    };
                 
-                // Use the __app_id global variable provided by the platform.
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'eritrean-league-fallback';
+                // Use platform-provided app ID for path, or a fallback for external hosting.
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'eritrea-league-app-gh';
 
                 // Initialize Firebase app
                 app = initializeApp(firebaseConfig);
@@ -415,7 +423,7 @@
                 // Enable Firestore debug logging
                 setLogLevel('debug');
                 
-                console.log("Firebase Initialized. App ID:", appId);
+                console.log("Firebase Initialized. App ID for path:", appId);
 
                 // Authenticate user using custom token if available, otherwise anonymously.
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -559,7 +567,7 @@
          */
         async function updateMatchInFirestore(matchId, score1, score2, status) {
             try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'eritrean-league-fallback';
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'eritrea-league-app-gh';
                 const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
                 await updateDoc(matchRef, {
                     score1: score1,
@@ -923,4 +931,3 @@
     </script>
 </body>
 </html>
-
