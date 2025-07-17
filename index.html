@@ -207,13 +207,39 @@
     </div>
 </div>
 
-<!-- Players Modal -->
-<div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-  <div class="bg-white w-96 rounded-xl shadow-lg p-6 text-right">
-    <h2 id="teamModalTitle" class="text-xl font-bold mb-4">اللاعبين</h2>
-    <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
-      <!-- Player names will be added here -->
-    </ul>
+<!-- Team Info Modal -->
+<div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 text-right">
+    <h2 id="teamModalTitle" class="text-xl font-bold mb-4"></h2>
+    
+    <!-- Tabs -->
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-4 space-x-reverse" aria-label="Tabs">
+        <button onclick="showTeamModalTab('players')" id="players-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          اللاعبون
+        </button>
+        <button onclick="showTeamModalTab('matches')" id="matches-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          المباريات
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="mt-4 max-h-64 overflow-y-auto">
+      <!-- Players Panel -->
+      <div id="players-panel" class="team-modal-panel">
+        <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
+          <!-- Player names will be added here -->
+        </ul>
+      </div>
+      <!-- Matches Panel -->
+      <div id="matches-panel" class="team-modal-panel hidden">
+         <div id="teamMatchesList" class="space-y-3">
+            <!-- Team matches will be added here -->
+         </div>
+      </div>
+    </div>
+
     <button onclick="closeTeamModal()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">إغلاق</button>
   </div>
 </div>
@@ -271,7 +297,6 @@
                     userId = user.uid;
                     document.getElementById('user-id-display').textContent = userId;
 
-                    // Check if the user is the admin.
                     if (user.uid === adminUID) {
                         adminAuthenticated = true;
                         document.getElementById('admin-login-nav-button').style.display = 'none';
@@ -282,14 +307,12 @@
                         document.getElementById('admin-logout-button').style.display = 'none';
                     }
                     
-                    // Initialize data listeners only once after authentication is confirmed.
                     if (!firebaseInitialized) {
                         setupFirestoreListeners();
                         checkAndCreateInitialData();
                         firebaseInitialized = true;
                     }
                 } else {
-                    // User is signed out, so sign them in anonymously.
                     adminAuthenticated = false;
                     document.getElementById('user-id-display').textContent = 'جاري المصادقة...';
                     document.getElementById('admin-login-nav-button').style.display = 'block';
@@ -311,40 +334,85 @@
         }
     }
 
-    // --- TEAM MODAL FUNCTIONS ---
+    // --- TEAM INFO MODAL FUNCTIONS ---
+    function showTeamModalTab(tabName) {
+        document.querySelectorAll('.team-modal-panel').forEach(panel => panel.classList.add('hidden'));
+        document.querySelectorAll('.team-modal-tab').forEach(tab => {
+            tab.classList.remove('border-blue-500', 'text-blue-600');
+            tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+        });
+
+        document.getElementById(`${tabName}-panel`).classList.remove('hidden');
+        const activeTab = document.getElementById(`${tabName}-tab`);
+        activeTab.classList.add('border-blue-500', 'text-blue-600');
+        activeTab.classList.remove('border-transparent', 'text-gray-500');
+    }
+    window.showTeamModalTab = showTeamModalTab;
+
     async function openTeamModal(teamName) {
         const teamModal = document.getElementById("teamModal");
         teamModal.classList.remove("hidden");
-        teamModal.classList.add("flex"); // Use flex for centering
-        document.getElementById("teamModalTitle").textContent = `لاعبو فريق ${teamName}`;
-        const playersListEl = document.getElementById("teamPlayersList");
-        playersListEl.innerHTML = `<li class="text-sm text-gray-500">جاري التحميل...</li>`;
+        teamModal.classList.add("flex");
+        document.getElementById("teamModalTitle").textContent = `معلومات فريق ${teamName}`;
+        
+        showTeamModalTab('players');
 
-        try {
-            const team = teamsData.find(t => t.name === teamName);
-            if (team) {
-                const players = team.players || [];
-                if (players.length > 0) {
-                    playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
-                } else {
-                    playersListEl.innerHTML = `<li>لا يوجد لاعبين مسجلين لهذا الفريق.</li>`;
-                }
+        // --- Display players ---
+        const playersListEl = document.getElementById("teamPlayersList");
+        playersListEl.innerHTML = '';
+        const team = teamsData.find(t => t.name === teamName);
+        if (team) {
+            const players = team.players || [];
+            if (players.length > 0) {
+                playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
             } else {
-                console.log("Team not found in local data:", teamName);
-                playersListEl.innerHTML = `<li>لم يتم العثور على الفريق في البيانات المحلية.</li>`;
+                playersListEl.innerHTML = `<li>لا يوجد لاعبين مسجلين لهذا الفريق.</li>`;
             }
-        } catch (error) {
-            console.error("خطأ في عرض اللاعبين:", error);
-            playersListEl.innerHTML = `<li class="text-red-600">حدث خطأ أثناء عرض البيانات.</li>`;
+        } else {
+            playersListEl.innerHTML = `<li>لم يتم العثور على الفريق.</li>`;
+        }
+
+        // --- Display matches ---
+        const matchesListEl = document.getElementById("teamMatchesList");
+        matchesListEl.innerHTML = '';
+        const teamMatches = matchesData
+            .filter(m => m.team1 === teamName || m.team2 === teamName)
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        if (teamMatches.length > 0) {
+            teamMatches.forEach(match => {
+                let matchHTML;
+                if (match.status === 'finished') {
+                    const isWinner = (match.team1 === teamName && match.score1 > match.score2) || (match.team2 === teamName && match.score2 > match.score1);
+                    const isLoser = (match.team1 === teamName && match.score1 < match.score2) || (match.team2 === teamName && match.score2 < match.score1);
+                    let bgColor = 'bg-yellow-100 border-yellow-400'; // Draw
+                    if (isWinner) bgColor = 'bg-green-100 border-green-400';
+                    if (isLoser) bgColor = 'bg-red-100 border-red-400';
+
+                    matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
+                                    <p class="text-xs text-gray-500">${new Date(match.date).toLocaleDateString('ar-SA')}</p>
+                                    <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
+                                    <p class="text-xs font-bold text-gray-600">انتهت</p>
+                                 </div>`;
+                } else {
+                    matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
+                                    <p class="text-xs text-gray-500">${new Date(match.date).toLocaleDateString('ar-SA')} - ${match.time}</p>
+                                    <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
+                                    <p class="text-xs font-bold text-gray-600">قادمة</p>
+                                 </div>`;
+                }
+                matchesListEl.innerHTML += matchHTML;
+            });
+        } else {
+            matchesListEl.innerHTML = `<p>لا توجد مباريات مجدولة لهذا الفريق.</p>`;
         }
     }
+    window.openTeamModal = openTeamModal;
 
     function closeTeamModal() {
-        const teamModal = document.getElementById("teamModal");
-        teamModal.classList.add("hidden");
-        teamModal.classList.remove("flex");
+        document.getElementById("teamModal").classList.add("hidden");
+        document.getElementById("teamModal").classList.remove("flex");
     }
-    window.openTeamModal = openTeamModal;
     window.closeTeamModal = closeTeamModal;
 
 
@@ -382,7 +450,7 @@
             const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
             const defaultTeams = [
                 { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", players: ["عبدالله", "سليمان", "إبراهيم", "حسن", "حسين", "علي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "عبدالله", players: ["محمود", "ادم", "مالك", "خالد", "وليد", "حسين"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", players: ["صالح", "سعود", "فيصل", "تركي", "نواف", "بندر"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
                 { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", players: ["منصور", "مشعل", "فارس", "ماجد", "طلال", "راكان"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
                 { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", players: ["عادل", "جمال", "كمال", "هشام", "وليد", "سامي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
                 { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", players: ["أيمن", "طارق", "زياد", "رياض", "عزام", "بسام"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
