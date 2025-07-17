@@ -9,8 +9,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', 'Inter', sans-serif; background: linear-gradient(135deg, #e0f2fe 0%, #cce7ff 50%, #b3daff 100%); background-attachment: fixed; position: relative; z-index: 1; }
-        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Coat_of_arms_of_Eritrea.svg/800px-Coat_of_arms_of_Eritrea.svg.png'), url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Flag_of_Eritrea.svg/800px-Flag_of_Eritrea.svg.png'); background-repeat: repeat; background-size: 200px auto; background-position: 0px 0px, 100px 100px; opacity: 0.1; filter: grayscale(100%); z-index: -1; pointer-events: none; }
+        body {
+            font-family: 'Cairo', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #cce7ff 50%, #b3daff 100%);
+            background-attachment: fixed;
+            position: relative;
+            z-index: 1;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Coat_of_arms_of_Eritrea.svg/800px-Coat_of_arms_of_Eritrea.svg.png'), url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Flag_of_Eritrea.svg/800px-Flag_of_Eritrea.svg.png');
+            background-repeat: repeat;
+            background-size: 200px auto;
+            background-position: 0px 0px, 100px 100px;
+            opacity: 0.1;
+            filter: grayscale(100%);
+            z-index: -1;
+            pointer-events: none;
+        }
         .page-section { display: none; }
         .page-section.active { display: block; }
         th, td { text-align: right; }
@@ -32,358 +53,737 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
-    <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" onclick="showSection('home'); return false;" class="text-white text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
-            <div class="space-x-1 sm:space-x-2 md:space-x-4 space-x-reverse flex items-center">
-                <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="home">الرئيسية</button>
-                <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="teams">الفرق</button>
-                <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="matches">المباريات</button>
-                <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="standings">الترتيب</button>
-                <button id="admin-login-nav-button" class="nav-button text-white hover:text-yellow-300 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="admin">المسؤول</button>
-                <button id="admin-logout-button" class="nav-button bg-red-600 text-white hover:bg-red-700 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" style="display: none;">تسجيل الخروج</button>
-            </div>
-        </div>
-    </nav>
-
-    <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
-        <div class="text-center mb-4 text-gray-600 text-sm">معرف المستخدم: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">جار التحميل...</span></div>
-
-        <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
-            <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">!Eritrean International League أهلاً بك في</h2>
-            <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
-                <div class="bg-blue-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-blue-500">
-                    <h3 class="text-xl sm:text-2xl font-bold text-blue-700 mb-3">الفرق</h3>
-                    <p class="text-sm sm:text-base text-gray-700 mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
-                    <button class="nav-button bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition" data-target="teams">عرض الفرق</button>
-                </div>
-                <div class="bg-green-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-green-500">
-                    <h3 class="text-xl sm:text-2xl font-bold text-green-700 mb-3">المباريات</h3>
-                    <p class="text-sm sm:text-base text-gray-700 mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
-                    <button class="nav-button bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition" data-target="matches">عرض المباريات</button>
-                </div>
-                <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-yellow-500">
-                    <h3 class="text-xl sm:text-2xl font-bold text-yellow-700 mb-3">ترتيب الدوري</h3>
-                    <p class="text-sm sm:text-base text-gray-700 mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
-                    <button class="nav-button bg-yellow-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-yellow-700 transition" data-target="standings">عرض الترتيب</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-            <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
-            <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8"></div>
-        </section>
-
-        <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-            <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
-            <div>
-                <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">نتائج المباريات</h3>
-                <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
-            </div>
-            <div class="mt-6 sm:mt-8">
-                <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">المباريات القادمة</h3>
-                <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"></div>
-            </div>
-        </section>
-
-        <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-            <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
-            <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-green-600 text-white">
-                        <tr>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الترتيب</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفريق</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">لعب</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">فاز</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">تعادل</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">خسر</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">له</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">عليه</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفرق</th>
-                            <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">النقاط</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-            <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
-            <div id="admin-password-prompt" class="max-w-md mx-auto">
-                <label for="admin-email" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
-                <input type="email" id="admin-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3 mb-4" placeholder="admin@example.com">
-                <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">كلمة المرور</label>
-                <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">دخول</button>
-                <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base"></p>
-            </div>
-            <div id="admin-content" class="max-w-2xl mx-auto">
-                <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">تحديث نتائج المباريات</h3>
-                <form id="update-score-form">
-                    <div class="mb-4">
-                        <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
-                        <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 sm:p-3"></select>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
-                            <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                        </div>
-                        <div>
-                            <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
-                            <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                        </div>
-                    </div>
-                    <div class="mb-4 flex items-center">
-                        <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                        <label for="reset-match-checkbox" class="mr-2 block text-base sm:text-lg text-gray-900">إعادة تعيين المباراة (جعلها قادمة)</label>
-                    </div>
-                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition">تحديث النتيجة</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
-        <div class="container mx-auto">
-            <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-
-    <div id="message-modal" class="modal">
-        <div class="modal-content p-4 sm:p-6">
-            <span class="close-button" id="close-modal-button">&times;</span>
-            <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
-            <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">موافق</button>
+<!-- Navigation Bar -->
+<nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="#" onclick="showSection('home'); return false;" class="text-white text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
+        <div class="space-x-1 sm:space-x-2 md:space-x-4 space-x-reverse flex items-center">
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="home">الرئيسية</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="teams">الفرق</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="matches">المباريات</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="standings">الترتيب</button>
+            <button id="admin-login-nav-button" class="nav-button text-white hover:text-yellow-300 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="admin">المسؤول</button>
+            <button id="admin-logout-button" class="nav-button bg-red-600 text-white hover:bg-red-700 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" style="display: none;">تسجيل الخروج</button>
         </div>
     </div>
+</nav>
 
-    <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<!-- Main Content -->
+<main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
+    <div class="text-center mb-4 text-gray-600 text-sm">معرف المستخدم: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">جار التحميل...</span></div>
 
-        // --- GLOBAL VARIABLES ---
-        let app, db, auth;
-        let userId;
-        let adminAuthenticated = false;
-        let teamsData = [];
-        let matchesData = [];
-        const appId = 'eritrea-league-app-gh'; 
+    <!-- Home Section -->
+    <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">!Eritrean International League أهلاً بك في</h2>
+        <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
+            <div class="bg-blue-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-blue-500">
+                <h3 class="text-xl sm:text-2xl font-bold text-blue-700 mb-3">الفرق</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
+                <button class="nav-button bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition" data-target="teams">عرض الفرق</button>
+            </div>
+            <div class="bg-green-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-green-500">
+                <h3 class="text-xl sm:text-2xl font-bold text-green-700 mb-3">المباريات</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
+                <button class="nav-button bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition" data-target="matches">عرض المباريات</button>
+            </div>
+            <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-yellow-500">
+                <h3 class="text-xl sm:text-2xl font-bold text-yellow-700 mb-3">ترتيب الدوري</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
+                <button class="nav-button bg-yellow-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-yellow-700 transition" data-target="standings">عرض الترتيب</button>
+            </div>
+        </div>
+    </section>
 
-        // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
-        async function initializeFirebase() {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
-                    authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
-                    projectId: "eritrean-international-l-7bc64",
-                    storageBucket: "eritrean-international-l-7bc64.appspot.com",
-                    messagingSenderId: "188029452555",
-                    appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
-                };
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                onAuthStateChanged(auth, (user) => {
-                    const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; 
-                    if (user && user.uid === adminUID) {
-                        userId = user.uid;
+    <!-- Teams Section -->
+    <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
+        <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+            <!-- Team cards will be inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Matches Section -->
+    <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
+        <div>
+            <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">نتائج المباريات</h3>
+            <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Past match cards will be inserted here -->
+            </div>
+        </div>
+        <div class="mt-6 sm:mt-8">
+            <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">المباريات القادمة</h3>
+            <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Upcoming match cards will be inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Standings Section -->
+    <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
+        <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-green-600 text-white">
+                    <tr>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الترتيب</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفريق</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">لعب</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">فاز</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">تعادل</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">خسر</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">له</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">عليه</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفرق</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">النقاط</th>
+                    </tr>
+                </thead>
+                <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Standings rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
+        <div id="admin-password-prompt" class="max-w-md mx-auto">
+            <label for="admin-email" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+            <input type="email" id="admin-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3 mb-4" placeholder="admin@example.com">
+            <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">كلمة المرور</label>
+            <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
+            <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">دخول</button>
+            <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base"></p>
+        </div>
+        <div id="admin-content" class="max-w-2xl mx-auto">
+            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">تحديث نتائج المباريات</h3>
+            <form id="update-score-form">
+                <div class="mb-4">
+                    <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
+                    <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 sm:p-3"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
+                        <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
+                    </div>
+                    <div>
+                        <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
+                        <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
+                    </div>
+                </div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="reset-match-checkbox" class="mr-2 block text-base sm:text-lg text-gray-900">إعادة تعيين المباراة (جعلها قادمة)</label>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition">تحديث النتيجة</button>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
+    <div class="container mx-auto">
+        <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
+    </div>
+</footer>
+
+<!-- Message Modal -->
+<div id="message-modal" class="modal">
+    <div class="modal-content p-4 sm:p-6">
+        <span class="close-button" id="close-modal-button">&times;</span>
+        <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
+        <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">موافق</button>
+    </div>
+</div>
+
+<!-- Players Modal -->
+<div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white w-96 rounded-xl shadow-lg p-6 text-right">
+    <h2 id="teamModalTitle" class="text-xl font-bold mb-4">اللاعبين</h2>
+    <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
+      <!-- Player names will be added here -->
+    </ul>
+    <button onclick="closeTeamModal()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">إغلاق</button>
+  </div>
+</div>
+
+
+<script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // --- GLOBAL VARIABLES ---
+    let app, db, auth;
+    let userId;
+    let adminAuthenticated = false;
+    let teamsData = [];
+    let matchesData = [];
+    let firebaseInitialized = false; // Flag to prevent multiple initializations
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'eritrea-league-app-gh'; // Use provided app ID with a fallback
+
+    // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+    async function initializeFirebase() {
+        try {
+            const firebaseConfigString = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+            if (!firebaseConfigString) {
+                showModal("إعدادات Firebase غير متوفرة. لا يمكن تشغيل التطبيق.");
+                console.error("Firebase config is missing.");
+                return;
+            }
+            const firebaseConfig = JSON.parse(firebaseConfigString);
+
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, (user) => {
+                const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
+
+                if (user) {
+                    // User is signed in.
+                    userId = user.uid;
+                    document.getElementById('user-id-display').textContent = userId;
+
+                    // Check if the user is the admin.
+                    if (user.uid === adminUID) {
                         adminAuthenticated = true;
-                        document.getElementById('user-id-display').textContent = userId;
                         document.getElementById('admin-login-nav-button').style.display = 'none';
                         document.getElementById('admin-logout-button').style.display = 'block';
                     } else {
                         adminAuthenticated = false;
                         document.getElementById('admin-login-nav-button').style.display = 'block';
                         document.getElementById('admin-logout-button').style.display = 'none';
-                        if (user) {
-                             userId = user.uid;
-                             document.getElementById('user-id-display').textContent = userId;
-                        } else {
-                           signInAnonymously(auth).catch(e => console.error("Anonymous sign in failed", e));
-                        }
                     }
-                    setupFirestoreListeners();
-                    initializeDefaultData();
-                });
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message);
-            }
-        }
-
-        function setupFirestoreListeners() {
-            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-            onSnapshot(teamsCollectionRef, (snapshot) => {
-                teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderAllActiveSections();
-            }, (error) => console.error("Error listening to teams:", error));
-            const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-            onSnapshot(matchesCollectionRef, (snapshot) => {
-                matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderAllActiveSections();
-            }, (error) => console.error("Error listening to matches:", error));
-        }
-
-        async function initializeDefaultData() {
-            try {
-                const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-                const teamsSnapshot = await getDocs(teamsCollectionRef);
-                let currentTeamsInDb = [];
-                if (teamsSnapshot.empty) {
-                    const defaultTeams = [ { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }, { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", playersCount: 10, startersCount: 6, points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }];
-                    for (const team of defaultTeams) { await addDoc(teamsCollectionRef, team); }
-                    currentTeamsInDb = defaultTeams;
-                } else { currentTeamsInDb = teamsSnapshot.docs.map(doc => doc.data()); }
-                const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-                const matchesSnapshot = await getDocs(matchesCollectionRef);
-                if (matchesSnapshot.empty && currentTeamsInDb.length > 0) {
-                    const generatedMatches = generateRoundRobinSchedule(currentTeamsInDb.map(team => team.name));
-                    for (const match of generatedMatches) { await addDoc(matchesCollectionRef, match); }
-                }
-            } catch (error) { console.error("Error initializing default data:", error); }
-        }
-
-        async function updateMatchInFirestore(matchId, score1, score2, status) {
-            try {
-                const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
-                await updateDoc(matchRef, { score1, score2, status });
-            } catch (error) {
-                console.error("Error updating match:", error);
-                showModal("فشل تحديث المباراة. تأكد أنك مسجل كمسؤول. الخطأ: " + error.message);
-            }
-        }
-        
-        function showModal(message) { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').style.display = 'flex'; }
-        function hideModal() { document.getElementById('message-modal').style.display = 'none'; }
-        
-        function generateRoundRobinSchedule(teamNames) {
-            const teams = [...teamNames]; if (teams.length % 2 !== 0) teams.push('BYE'); const numTeams = teams.length; const allMatches = []; let currentDate = new Date('2025-09-01T00:00:00'); const times = ['09:00 صباحاً', '09:40 صباحاً']; let timeIndex = 0; let matchesOnCurrentDay = 0;
-            for (let round = 0; round < numTeams - 1; round++) {
-                for (let i = 0; i < numTeams / 2; i++) {
-                    const team1 = teams[i]; const team2 = teams[numTeams - 1 - i]; if (team1 === 'BYE' || team2 === 'BYE') continue;
-                    while (currentDate.getDay() === 5 || currentDate.getDay() === 6) { currentDate.setDate(currentDate.getDate() + 1); timeIndex = 0; matchesOnCurrentDay = 0; }
-                    allMatches.push({ team1, team2, date: currentDate.toISOString().slice(0, 10), time: times[timeIndex], location: "الملعب الرئيسي", status: "upcoming", score1: null, score2: null, round: round + 1 });
-                    matchesOnCurrentDay++;
-                    if (matchesOnCurrentDay >= 2) { matchesOnCurrentDay = 0; timeIndex = 0; currentDate.setDate(currentDate.getDate() + 1); } else { timeIndex++; }
-                }
-                teams.splice(1, 0, teams.pop());
-            }
-            return allMatches;
-        }
-
-        function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
-            const team = teamsData.find(t => t.name === teamName); const opponent = teamsData.find(t => t.name === opponentName); if (!team || !opponent) return;
-            team.matchesPlayed++; opponent.matchesPlayed++; team.goalsFor += scoreTeam; team.goalsAgainst += scoreOpponent; opponent.goalsFor += scoreOpponent; opponent.goalsAgainst += scoreTeam;
-            if (scoreTeam > scoreOpponent) { team.wins++; team.points += 3; opponent.losses++; } 
-            else if (scoreTeam < scoreOpponent) { team.losses++; opponent.wins++; opponent.points += 3; } 
-            else { team.draws++; opponent.draws++; team.points += 1; opponent.points += 1; }
-        }
-
-        function calculateStandings() {
-            teamsData.forEach(team => { team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0; team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0; });
-            matchesData.forEach(match => { if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') { updateTeamStats(match.team1, match.team2, match.score1, match.score2); } });
-            teamsData.forEach(team => { team.goalDifference = team.goalsFor - team.goalsAgainst; });
-        }
-
-        function renderTeams() {
-            const container = document.getElementById('teams-container'); container.innerHTML = ''; if (!teamsData || teamsData.length === 0) { container.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد فرق.</p>`; return; }
-            teamsData.forEach(team => { container.innerHTML += `<div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200"><img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover"><h3 class="text-2xl font-bold text-blue-800">${team.name}</h3><p class="text-lg text-gray-700">القائد: <span class="font-semibold">${team.captain}</span></p></div>`; });
-        }
-
-        function renderMatches() {
-            const upcoming = document.getElementById('upcoming-matches'); const past = document.getElementById('past-matches'); const heading = document.getElementById('upcoming-matches-heading'); upcoming.innerHTML = ''; past.innerHTML = ''; if (!matchesData) return;
-            const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a,b) => new Date(a.date) - new Date(b.date));
-            const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a,b) => new Date(b.date) - new Date(a.date));
-            if (pastMatches.length === 0) { past.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة.</p>`; } else { pastMatches.forEach(match => { const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' }); past.innerHTML += `<div class="bg-red-50 rounded-xl card-shadow p-4 border-2 border-red-300"><p class="text-sm text-gray-500 mb-2">${day}، ${match.date}</p><p class="text-2xl font-bold text-center text-gray-800">${match.team1} <span class="text-red-600">${match.score1}-${match.score2}</span> ${match.team2}</p><p class="text-lg text-center text-red-700 font-semibold">انتهت</p></div>`; }); }
-            if (upcomingMatches.length === 0) { heading.style.display = 'block'; upcoming.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`; } else { heading.style.display = 'block'; upcomingMatches.forEach(match => { const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' }); upcoming.innerHTML += `<div class="bg-gray-50 rounded-xl card-shadow p-4 border-2 border-blue-300"><p class="text-sm text-gray-500 mb-2">${day}، ${match.date} - ${match.time}</p><p class="text-lg font-semibold text-gray-800">${match.team1} <span class="text-blue-600 font-bold text-xl">VS</span> ${match.team2}</p><p class="text-lg text-center text-blue-500 font-semibold mb-2">مباراة قادمة</p><p class="sm text-gray-600 text-center">المكان: ${match.location}</p></div>`; }); }
-        }
-
-        function renderStandings() {
-            const tableBody = document.getElementById('standings-table-body'); tableBody.innerHTML = ''; if (!teamsData || teamsData.length === 0) { tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات.</td></tr>`; return; }
-            const sortedTeams = [...teamsData].sort((a, b) => { if (b.points !== a.points) return b.points - a.points; if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference; return b.goalsFor - a.goalsFor; });
-            sortedTeams.forEach((team, index) => { tableBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td><td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${team.name}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td><td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td><td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td></tr>`; });
-        }
-
-        function populateAdminMatchSelector() {
-            const matchSelect = document.getElementById('match-select'); const selectedValue = matchSelect.value; matchSelect.innerHTML = '<option value="">-- اختر مباراة --</option>'; if (!matchesData) return;
-            const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
-            sortedMatches.forEach(match => { const statusText = match.status === 'upcoming' ? ' (قادمة)' : ' (انتهت)'; const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : ''; matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})${scoreText}${statusText}</option>`; });
-            matchSelect.value = selectedValue;
-        }
-
-        function updateScoreLabels() {
-            const matchSelect = document.getElementById('match-select'); const selectedMatchId = matchSelect.value; const score1Label = document.getElementById('score1-label'); const score2Label = document.getElementById('score2-label'); const score1Input = document.getElementById('score1'); const score2Input = document.getElementById('score2');
-            if (selectedMatchId) { const selectedMatch = matchesData.find(m => m.id == selectedMatchId); if (selectedMatch) { score1Label.textContent = `نتيجة ${selectedMatch.team1}`; score2Label.textContent = `نتيجة ${selectedMatch.team2}`; score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : ''; score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : ''; } } 
-            else { score1Label.textContent = 'نتيجة الفريق الأول'; score2Label.textContent = 'نتيجة الفريق الثاني'; score1Input.value = ''; score2Input.value = ''; }
-        }
-
-        function renderAllActiveSections() {
-            const activeSection = document.querySelector('.page-section.active'); if (!activeSection) { showSection('home'); return; }
-            const sectionId = activeSection.id;
-            if (sectionId === 'teams') renderTeams();
-            else if (sectionId === 'matches') renderMatches();
-            else if (sectionId === 'standings') { calculateStandings(); renderStandings(); }
-            else if (sectionId === 'admin' && adminAuthenticated) { populateAdminMatchSelector(); updateScoreLabels(); }
-        }
-
-        function showSection(sectionId) {
-            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            if (sectionId === 'admin') {
-                if (adminAuthenticated) {
-                    document.getElementById('admin-password-prompt').style.display = 'none';
-                    document.getElementById('admin-content').style.display = 'block';
-                    populateAdminMatchSelector();
-                    updateScoreLabels();
+                    
+                    // Initialize data listeners only once after authentication is confirmed.
+                    if (!firebaseInitialized) {
+                        setupFirestoreListeners();
+                        initializeDefaultData();
+                        firebaseInitialized = true;
+                    }
                 } else {
-                    document.getElementById('admin-password-prompt').style.display = 'block';
-                    document.getElementById('admin-content').style.display = 'none';
+                    // User is signed out, so sign them in.
+                    adminAuthenticated = false;
+                    document.getElementById('user-id-display').textContent = 'جاري المصادقة...';
+                    document.getElementById('admin-login-nav-button').style.display = 'block';
+                    document.getElementById('admin-logout-button').style.display = 'none';
+
+                    // Use the provided custom token if available, otherwise sign in anonymously.
+                    const customToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    if (customToken) {
+                        signInWithCustomToken(auth, customToken).catch(e => {
+                            console.error("Custom token sign in failed, trying anonymous", e);
+                            signInAnonymously(auth).catch(e => console.error("Anonymous sign in failed", e));
+                        });
+                    } else {
+                        signInAnonymously(auth).catch(e => console.error("Anonymous sign in failed", e));
+                    }
                 }
-            } else { renderAllActiveSections(); }
+            });
+        } catch (error) {
+            console.error("Error initializing Firebase:", error);
+            showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message);
+        }
+    }
+
+    // --- TEAM MODAL FUNCTIONS ---
+    async function openTeamModal(teamName) {
+        const teamModal = document.getElementById("teamModal");
+        teamModal.classList.remove("hidden");
+        teamModal.classList.add("flex"); // Use flex for centering
+        document.getElementById("teamModalTitle").textContent = `لاعبو فريق ${teamName}`;
+        const playersListEl = document.getElementById("teamPlayersList");
+        playersListEl.innerHTML = `<li class="text-sm text-gray-500">جاري التحميل...</li>`;
+
+        try {
+            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+            const q = query(teamsCollectionRef, where("name", "==", teamName));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                const teamDoc = querySnapshot.docs[0]; // Get the first matching document
+                const data = teamDoc.data();
+                const players = data.players || [];
+                if (players.length > 0) {
+                    playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
+                } else {
+                    playersListEl.innerHTML = `<li>لا يوجد لاعبين مسجلين لهذا الفريق.</li>`;
+                }
+            } else {
+                console.log("No such document for team:", teamName);
+                playersListEl.innerHTML = `<li>لم يتم العثور على الفريق في قاعدة البيانات.</li>`;
+            }
+        } catch (error) {
+            console.error("خطأ في جلب اللاعبين:", error);
+            playersListEl.innerHTML = `<li class="text-red-600">حدث خطأ أثناء جلب البيانات.</li>`;
+        }
+    }
+
+    function closeTeamModal() {
+        const teamModal = document.getElementById("teamModal");
+        teamModal.classList.add("hidden");
+        teamModal.classList.remove("flex");
+    }
+    // Expose functions to global scope for inline onclick handlers
+    window.openTeamModal = openTeamModal;
+    window.closeTeamModal = closeTeamModal;
+
+
+    // --- FIRESTORE LISTENERS ---
+    function setupFirestoreListeners() {
+        // Listener for teams collection
+        const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+        onSnapshot(teamsCollectionRef, (snapshot) => {
+            teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderAllActiveSections(); // Re-render UI with new data
+        }, (error) => console.error("Error listening to teams:", error));
+
+        // Listener for matches collection
+        const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+        onSnapshot(matchesCollectionRef, (snapshot) => {
+            matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderAllActiveSections(); // Re-render UI with new data
+        }, (error) => console.error("Error listening to matches:", error));
+    }
+
+    // --- DATA INITIALIZATION ---
+    async function initializeDefaultData() {
+        try {
+            // Check if teams exist, if not, create them
+            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+            const teamsSnapshot = await getDocs(teamsCollectionRef);
+            let currentTeamsInDb = [];
+
+            if (teamsSnapshot.empty) {
+                console.log("No teams found. Initializing default teams...");
+                const defaultTeams = [
+                    { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", players: ["عبدالله", "سليمان", "إبراهيم", "حسن", "حسين", "علي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", players: ["صالح", "سعود", "فيصل", "تركي", "نواف", "بندر"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", players: ["منصور", "مشعل", "فارس", "ماجد", "طلال", "راكان"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", players: ["عادل", "جمال", "كمال", "هشام", "وليد", "سامي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", players: ["أيمن", "طارق", "زياد", "رياض", "عزام", "بسام"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", players: ["مروان", "غسان", "عصام", "وائل", "لؤي", "مهند"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", players: ["قصي", "فادي", "رامي", "هاني", "شادي", "حاتم"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", players: ["إياد", "جواد", "رائد", "فراس", "أمجد", "مؤيد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", players: ["رشيد", "سفيان", "ياسين", "زكريا", "يحيى", "إلياس"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", players: ["عمران", "موسى", "هارون", "داود", "يعقوب", "إسحاق"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+                    { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", players: ["آدم", "نوح", "إدريس", "هود", "شعيب", "أيوب"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }
+                ];
+                for (const team of defaultTeams) {
+                    await addDoc(teamsCollectionRef, team);
+                }
+                currentTeamsInDb = defaultTeams;
+            } else {
+                currentTeamsInDb = teamsSnapshot.docs.map(doc => doc.data());
+            }
+
+            // Check if matches exist, if not, generate them
+            const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+            const matchesSnapshot = await getDocs(matchesCollectionRef);
+            if (matchesSnapshot.empty && currentTeamsInDb.length > 0) {
+                console.log("No matches found. Generating schedule...");
+                const generatedMatches = generateRoundRobinSchedule(currentTeamsInDb.map(team => team.name));
+                for (const match of generatedMatches) {
+                    await addDoc(matchesCollectionRef, match);
+                }
+            }
+        } catch (error) {
+            console.error("Error initializing default data:", error);
+        }
+    }
+    
+    // --- DATABASE UPDATES ---
+    async function updateMatchInFirestore(matchId, score1, score2, status) {
+        try {
+            const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
+            await updateDoc(matchRef, { score1, score2, status });
+        } catch (error) {
+            console.error("Error updating match:", error);
+            showModal("فشل تحديث المباراة. تأكد أنك مسجل كمسؤول. الخطأ: " + error.message);
+        }
+    }
+
+    // --- UI & MODAL ---
+    function showModal(message) {
+        document.getElementById('modal-message').textContent = message;
+        document.getElementById('message-modal').style.display = 'flex';
+    }
+
+    function hideModal() {
+        document.getElementById('message-modal').style.display = 'none';
+    }
+
+    // --- LOGIC & CALCULATIONS ---
+    function generateRoundRobinSchedule(teamNames) {
+        const teams = [...teamNames];
+        if (teams.length % 2 !== 0) teams.push('BYE'); // Add a bye if odd number of teams
+        const numTeams = teams.length;
+        const allMatches = [];
+        let currentDate = new Date('2025-09-01T00:00:00');
+        const times = ['09:00 صباحاً', '09:40 صباحاً'];
+        let timeIndex = 0;
+        let matchesOnCurrentDay = 0;
+
+        for (let round = 0; round < numTeams - 1; round++) {
+            for (let i = 0; i < numTeams / 2; i++) {
+                const team1 = teams[i];
+                const team2 = teams[numTeams - 1 - i];
+
+                if (team1 === 'BYE' || team2 === 'BYE') continue; // Skip bye matches
+                
+                // Skip weekends (Friday and Saturday)
+                while (currentDate.getDay() === 5 || currentDate.getDay() === 6) {
+                    currentDate.setDate(currentDate.getDate() + 1);
+                    timeIndex = 0;
+                    matchesOnCurrentDay = 0;
+                }
+
+                allMatches.push({
+                    team1,
+                    team2,
+                    date: currentDate.toISOString().slice(0, 10),
+                    time: times[timeIndex],
+                    location: "الملعب الرئيسي",
+                    status: "upcoming",
+                    score1: null,
+                    score2: null,
+                    round: round + 1
+                });
+
+                matchesOnCurrentDay++;
+                if (matchesOnCurrentDay >= 2) { // Max 2 matches per day
+                    matchesOnCurrentDay = 0;
+                    timeIndex = 0;
+                    currentDate.setDate(currentDate.getDate() + 1);
+                } else {
+                    timeIndex++;
+                }
+            }
+            // Rotate teams for next round
+            teams.splice(1, 0, teams.pop());
+        }
+        return allMatches;
+    }
+
+    function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
+        const team = teamsData.find(t => t.name === teamName);
+        const opponent = teamsData.find(t => t.name === opponentName);
+        if (!team || !opponent) return;
+
+        team.matchesPlayed++;
+        opponent.matchesPlayed++;
+        team.goalsFor += scoreTeam;
+        team.goalsAgainst += scoreOpponent;
+        opponent.goalsFor += scoreOpponent;
+        opponent.goalsAgainst += scoreTeam;
+
+        if (scoreTeam > scoreOpponent) { // Team wins
+            team.wins++;
+            team.points += 3;
+            opponent.losses++;
+        } else if (scoreTeam < scoreOpponent) { // Opponent wins
+            team.losses++;
+            opponent.wins++;
+            opponent.points += 3;
+        } else { // Draw
+            team.draws++;
+            opponent.draws++;
+            team.points += 1;
+            opponent.points += 1;
+        }
+    }
+
+    function calculateStandings() {
+        // Reset stats before recalculating
+        teamsData.forEach(team => {
+            team.matchesPlayed = 0;
+            team.wins = 0;
+            team.draws = 0;
+            team.losses = 0;
+            team.goalsFor = 0;
+            team.goalsAgainst = 0;
+            team.points = 0;
+        });
+
+        // Recalculate based on finished matches
+        matchesData.forEach(match => {
+            if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
+                updateTeamStats(match.team1, match.team2, match.score1, match.score2);
+            }
+        });
+
+        // Calculate goal difference
+        teamsData.forEach(team => {
+            team.goalDifference = team.goalsFor - team.goalsAgainst;
+        });
+    }
+
+    // --- RENDER FUNCTIONS ---
+    function renderTeams() {
+        const container = document.getElementById('teams-container');
+        container.innerHTML = '';
+        if (!teamsData || teamsData.length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد فرق.</p>`;
+            return;
+        }
+        teamsData.forEach(team => {
+            container.innerHTML += `
+                <div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200">
+                    <img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
+                    <h3 class="text-2xl font-bold text-blue-800">
+                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span>
+                    </h3>
+                    <p class="text-lg text-gray-700">القائد: <span class="font-semibold">${team.captain}</span></p>
+                </div>`;
+        });
+    }
+
+    function renderMatches() {
+        const upcomingContainer = document.getElementById('upcoming-matches');
+        const pastContainer = document.getElementById('past-matches');
+        const upcomingHeading = document.getElementById('upcoming-matches-heading');
+        upcomingContainer.innerHTML = '';
+        pastContainer.innerHTML = '';
+
+        if (!matchesData) return;
+
+        const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
+        const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (pastMatches.length === 0) {
+            pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة.</p>`;
+        } else {
+            pastMatches.forEach(match => {
+                const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' });
+                pastContainer.innerHTML += `
+                    <div class="bg-red-50 rounded-xl card-shadow p-4 border-2 border-red-300">
+                        <p class="text-sm text-gray-500 mb-2">${day}، ${match.date}</p>
+                        <p class="text-2xl font-bold text-center text-gray-800">
+                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span> 
+                            <span class="text-red-600">${match.score1}-${match.score2}</span> 
+                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
+                        </p>
+                        <p class="text-lg text-center text-red-700 font-semibold">انتهت</p>
+                    </div>`;
+            });
         }
 
-        // --- EVENT LISTENERS ---
-        document.querySelectorAll('.nav-button[data-target]').forEach(button => {
-            button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
+        if (upcomingMatches.length === 0) {
+            upcomingHeading.style.display = 'block';
+            upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`;
+        } else {
+            upcomingHeading.style.display = 'block';
+            upcomingMatches.forEach(match => {
+                const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' });
+                upcomingContainer.innerHTML += `
+                    <div class="bg-gray-50 rounded-xl card-shadow p-4 border-2 border-blue-300">
+                        <p class="text-sm text-gray-500 mb-2">${day}، ${match.date} - ${match.time}</p>
+                        <p class="text-lg font-semibold text-gray-800">
+                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span> 
+                            <span class="text-blue-600 font-bold text-xl">VS</span> 
+                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
+                        </p>
+                        <p class="text-lg text-center text-blue-500 font-semibold mb-2">مباراة قادمة</p>
+                        <p class="sm text-gray-600 text-center">المكان: ${match.location}</p>
+                    </div>`;
+            });
+        }
+    }
+
+    function renderStandings() {
+        const tableBody = document.getElementById('standings-table-body');
+        tableBody.innerHTML = '';
+        if (!teamsData || teamsData.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات.</td></tr>`;
+            return;
+        }
+
+        const sortedTeams = [...teamsData].sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+            return b.goalsFor - a.goalsFor;
         });
 
-        document.getElementById('admin-login-button').addEventListener('click', async () => {
-            const email = document.getElementById('admin-email').value; const password = document.getElementById('admin-password').value; const errorMsg = document.getElementById('admin-password-error'); errorMsg.style.display = 'none';
-            if (!email || !password) { errorMsg.textContent = "الرجاء إدخال البريد الإلكتروني وكلمة المرور."; errorMsg.style.display = 'block'; return; }
-            try { await signInWithEmailAndPassword(auth, email, password); showModal('تم تسجيل الدخول بنجاح كمسؤول!'); showSection('admin'); } 
-            catch (error) { errorMsg.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.'; errorMsg.style.display = 'block'; }
+        sortedTeams.forEach((team, index) => {
+            tableBody.innerHTML += `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                        <span class="text-blue-600 hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span>
+                    </td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td>
+                    <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td>
+                </tr>`;
         });
+    }
 
-        document.getElementById('admin-logout-button').addEventListener('click', () => {
-            signOut(auth).then(() => { showModal('تم تسجيل الخروج بنجاح.'); showSection('home'); }).catch((error) => console.error('Sign out error', error));
+    function populateAdminMatchSelector() {
+        const matchSelect = document.getElementById('match-select');
+        const selectedValue = matchSelect.value; // Preserve selection
+        matchSelect.innerHTML = '<option value="">-- اختر مباراة --</option>';
+        if (!matchesData) return;
+
+        const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+        sortedMatches.forEach(match => {
+            const statusText = match.status === 'upcoming' ? ' (قادمة)' : ' (انتهت)';
+            const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
+            matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})${scoreText}${statusText}</option>`;
         });
+        matchSelect.value = selectedValue;
+    }
+    
+    function updateScoreLabels() {
+        const matchSelect = document.getElementById('match-select');
+        const selectedMatchId = matchSelect.value;
+        const score1Label = document.getElementById('score1-label');
+        const score2Label = document.getElementById('score2-label');
+        const score1Input = document.getElementById('score1');
+        const score2Input = document.getElementById('score2');
 
-        document.getElementById('update-score-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const matchId = document.getElementById('match-select').value; if (!matchId) { showModal('الرجاء اختيار مباراة.'); return; }
-            const score1Input = document.getElementById('score1'); const score2Input = document.getElementById('score2'); const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
-            let newStatus, newScore1, newScore2;
-            if (resetMatchCheckbox.checked) { newStatus = 'upcoming'; newScore1 = null; newScore2 = null; } 
-            else { newScore1 = parseInt(score1Input.value, 10); newScore2 = parseInt(score2Input.value, 10); if (isNaN(newScore1) || isNaN(newScore2)) { showModal('الرجاء إدخال نتيجة رقمية صحيحة.'); return; } newStatus = 'finished'; }
-            await updateMatchInFirestore(matchId, newScore1, newScore2, newStatus);
-            document.getElementById('update-score-form').reset();
+        if (selectedMatchId) {
+            const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+            if (selectedMatch) {
+                score1Label.textContent = `نتيجة ${selectedMatch.team1}`;
+                score2Label.textContent = `نتيجة ${selectedMatch.team2}`;
+                score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : '';
+                score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : '';
+            }
+        } else {
+            score1Label.textContent = 'نتيجة الفريق الأول';
+            score2Label.textContent = 'نتيجة الفريق الثاني';
+            score1Input.value = '';
+            score2Input.value = '';
+        }
+    }
+
+    function renderAllActiveSections() {
+        const activeSection = document.querySelector('.page-section.active');
+        if (!activeSection) {
+            showSection('home');
+            return;
+        }
+        const sectionId = activeSection.id;
+
+        if (sectionId === 'teams') renderTeams();
+        else if (sectionId === 'matches') renderMatches();
+        else if (sectionId === 'standings') {
+            calculateStandings();
+            renderStandings();
+        } else if (sectionId === 'admin' && adminAuthenticated) {
+            populateAdminMatchSelector();
             updateScoreLabels();
-            showModal('تم تحديث المباراة بنجاح!');
-        });
+        }
+    }
 
-        document.getElementById('close-modal-button').addEventListener('click', hideModal);
-        document.getElementById('modal-ok-button').addEventListener('click', hideModal);
-        window.addEventListener('click', (event) => { if (event.target === document.getElementById('message-modal')) { hideModal(); } });
+    function showSection(sectionId) {
+        document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
 
-        // --- INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', initializeFirebase);
-    </script>
+        if (sectionId === 'admin') {
+            if (adminAuthenticated) {
+                document.getElementById('admin-password-prompt').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                populateAdminMatchSelector();
+                updateScoreLabels();
+            } else {
+                document.getElementById('admin-password-prompt').style.display = 'block';
+                document.getElementById('admin-content').style.display = 'none';
+            }
+        } else {
+            renderAllActiveSections();
+        }
+    }
+
+    // --- EVENT LISTENERS ---
+    document.querySelectorAll('.nav-button[data-target]').forEach(button => {
+        button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
+    });
+
+    document.getElementById('admin-login-button').addEventListener('click', async () => {
+        const email = document.getElementById('admin-email').value;
+        const password = document.getElementById('admin-password').value;
+        const errorMsg = document.getElementById('admin-password-error');
+        errorMsg.style.display = 'none';
+
+        if (!email || !password) {
+            errorMsg.textContent = "الرجاء إدخال البريد الإلكتروني وكلمة المرور.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            showModal('تم تسجيل الدخول بنجاح كمسؤول!');
+            showSection('admin');
+        } catch (error) {
+            errorMsg.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    document.getElementById('admin-logout-button').addEventListener('click', () => {
+        signOut(auth).then(() => {
+            showModal('تم تسجيل الخروج بنجاح.');
+            showSection('home');
+        }).catch((error) => console.error('Sign out error', error));
+    });
+
+    document.getElementById('update-score-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const matchId = document.getElementById('match-select').value;
+        if (!matchId) {
+            showModal('الرجاء اختيار مباراة.');
+            return;
+        }
+        const score1Input = document.getElementById('score1');
+        const score2Input = document.getElementById('score2');
+        const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
+        let newStatus, newScore1, newScore2;
+
+        if (resetMatchCheckbox.checked) {
+            newStatus = 'upcoming';
+            newScore1 = null;
+            newScore2 = null;
+        } else {
+            newScore1 = parseInt(score1Input.value, 10);
+            newScore2 = parseInt(score2Input.value, 10);
+            if (isNaN(newScore1) || isNaN(newScore2)) {
+                showModal('الرجاء إدخال نتيجة رقمية صحيحة.');
+                return;
+            }
+            newStatus = 'finished';
+        }
+        await updateMatchInFirestore(matchId, newScore1, newScore2, newStatus);
+        document.getElementById('update-score-form').reset();
+        updateScoreLabels();
+        showModal('تم تحديث المباراة بنجاح!');
+    });
+    
+    document.getElementById('match-select').addEventListener('change', updateScoreLabels);
+
+    document.getElementById('close-modal-button').addEventListener('click', hideModal);
+    document.getElementById('modal-ok-button').addEventListener('click', hideModal);
+    window.addEventListener('click', (event) => {
+        if (event.target === document.getElementById('message-modal')) {
+            hideModal();
+        }
+    });
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', initializeFirebase);
+
+</script>
 </body>
 </html>
