@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Cairo', 'Inter', sans-serif;
+            font-family: 'Inter', 'Cairo', sans-serif;
             background: linear-gradient(135deg, #e0f2fe 0%, #cce7ff 50%, #b3daff 100%);
             background-attachment: fixed;
             position: relative;
@@ -34,7 +34,7 @@
         }
         .page-section { display: none; }
         .page-section.active { display: block; }
-        th, td { text-align: right; }
+        th, td { text-align: left; }
         th { font-size: 0.8rem; }
         td { font-size: 0.9rem; }
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -44,7 +44,7 @@
         #admin-content, #admin-password-error { display: none; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); max-width: 450px; text-align: center; position: relative; border: 2px solid #4682B4; }
-        .close-button { color: #888; float: left; font-size: 32px; font-weight: bold; position: absolute; top: 10px; left: 15px; transition: color 0.2s ease; }
+        .close-button { color: #888; float: right; font-size: 32px; font-weight: bold; position: absolute; top: 10px; right: 15px; transition: color 0.2s ease; }
         .close-button:hover, .close-button:focus { color: #333; cursor: pointer; }
         .card-shadow { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .card-shadow:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.15); }
@@ -56,49 +56,48 @@
 <!-- Navigation Bar -->
 <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
     <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
-        <a href="#" onclick="showSection('home'); return false;" class="text-white text-center sm:text-right text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
+        <a href="#" onclick="showSection('home'); return false;" class="text-white text-center sm:text-left text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
         <div class="flex flex-wrap justify-center sm:justify-end items-center gap-x-1 gap-y-2 sm:gap-x-2">
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="home">الرئيسية</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="teams">الفرق</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="matches">المباريات</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="standings">الترتيب</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="scorers">الهدافون</button>
-            <button id="admin-login-nav-button" class="nav-button text-white hover:text-yellow-300 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="admin">المسؤول</button>
-            <button id="admin-logout-button" class="nav-button bg-red-600 text-white hover:bg-red-700 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" style="display: none;">تسجيل الخروج</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="home">Home</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="teams">Teams</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="matches">Matches</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="standings">Standings</button>
+            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="scorers">Scorers</button>
+            <button class="nav-button text-white hover:text-yellow-300 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="admin">Admin</button>
         </div>
     </div>
 </nav>
 
 <!-- Main Content -->
 <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
-    <div class="text-center mb-4 text-gray-600 text-sm">معرف المستخدم: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">جار التحميل...</span></div>
+    <div class="text-center mb-4 text-gray-600 text-sm">User ID: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">Loading...</span></div>
 
     <!-- Home Section -->
     <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">!Eritrean International League أهلاً بك في</h2>
-        <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">هنا يمكنك متابعة كل ما يتعلق بدوري السفارة الإرترية.</p>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">Welcome to the Eritrean International League!</h2>
+        <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">Here you can follow everything related to the Eritrean Embassy League.</p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
             <div class="bg-blue-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-blue-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-blue-700 mb-3">الفرق</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">تعرف على الفرق المشاركة واللاعبين المميزين.</p>
-                <button class="nav-button bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition" data-target="teams">عرض الفرق</button>
+                <h3 class="text-xl sm:text-2xl font-bold text-blue-700 mb-3">Teams</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">Get to know the participating teams and their star players.</p>
+                <button class="nav-button bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition" data-target="teams">View Teams</button>
             </div>
             <div class="bg-green-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-green-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-green-700 mb-3">المباريات</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">اكتشف مواعيد المباريات والنتائج المباشرة.</p>
-                <button class="nav-button bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition" data-target="matches">عرض المباريات</button>
+                <h3 class="text-xl sm:text-2xl font-bold text-green-700 mb-3">Matches</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">Discover match schedules and live results.</p>
+                <button class="nav-button bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition" data-target="matches">View Matches</button>
             </div>
             <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-yellow-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-yellow-700 mb-3">ترتيب الدوري</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">اطلع على ترتيب الفرق في الدوري وعدد النقاط.</p>
-                <button class="nav-button bg-yellow-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-yellow-700 transition" data-target="standings">عرض الترتيب</button>
+                <h3 class="text-xl sm:text-2xl font-bold text-yellow-700 mb-3">League Standings</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4">Check out the team standings and points.</p>
+                <button class="nav-button bg-yellow-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-yellow-700 transition" data-target="standings">View Standings</button>
             </div>
         </div>
     </section>
 
     <!-- Teams Section -->
     <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">الفرق المشاركة</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Participating Teams</h2>
         <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
             <!-- Team cards will be inserted here by JavaScript -->
         </div>
@@ -106,15 +105,15 @@
 
     <!-- Matches Section -->
     <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">جدول ونتائج المباريات</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Match Schedule & Results</h2>
         <div>
-            <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">نتائج المباريات</h3>
+            <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">Match Results</h3>
             <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <!-- Past match cards will be inserted here -->
             </div>
         </div>
         <div class="mt-6 sm:mt-8">
-            <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">المباريات القادمة</h3>
+            <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">Upcoming Matches</h3>
             <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <!-- Upcoming match cards will be inserted here -->
             </div>
@@ -123,21 +122,21 @@
 
     <!-- Standings Section -->
     <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">ترتيب الدوري</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">League Standings</h2>
         <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-green-600 text-white">
                     <tr>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الترتيب</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفريق</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">لعب</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">فاز</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">تعادل</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">خسر</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">له</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">عليه</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفرق</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">النقاط</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Rank</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Team</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">P</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">W</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">D</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">L</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GF</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GA</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GD</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Pts</th>
                     </tr>
                 </thead>
                 <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
@@ -149,15 +148,15 @@
 
     <!-- Scorers Section -->
     <section id="scorers" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">قائمة الهدافين</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Top Scorers</h2>
         <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-yellow-600 text-white">
                     <tr>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الترتيب</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">اللاعب</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الفريق</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-right text-xs font-medium uppercase">الأهداف</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Rank</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Player</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Team</th>
+                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Goals</th>
                     </tr>
                 </thead>
                 <tbody id="scorers-table-body" class="bg-white divide-y divide-gray-200">
@@ -169,46 +168,62 @@
 
     <!-- Admin Section -->
     <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">لوحة تحكم المسؤول</h2>
+        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Admin Control Panel</h2>
         <div id="admin-password-prompt" class="max-w-md mx-auto">
-            <label for="admin-email" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+            <label for="admin-email" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Email</label>
             <input type="email" id="admin-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3 mb-4" placeholder="admin@example.com">
-            <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">كلمة المرور</label>
+            <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Password</label>
             <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-            <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">دخول</button>
+            <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">Login</button>
             <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base"></p>
         </div>
         <div id="admin-content" class="max-w-2xl mx-auto">
-            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">تحديث نتائج المباريات</h3>
+            <button id="admin-logout-button" class="w-full mb-6 bg-red-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-700 transition">Logout</button>
+            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">Update Match Data</h3>
             <form id="update-score-form">
                 <div class="mb-4">
-                    <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">اختر المباراة</label>
+                    <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Select Match</label>
                     <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 sm:p-3"></select>
                 </div>
+                
+                <!-- Date and Time inputs -->
+                <div id="date-time-inputs" class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="match-date" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Match Date</label>
+                        <input type="date" id="match-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
+                    </div>
+                    <div>
+                        <label for="match-time" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Match Time</label>
+                        <input type="time" id="match-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
+                    </div>
+                </div>
+
+                <!-- Score inputs -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الأول</label>
+                        <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Team 1 Score</label>
                         <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
                     </div>
                     <div>
-                        <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">نتيجة الفريق الثاني</label>
+                        <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Team 2 Score</label>
                         <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
                     </div>
                 </div>
+
                 <div id="scorers-input-section" class="hidden mt-4 border-t pt-4">
                     <!-- Scorer inputs will be rendered here -->
                 </div>
                 <div class="mb-4 flex items-center">
                     <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="reset-match-checkbox" class="mr-2 block text-base sm:text-lg text-gray-900">إعادة تعيين المباراة (جعلها قادمة)</label>
+                    <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900">Reset Match (make it upcoming)</label>
                 </div>
-                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition">تحديث النتيجة</button>
+                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition">Update Data</button>
             </form>
 
             <div class="mt-8 border-t pt-6">
-                <h3 class="text-xl sm:text-2xl font-semibold text-red-700 mb-4">منطقة الخطر</h3>
-                <p class="text-gray-600 mb-4">استخدم هذا الزر فقط إذا كنت تريد حذف جميع بيانات البطولة (الفرق، المباريات، النتائج) والبدء من جديد بالبيانات الافتراضية. هذا الإجراء لا يمكن التراجع عنه.</p>
-                <button id="reset-data-button" class="w-full bg-red-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-800 transition">إعادة تهيئة بيانات البطولة</button>
+                <h3 class="text-xl sm:text-2xl font-semibold text-red-700 mb-4">Danger Zone</h3>
+                <p class="text-gray-600 mb-4">Use this button only if you want to delete all tournament data (teams, matches, results) and start over with the default data. This action cannot be undone.</p>
+                <button id="reset-data-button" class="w-full bg-red-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-800 transition">Reset Tournament Data</button>
             </div>
         </div>
     </section>
@@ -218,7 +233,7 @@
 <!-- Footer -->
 <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
     <div class="container mx-auto">
-        <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. جميع الحقوق محفوظة.</p>
+        <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. All rights reserved.</p>
     </div>
 </footer>
 
@@ -227,45 +242,40 @@
     <div class="modal-content p-4 sm:p-6">
         <span class="close-button" id="close-modal-button">&times;</span>
         <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
-        <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">موافق</button>
+        <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">OK</button>
     </div>
 </div>
 
 <!-- Team Info Modal -->
 <div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-  <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 text-right">
-    <h2 id="teamModalTitle" class="text-xl font-bold mb-4"></h2>
-    
-    <!-- Tabs -->
-    <div class="border-b border-gray-200">
-      <nav class="-mb-px flex space-x-4 space-x-reverse" aria-label="Tabs">
-        <button onclick="showTeamModalTab('players')" id="players-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-          اللاعبون
-        </button>
-        <button onclick="showTeamModalTab('matches')" id="matches-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-          المباريات
-        </button>
-      </nav>
-    </div>
+    <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 text-left">
+        <h2 id="teamModalTitle" class="text-xl font-bold mb-4"></h2>
+        <!-- Tabs -->
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                <button onclick="showTeamModalTab('players')" id="players-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Players</button>
+                <button onclick="showTeamModalTab('matches')" id="matches-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matches</button>
+            </nav>
+        </div>
 
-    <!-- Tab Content -->
-    <div class="mt-4 max-h-64 overflow-y-auto">
-      <!-- Players Panel -->
-      <div id="players-panel" class="team-modal-panel">
-        <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
-          <!-- Player names will be added here -->
-        </ul>
-      </div>
-      <!-- Matches Panel -->
-      <div id="matches-panel" class="team-modal-panel hidden">
-         <div id="teamMatchesList" class="space-y-3">
-            <!-- Team matches will be added here -->
-         </div>
-      </div>
-    </div>
+        <!-- Tab Content -->
+        <div class="mt-4 max-h-64 overflow-y-auto">
+            <!-- Players Panel -->
+            <div id="players-panel" class="team-modal-panel">
+                <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
+                    <!-- Player names will be added here -->
+                </ul>
+            </div>
+            <!-- Matches Panel -->
+            <div id="matches-panel" class="team-modal-panel hidden">
+                <div id="teamMatchesList" class="space-y-3">
+                    <!-- Team matches will be added here -->
+                </div>
+            </div>
+        </div>
 
-    <button onclick="closeTeamModal()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">إغلاق</button>
-  </div>
+        <button onclick="closeTeamModal()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">Close</button>
+    </div>
 </div>
 
 <!-- Confirmation Modal -->
@@ -273,713 +283,717 @@
     <div class="modal-content p-4 sm:p-6">
         <p id="confirm-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
         <div class="flex justify-center gap-4">
-            <button id="confirm-ok-button" class="bg-red-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-700 transition">تأكيد</button>
-            <button id="confirm-cancel-button" class="bg-gray-300 text-gray-800 px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-400 transition">إلغاء</button>
+            <button id="confirm-ok-button" class="bg-red-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-700 transition">Confirm</button>
+            <button id="confirm-cancel-button" class="bg-gray-300 text-gray-800 px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-400 transition">Cancel</button>
         </div>
     </div>
 </div>
 
 
 <script type="module">
-    // Firebase imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // --- GLOBAL VARIABLES ---
-    let app, db, auth;
-    let userId;
-    let adminAuthenticated = false;
-    let teamsData = [];
-    let matchesData = [];
-    let firebaseInitialized = false; // Flag to prevent multiple initializations
-    const appId = 'eritrea-league-app-gh'; // Fallback App ID for GitHub Pages
-    let confirmCallback = null;
+// --- GLOBAL VARIABLES ---
+let app, db, auth;
+let userId;
+let adminAuthenticated = false;
+let teamsData = [];
+let matchesData = [];
+let firebaseInitialized = false; // Flag to prevent multiple initializations
+const appId = 'eritrea-league-app-gh'; // Fallback App ID for GitHub Pages
+let confirmCallback = null;
 
-    // --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
-    async function initializeFirebase() {
-        try {
-            // Your web app's Firebase configuration
-            const firebaseConfig = {
-              apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
-              authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
-              projectId: "eritrean-international-l-7bc64",
-              storageBucket: "eritrean-international-l-7bc64.appspot.com",
-              messagingSenderId: "188029452555",
-              appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
-            };
+// --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+async function initializeFirebase() {
+    try {
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
+            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
+            projectId: "eritrean-international-l-7bc64",
+            storageBucket: "eritrean-international-l-7bc64.appspot.com",
+            messagingSenderId: "188029452555",
+            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
+        };
 
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
 
-            onAuthStateChanged(auth, (user) => {
-                const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
+        onAuthStateChanged(auth, (user) => {
+            const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
 
-                if (user) {
-                    userId = user.uid;
-                    document.getElementById('user-id-display').textContent = userId;
+            if (user) {
+                userId = user.uid;
+                document.getElementById('user-id-display').textContent = userId;
 
-                    if (user.uid === adminUID) {
-                        adminAuthenticated = true;
-                        document.getElementById('admin-login-nav-button').style.display = 'none';
-                        document.getElementById('admin-logout-button').style.display = 'block';
-                    } else {
-                        adminAuthenticated = false;
-                        document.getElementById('admin-login-nav-button').style.display = 'block';
-                        document.getElementById('admin-logout-button').style.display = 'none';
-                    }
-                    
-                    if (!firebaseInitialized) {
-                        setupFirestoreListeners();
-                        checkAndCreateInitialData();
-                        firebaseInitialized = true;
-                    }
+                if (user.uid === adminUID) {
+                    adminAuthenticated = true;
                 } else {
                     adminAuthenticated = false;
-                    document.getElementById('user-id-display').textContent = 'جاري المصادقة...';
-                    document.getElementById('admin-login-nav-button').style.display = 'block';
-                    document.getElementById('admin-logout-button').style.display = 'none';
-                    
-                    signInAnonymously(auth).catch(error => {
-                        console.error("Anonymous sign in failed", error);
-                        if (error.code === 'auth/network-request-failed') {
-                            showModal("فشل تسجيل الدخول. قد يكون السبب أن نطاق الموقع (Domain) غير مضاف إلى قائمة النطاقات المصرح بها في إعدادات المصادقة بمشروع Firebase. يرجى مراجعة إعدادات مشروعك والتأكد من إضافة النطاق.");
-                        } else {
-                            showModal("فشل تسجيل الدخول المجهول: " + error.message);
-                        }
-                    });
                 }
-            });
-        } catch (error) {
-            console.error("Error initializing Firebase:", error);
-            showModal("حدث خطأ أثناء تهيئة التطبيق: " + error.message);
-        }
-    }
-
-    // --- TEAM INFO MODAL FUNCTIONS ---
-    function showTeamModalTab(tabName) {
-        document.querySelectorAll('.team-modal-panel').forEach(panel => panel.classList.add('hidden'));
-        document.querySelectorAll('.team-modal-tab').forEach(tab => {
-            tab.classList.remove('border-blue-500', 'text-blue-600');
-            tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-        });
-
-        document.getElementById(`${tabName}-panel`).classList.remove('hidden');
-        const activeTab = document.getElementById(`${tabName}-tab`);
-        activeTab.classList.add('border-blue-500', 'text-blue-600');
-        activeTab.classList.remove('border-transparent', 'text-gray-500');
-    }
-    window.showTeamModalTab = showTeamModalTab;
-
-    async function openTeamModal(teamName) {
-        const teamModal = document.getElementById("teamModal");
-        teamModal.classList.remove("hidden");
-        teamModal.classList.add("flex");
-        document.getElementById("teamModalTitle").textContent = `معلومات فريق ${teamName}`;
-        
-        showTeamModalTab('players');
-
-        // --- Display players ---
-        const playersListEl = document.getElementById("teamPlayersList");
-        playersListEl.innerHTML = '';
-        const team = teamsData.find(t => t.name === teamName);
-        if (team) {
-            const players = team.players || [];
-            if (players.length > 0) {
-                playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
+                if (!firebaseInitialized) {
+                    setupFirestoreListeners();
+                    checkAndCreateInitialData();
+                    firebaseInitialized = true;
+                }
             } else {
-                playersListEl.innerHTML = `<li>لا يوجد لاعبين مسجلين لهذا الفريق.</li>`;
+                adminAuthenticated = false;
+                document.getElementById('user-id-display').textContent = 'Authenticating...';
+                signInAnonymously(auth).catch(error => {
+                    console.error("Anonymous sign in failed", error);
+                    if (error.code === 'auth/network-request-failed') {
+                         showModal("Login failed. The website's domain might not be authorized in your Firebase project's authentication settings. Please check your project configuration and add the domain.");
+                    } else {
+                        showModal("Anonymous sign in failed: " + error.message);
+                    }
+                });
             }
-        } else {
-            playersListEl.innerHTML = `<li>لم يتم العثور على الفريق.</li>`;
-        }
-
-        // --- Display matches ---
-        const matchesListEl = document.getElementById("teamMatchesList");
-        matchesListEl.innerHTML = '';
-        const teamMatches = matchesData
-            .filter(m => m.team1 === teamName || m.team2 === teamName)
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        if (teamMatches.length > 0) {
-            teamMatches.forEach(match => {
-                let matchHTML;
-                if (match.status === 'finished') {
-                    const isWinner = (match.team1 === teamName && match.score1 > match.score2) || (match.team2 === teamName && match.score2 > match.score1);
-                    const isLoser = (match.team1 === teamName && match.score1 < match.score2) || (match.team2 === teamName && match.score2 < match.score1);
-                    let bgColor = 'bg-yellow-100 border-yellow-400'; // Draw
-                    if (isWinner) bgColor = 'bg-green-100 border-green-400';
-                    if (isLoser) bgColor = 'bg-red-100 border-red-400';
-
-                    matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
-                                    <p class="text-xs text-gray-500">${new Date(match.date).toLocaleDateString('ar-SA')}</p>
-                                    <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
-                                    <p class="text-xs font-bold text-gray-600">انتهت</p>
-                                 </div>`;
-                } else {
-                    matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
-                                    <p class="text-xs text-gray-500">${new Date(match.date).toLocaleDateString('ar-SA')} - ${match.time}</p>
-                                    <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
-                                    <p class="text-xs font-bold text-gray-600">قادمة</p>
-                                 </div>`;
-                }
-                matchesListEl.innerHTML += matchHTML;
-            });
-        } else {
-            matchesListEl.innerHTML = `<p>لا توجد مباريات مجدولة لهذا الفريق.</p>`;
-        }
+        });
+    } catch (error) {
+        console.error("Error initializing Firebase:", error);
+        showModal("Error initializing the application: " + error.message);
     }
-    window.openTeamModal = openTeamModal;
+}
 
-    function closeTeamModal() {
-        document.getElementById("teamModal").classList.add("hidden");
-        document.getElementById("teamModal").classList.remove("flex");
+// --- TEAM INFO MODAL FUNCTIONS ---
+function showTeamModalTab(tabName) {
+    document.querySelectorAll('.team-modal-panel').forEach(panel => panel.classList.add('hidden'));
+    document.querySelectorAll('.team-modal-tab').forEach(tab => {
+        tab.classList.remove('border-blue-500', 'text-blue-600');
+        tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+    });
+
+    document.getElementById(`${tabName}-panel`).classList.remove('hidden');
+    const activeTab = document.getElementById(`${tabName}-tab`);
+    activeTab.classList.add('border-blue-500', 'text-blue-600');
+    activeTab.classList.remove('border-transparent', 'text-gray-500');
+}
+window.showTeamModalTab = showTeamModalTab;
+
+async function openTeamModal(teamName) {
+    const teamModal = document.getElementById("teamModal");
+    teamModal.classList.remove("hidden");
+    teamModal.classList.add("flex");
+    document.getElementById("teamModalTitle").textContent = `Team Info: ${teamName}`;
+    showTeamModalTab('players');
+
+    // --- Display players ---
+    const playersListEl = document.getElementById("teamPlayersList");
+    playersListEl.innerHTML = '';
+    const team = teamsData.find(t => t.name === teamName);
+    if (team) {
+        const players = team.players || [];
+        if (players.length > 0) {
+            playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
+        } else {
+            playersListEl.innerHTML = `<li>No registered players for this team.</li>`;
+        }
+    } else {
+        playersListEl.innerHTML = `<li>Team not found.</li>`;
     }
-    window.closeTeamModal = closeTeamModal;
+
+    // --- Display matches ---
+    const matchesListEl = document.getElementById("teamMatchesList");
+    matchesListEl.innerHTML = '';
+    const teamMatches = matchesData
+        .filter(m => m.team1 === teamName || m.team2 === teamName)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if (teamMatches.length > 0) {
+        teamMatches.forEach(match => {
+            let matchHTML;
+            if (match.status === 'finished') {
+                const isWinner = (match.team1 === teamName && match.score1 > match.score2) || (match.team2 === teamName && match.score2 > match.score1);
+                const isLoser = (match.team1 === teamName && match.score1 < match.score2) || (match.team2 === teamName && match.score2 < match.score1);
+                let bgColor = 'bg-yellow-100 border-yellow-400'; // Draw
+                if (isWinner) bgColor = 'bg-green-100 border-green-400';
+                if (isLoser) bgColor = 'bg-red-100 border-red-400';
+
+                matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
+                    <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)}</p>
+                    <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
+                    <p class="text-xs font-bold text-gray-600">Finished</p>
+                </div>`;
+            } else {
+                matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
+                    <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)} - ${formatTimeForDisplay(match.time)}</p>
+                    <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
+                    <p class="text-xs font-bold text-gray-600">Upcoming</p>
+                </div>`;
+            }
+            matchesListEl.innerHTML += matchHTML;
+        });
+    } else {
+        matchesListEl.innerHTML = `<p>No scheduled matches for this team.</p>`;
+    }
+}
+window.openTeamModal = openTeamModal;
+
+function closeTeamModal() {
+    document.getElementById("teamModal").classList.add("hidden");
+    document.getElementById("teamModal").classList.remove("flex");
+}
+window.closeTeamModal = closeTeamModal;
 
 
-    // --- FIRESTORE LISTENERS ---
-    function setupFirestoreListeners() {
+// --- FIRESTORE LISTENERS ---
+function setupFirestoreListeners() {
+    const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+    onSnapshot(teamsCollectionRef, (snapshot) => {
+        teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAllActiveSections(); 
+    }, (error) => console.error("Error listening to teams:", error));
+
+    const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+    onSnapshot(matchesCollectionRef, (snapshot) => {
+        matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAllActiveSections(); 
+    }, (error) => console.error("Error listening to matches:", error));
+}
+
+// --- DATA INITIALIZATION ---
+async function checkAndCreateInitialData() {
+    try {
         const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-        onSnapshot(teamsCollectionRef, (snapshot) => {
-            teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderAllActiveSections(); 
-        }, (error) => console.error("Error listening to teams:", error));
+        const teamsSnapshot = await getDocs(teamsCollectionRef);
+        if (teamsSnapshot.empty) {
+            console.log("No teams found. Initializing default data...");
+            await initializeDefaultData();
+        }
+    } catch (error) {
+        console.error("Error checking for initial data:", error);
+    }
+}
+async function initializeDefaultData() {
+    try {
+        const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+        const defaultTeams = [
+            { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", players: ["عبدالله", "سليمان", "إبراهيم", "حسن", "حسين", "علي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", players: ["صالح", "سعود", "فيصل", "تركي", "نواف", "بندر"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", players: ["منصور", "مشعل", "فارس", "ماجد", "طلال", "راكان"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", players: ["عادل", "جمال", "كمال", "هشام", "وليد", "سامي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", players: ["أيمن", "طارق", "زياد", "رياض", "عزام", "بسام"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", players: ["مروان", "غسان", "عصام", "وائل", "لؤي", "مهند"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", players: ["قصي", "فادي", "رامي", "هاني", "شادي", "حاتم"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", players: ["إياد", "جواد", "رائد", "فراس", "أمجد", "مؤيد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", players: ["رشيد", "سفيان", "ياسين", "زكريا", "يحيى", "إلياس"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", players: ["عمران", "موسى", "هارون", "داود", "يعقوب", "إسحاق"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", players: ["آدم", "نوح", "إدريس", "هود", "شعيب", "أيوب"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+        ];
+        let teamNames = [];
+        for (const team of defaultTeams) {
+            await addDoc(teamsCollectionRef, team);
+            teamNames.push(team.name);
+        }
+        console.log("Default teams initialized.");
 
         const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-        onSnapshot(matchesCollectionRef, (snapshot) => {
-            matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderAllActiveSections(); 
-        }, (error) => console.error("Error listening to matches:", error));
-    }
-
-    // --- DATA INITIALIZATION ---
-    async function checkAndCreateInitialData() {
-        try {
-            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-            const teamsSnapshot = await getDocs(teamsCollectionRef);
-            if (teamsSnapshot.empty) {
-                console.log("No teams found. Initializing default data...");
-                await initializeDefaultData();
-            }
-        } catch (error) {
-            console.error("Error checking for initial data:", error);
+        const generatedMatches = generateRoundRobinSchedule(teamNames);
+        for (const match of generatedMatches) {
+            await addDoc(matchesCollectionRef, match);
         }
+        console.log("Default matches initialized.");
+
+    } catch (error) {
+        console.error("Error initializing default data:", error);
     }
-    
-    async function initializeDefaultData() {
-        try {
-            const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-            const defaultTeams = [
-                { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "أحمد", players: ["عبدالله", "سليمان", "إبراهيم", "حسن", "حسين", "علي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "خالد", players: ["صالح", "سعود", "فيصل", "تركي", "نواف", "بندر"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "محمد", players: ["منصور", "مشعل", "فارس", "ماجد", "طلال", "راكان"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "يوسف", players: ["عادل", "جمال", "كمال", "هشام", "وليد", "سامي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "فهد", players: ["أيمن", "طارق", "زياد", "رياض", "عزام", "بسام"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "علي", players: ["مروان", "غسان", "عصام", "وائل", "لؤي", "مهند"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "سعيد", players: ["قصي", "فادي", "رامي", "هاني", "شادي", "حاتم"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "ناصر", players: ["إياد", "جواد", "رائد", "فراس", "أمجد", "مؤيد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "11A", logo: "https://placehold.co/100x100/F5CBA7/000000?text=11A", captain: "محمود", players: ["رشيد", "سفيان", "ياسين", "زكريا", "يحيى", "إلياس"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "عمر", players: ["عمران", "موسى", "هارون", "داود", "يعقوب", "إسحاق"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-                { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "بدر", players: ["آدم", "نوح", "إدريس", "هود", "شعيب", "أيوب"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 }
-            ];
-            let teamNames = [];
-            for (const team of defaultTeams) {
-                await addDoc(teamsCollectionRef, team);
-                teamNames.push(team.name);
+}
+// --- DATABASE UPDATES ---
+async function updateMatchInFirestore(matchId, dataToUpdate) {
+    try {
+        const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
+        await updateDoc(matchRef, dataToUpdate);
+    } catch (error) {
+        console.error("Error updating match:", error);
+        showModal("Failed to update match. Ensure you are logged in as an admin. Error: " + error.message);
+    }
+}
+
+// --- UI & MODAL ---
+function showModal(message) {
+    document.getElementById('modal-message').textContent = message;
+    document.getElementById('message-modal').style.display = 'flex';
+}
+
+function hideModal() {
+    document.getElementById('message-modal').style.display = 'none';
+}
+
+function showConfirmModal(message, onConfirm) {
+    document.getElementById('confirm-message').textContent = message;
+    confirmCallback = onConfirm;
+    document.getElementById('confirm-modal').style.display = 'flex';
+}
+
+function hideConfirmModal() {
+    document.getElementById('confirm-modal').style.display = 'none';
+    confirmCallback = null;
+}
+
+
+// --- LOGIC & CALCULATIONS ---
+function formatDate_YYYYMMDD(dateString) {
+    if (!dateString) return '';
+    // The date is already in YYYY-MM-DD format, so just replace hyphens with slashes.
+    return dateString.replace(/-/g, '/');
+}
+
+function formatTimeForDisplay(time24) {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':');
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const formattedHours = h % 12 || 12;
+    return `${formattedHours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+}
+
+function generateRoundRobinSchedule(teamNames) {
+    const teams = [...teamNames];
+    if (teams.length % 2 !== 0) teams.push('BYE'); 
+    const numTeams = teams.length;
+    const allMatches = [];
+    let currentDate = new Date('2025-09-01T00:00:00');
+    const times = ['09:00', '09:40']; // Use 24-hour format
+    let timeIndex = 0;
+    let matchesOnCurrentDay = 0;
+
+    for (let round = 0; round < numTeams - 1; round++) {
+        for (let i = 0; i < numTeams / 2; i++) {
+            const team1 = teams[i];
+            const team2 = teams[numTeams - 1 - i];
+
+            if (team1 === 'BYE' || team2 === 'BYE') continue;
+
+            while (currentDate.getDay() === 5 || currentDate.getDay() === 6) { // Skip Friday and Saturday
+                currentDate.setDate(currentDate.getDate() + 1);
+                timeIndex = 0;
+                matchesOnCurrentDay = 0;
             }
-            console.log("Default teams initialized.");
 
-            const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-            const generatedMatches = generateRoundRobinSchedule(teamNames);
-            for (const match of generatedMatches) {
-                await addDoc(matchesCollectionRef, match);
+            allMatches.push({
+                team1,
+                team2,
+                date: currentDate.toISOString().slice(0, 10),
+                time: times[timeIndex],
+                location: "Main Stadium",
+                status: "upcoming",
+                score1: null, score2: null,
+                scorers: { team1: [], team2: [] },
+                round: round + 1
+            });
+            
+            matchesOnCurrentDay++;
+            if (matchesOnCurrentDay >= 2) { 
+                matchesOnCurrentDay = 0;
+                timeIndex = 0;
+                currentDate.setDate(currentDate.getDate() + 1);
+            } else {
+                timeIndex++;
             }
-            console.log("Default matches initialized.");
-
-        } catch (error) {
-            console.error("Error initializing default data:", error);
         }
+        teams.splice(1, 0, teams.pop());
     }
-    
-    // --- DATABASE UPDATES ---
-    async function updateMatchInFirestore(matchId, dataToUpdate) {
-        try {
-            const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
-            await updateDoc(matchRef, dataToUpdate);
-        } catch (error) {
-            console.error("Error updating match:", error);
-            showModal("فشل تحديث المباراة. تأكد أنك مسجل كمسؤول. الخطأ: " + error.message);
+    return allMatches;
+}
+
+function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
+    const team = teamsData.find(t => t.name === teamName);
+    const opponent = teamsData.find(t => t.name === opponentName);
+    if (!team || !opponent) return;
+
+    team.matchesPlayed++;
+    opponent.matchesPlayed++;
+    team.goalsFor += scoreTeam;
+    team.goalsAgainst += scoreOpponent;
+    opponent.goalsFor += scoreOpponent;
+    opponent.goalsAgainst += scoreTeam;
+
+    if (scoreTeam > scoreOpponent) {
+        team.wins++; team.points += 3; opponent.losses++;
+    } else if (scoreTeam < scoreOpponent) {
+        team.losses++; opponent.wins++; opponent.points += 3;
+    } else {
+        team.draws++; opponent.draws++; team.points += 1; opponent.points += 1;
+    }
+}
+
+function calculateStandings() {
+    teamsData.forEach(team => {
+        team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0;
+        team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
+    });
+
+    matchesData.forEach(match => {
+        if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
+            updateTeamStats(match.team1, match.team2, match.score1, match.score2);
         }
-    }
+    });
 
-    // --- UI & MODAL ---
-    function showModal(message) {
-        document.getElementById('modal-message').textContent = message;
-        document.getElementById('message-modal').style.display = 'flex';
-    }
+    teamsData.forEach(team => {
+        team.goalDifference = team.goalsFor - team.goalsAgainst;
+    });
+}
+function calculateTopScorers() {
+    const playerGoals = {};
 
-    function hideModal() {
-        document.getElementById('message-modal').style.display = 'none';
-    }
-
-    function showConfirmModal(message, onConfirm) {
-        document.getElementById('confirm-message').textContent = message;
-        confirmCallback = onConfirm;
-        document.getElementById('confirm-modal').style.display = 'flex';
-    }
-
-    function hideConfirmModal() {
-        document.getElementById('confirm-modal').style.display = 'none';
-        confirmCallback = null;
-    }
-
-
-    // --- LOGIC & CALCULATIONS ---
-    function generateRoundRobinSchedule(teamNames) {
-        const teams = [...teamNames];
-        if (teams.length % 2 !== 0) teams.push('BYE'); 
-        const numTeams = teams.length;
-        const allMatches = [];
-        let currentDate = new Date('2025-09-01T00:00:00');
-        const times = ['09:00 صباحاً', '09:40 صباحاً'];
-        let timeIndex = 0;
-        let matchesOnCurrentDay = 0;
-
-        for (let round = 0; round < numTeams - 1; round++) {
-            for (let i = 0; i < numTeams / 2; i++) {
-                const team1 = teams[i];
-                const team2 = teams[numTeams - 1 - i];
-
-                if (team1 === 'BYE' || team2 === 'BYE') continue;
-                
-                while (currentDate.getDay() === 5 || currentDate.getDay() === 6) {
-                    currentDate.setDate(currentDate.getDate() + 1);
-                    timeIndex = 0;
-                    matchesOnCurrentDay = 0;
-                }
-
-                allMatches.push({
-                    team1, team2,
-                    date: currentDate.toISOString().slice(0, 10),
-                    time: times[timeIndex],
-                    location: "الملعب الرئيسي",
-                    status: "upcoming",
-                    score1: null, score2: null,
-                    scorers: { team1: [], team2: [] },
-                    round: round + 1
+    matchesData.forEach(match => {
+        if (match.status === 'finished' && match.scorers) {
+            // Process scorers for team1
+            if (match.scorers.team1) {
+                match.scorers.team1.forEach(scorer => {
+                    if (!playerGoals[scorer.name]) {
+                        playerGoals[scorer.name] = { goals: 0, team: match.team1 };
+                    }
+                    playerGoals[scorer.name].goals += scorer.goals;
                 });
-
-                matchesOnCurrentDay++;
-                if (matchesOnCurrentDay >= 2) { 
-                    matchesOnCurrentDay = 0;
-                    timeIndex = 0;
-                    currentDate.setDate(currentDate.getDate() + 1);
-                } else {
-                    timeIndex++;
-                }
             }
-            teams.splice(1, 0, teams.pop());
-        }
-        return allMatches;
-    }
-
-    function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
-        const team = teamsData.find(t => t.name === teamName);
-        const opponent = teamsData.find(t => t.name === opponentName);
-        if (!team || !opponent) return;
-
-        team.matchesPlayed++;
-        opponent.matchesPlayed++;
-        team.goalsFor += scoreTeam;
-        team.goalsAgainst += scoreOpponent;
-        opponent.goalsFor += scoreOpponent;
-        opponent.goalsAgainst += scoreTeam;
-
-        if (scoreTeam > scoreOpponent) {
-            team.wins++; team.points += 3; opponent.losses++;
-        } else if (scoreTeam < scoreOpponent) {
-            team.losses++; opponent.wins++; opponent.points += 3;
-        } else {
-            team.draws++; opponent.draws++; team.points += 1; opponent.points += 1;
-        }
-    }
-
-    function calculateStandings() {
-        teamsData.forEach(team => {
-            team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0;
-            team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
-        });
-
-        matchesData.forEach(match => {
-            if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
-                updateTeamStats(match.team1, match.team2, match.score1, match.score2);
+            // Process scorers for team2
+            if (match.scorers.team2) {
+                match.scorers.team2.forEach(scorer => {
+                    if (!playerGoals[scorer.name]) {
+                        playerGoals[scorer.name] = { goals: 0, team: match.team2 };
+                    }
+                    playerGoals[scorer.name].goals += scorer.goals;
+                });
             }
-        });
-
-        teamsData.forEach(team => {
-            team.goalDifference = team.goalsFor - team.goalsAgainst;
-        });
-    }
-    
-    function calculateTopScorers() {
-        const playerGoals = {};
-
-        matchesData.forEach(match => {
-            if (match.status === 'finished' && match.scorers) {
-                // Process scorers for team1
-                if (match.scorers.team1) {
-                    match.scorers.team1.forEach(scorer => {
-                        if (!playerGoals[scorer.name]) {
-                            playerGoals[scorer.name] = { goals: 0, team: match.team1 };
-                        }
-                        playerGoals[scorer.name].goals += scorer.goals;
-                    });
-                }
-                // Process scorers for team2
-                if (match.scorers.team2) {
-                     match.scorers.team2.forEach(scorer => {
-                        if (!playerGoals[scorer.name]) {
-                            playerGoals[scorer.name] = { goals: 0, team: match.team2 };
-                        }
-                        playerGoals[scorer.name].goals += scorer.goals;
-                    });
-                }
-            }
-        });
-
-        // Convert to array and sort
-        return Object.entries(playerGoals)
-            .map(([name, data]) => ({ name, ...data }))
-            .sort((a, b) => b.goals - a.goals);
-    }
-
-    // --- RENDER FUNCTIONS ---
-    function renderTeams() {
-        const container = document.getElementById('teams-container');
-        container.innerHTML = '';
-        if (!teamsData || teamsData.length === 0) {
-            container.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد فرق.</p>`;
-            return;
         }
-        teamsData.forEach(team => {
-            container.innerHTML += `
-                <div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200">
-                    <img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
-                    <h3 class="text-2xl font-bold text-blue-800">
-                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span>
-                    </h3>
-                    <p class="text-lg text-gray-700">القائد: <span class="font-semibold">${team.captain}</span></p>
+    });
+
+    // Convert to array and sort
+    return Object.entries(playerGoals)
+        .map(([name, data]) => ({ name, ...data }))
+        .sort((a, b) => b.goals - a.goals);
+}
+
+// --- RENDER FUNCTIONS ---
+function renderTeams() {
+    const container = document.getElementById('teams-container');
+    container.innerHTML = '';
+    if (!teamsData || teamsData.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-500 col-span-full">No teams.</p>`;
+        return;
+    }
+    teamsData.forEach(team => {
+        container.innerHTML += `
+            <div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200">
+                <img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
+                <h3 class="text-2xl font-bold text-blue-800"><span class="hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></h3>
+                <p class="text-lg text-gray-700">Captain: <span class="font-semibold">${team.captain}</span></p>
+            </div>`;
+    });
+}
+
+function renderMatches() {
+    const upcomingContainer = document.getElementById('upcoming-matches');
+    const pastContainer = document.getElementById('past-matches');
+    const upcomingHeading = document.getElementById('upcoming-matches-heading');
+    upcomingContainer.innerHTML = '';
+    pastContainer.innerHTML = '';
+
+    if (!matchesData) return;
+
+    const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
+    const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (pastMatches.length === 0) {
+        pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No past matches.</p>`;
+    } else {
+        pastMatches.forEach(match => {
+            const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
+            pastContainer.innerHTML += `
+                <div class="bg-red-50 rounded-xl card-shadow p-4 border-2 border-red-300">
+                    <p class="text-sm text-gray-500 mb-2">${day}, ${formatDate_YYYYMMDD(match.date)}</p>
+                    <p class="text-2xl font-bold text-center text-gray-800">
+                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span>&nbsp;
+                        <span class="text-red-600">${match.score1}-${match.score2}</span>&nbsp;
+                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
+                    </p>
+                    <p class="text-lg text-center text-red-700 font-semibold">Finished</p>
                 </div>`;
         });
     }
 
-    function renderMatches() {
-        const upcomingContainer = document.getElementById('upcoming-matches');
-        const pastContainer = document.getElementById('past-matches');
-        const upcomingHeading = document.getElementById('upcoming-matches-heading');
-        upcomingContainer.innerHTML = '';
-        pastContainer.innerHTML = '';
-
-        if (!matchesData) return;
-
-        const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
-        const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        if (pastMatches.length === 0) {
-            pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات سابقة.</p>`;
-        } else {
-            pastMatches.forEach(match => {
-                const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' });
-                pastContainer.innerHTML += `
-                    <div class="bg-red-50 rounded-xl card-shadow p-4 border-2 border-red-300">
-                        <p class="text-sm text-gray-500 mb-2">${day}، ${match.date}</p>
-                        <p class="text-2xl font-bold text-center text-gray-800">
-                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span> 
-                            <span class="text-red-600">${match.score1}-${match.score2}</span> 
-                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
-                        </p>
-                        <p class="text-lg text-center text-red-700 font-semibold">انتهت</p>
-                    </div>`;
-            });
-        }
-
-        if (upcomingMatches.length === 0) {
-            upcomingHeading.style.display = 'block';
-            upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">لا توجد مباريات قادمة.</p>`;
-        } else {
-            upcomingHeading.style.display = 'block';
-            upcomingMatches.forEach(match => {
-                const day = new Date(match.date).toLocaleDateString('ar-SA', { weekday: 'long' });
-                upcomingContainer.innerHTML += `
-                    <div class="bg-gray-50 rounded-xl card-shadow p-4 border-2 border-blue-300">
-                        <p class="text-sm text-gray-500 mb-2">${day}، ${match.date} - ${match.time}</p>
-                        <p class="text-lg font-semibold text-gray-800">
-                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span> 
-                            <span class="text-blue-600 font-bold text-xl">VS</span> 
-                            <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
-                        </p>
-                        <p class="text-lg text-center text-blue-500 font-semibold mb-2">مباراة قادمة</p>
-                        <p class="sm text-gray-600 text-center">المكان: ${match.location}</p>
-                    </div>`;
-            });
-        }
-    }
-
-    function renderStandings() {
-        const tableBody = document.getElementById('standings-table-body');
-        tableBody.innerHTML = '';
-        if (!teamsData || teamsData.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">لا توجد بيانات.</td></tr>`;
-            return;
-        }
-
-        const sortedTeams = [...teamsData].sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
-            if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
-            return b.goalsFor - a.goalsFor;
-        });
-
-        sortedTeams.forEach((team, index) => {
-            tableBody.innerHTML += `
-                <tr class="hover:bg-gray-50">
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
-                        <span class="text-blue-600 hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span>
-                    </td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td>
-                </tr>`;
+    if (upcomingMatches.length === 0) {
+        upcomingHeading.style.display = 'block';
+        upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No upcoming matches.</p>`;
+    } else {
+        upcomingHeading.style.display = 'block';
+        upcomingMatches.forEach(match => {
+            const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
+            upcomingContainer.innerHTML += `
+                <div class="bg-gray-50 rounded-xl card-shadow p-4 border-2 border-blue-300">
+                    <p class="text-sm text-gray-500 mb-2">${day}, ${formatDate_YYYYMMDD(match.date)} - ${formatTimeForDisplay(match.time)}</p>
+                    <p class="text-lg font-semibold text-gray-800">
+                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span>&nbsp;
+                        <span class="text-blue-600 font-bold text-xl">VS</span>&nbsp;
+                        <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
+                    </p>
+                    <p class="text-lg text-center text-blue-500 font-semibold mb-2">Upcoming Match</p>
+                    <p class="sm text-gray-600 text-center">Venue: ${match.location}</p>
+                </div>`;
         });
     }
-    
-    function renderTopScorers() {
-        const tableBody = document.getElementById('scorers-table-body');
-        tableBody.innerHTML = '';
-        const topScorers = calculateTopScorers();
+}
 
-        if (topScorers.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-4">لم يتم تسجيل أي أهداف بعد.</td></tr>`;
-            return;
-        }
-
-        topScorers.forEach((scorer, index) => {
-            tableBody.innerHTML += `
-                <tr class="hover:bg-gray-50">
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.name}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.team}</td>
-                    <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-yellow-800">${scorer.goals}</td>
-                </tr>`;
-        });
+function renderStandings() {
+    const tableBody = document.getElementById('standings-table-body');
+    tableBody.innerHTML = '';
+    if (!teamsData || teamsData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">No data available.</td></tr>`;
+        return;
     }
 
-    function populateAdminMatchSelector() {
-        const matchSelect = document.getElementById('match-select');
-        const selectedValue = matchSelect.value;
-        matchSelect.innerHTML = '<option value="">-- اختر مباراة --</option>';
-        if (!matchesData) return;
+    const sortedTeams = [...teamsData].sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+        return b.goalsFor - a.goalsFor;
+    });
 
-        const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
-        sortedMatches.forEach(match => {
-            const statusText = match.status === 'upcoming' ? ' (قادمة)' : ' (انتهت)';
-            const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
-            matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${match.date})${scoreText}${statusText}</option>`;
-        });
-        matchSelect.value = selectedValue;
-    }
-    
-    function handleMatchSelectionChange() {
-        const matchSelect = document.getElementById('match-select');
-        const selectedMatchId = matchSelect.value;
-        const score1Input = document.getElementById('score1');
-        const score2Input = document.getElementById('score2');
-        const score1Label = document.getElementById('score1-label');
-        const score2Label = document.getElementById('score2-label');
+    sortedTeams.forEach((team, index) => {
+        tableBody.innerHTML += `
+            <tr class="hover:bg-gray-50">
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap"><span class="text-blue-600 hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td>
+            </tr>`;
+    });
+}
+function renderTopScorers() {
+    const tableBody = document.getElementById('scorers-table-body');
+    tableBody.innerHTML = '';
+    const topScorers = calculateTopScorers();
 
-        if (selectedMatchId) {
-            const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
-            if (selectedMatch) {
-                score1Label.textContent = `نتيجة ${selectedMatch.team1}`;
-                score2Label.textContent = `نتيجة ${selectedMatch.team2}`;
-                score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : '';
-                score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : '';
-            }
-        } else {
-            score1Label.textContent = 'نتيجة الفريق الأول';
-            score2Label.textContent = 'نتيجة الفريق الثاني';
-            score1Input.value = '';
-            score2Input.value = '';
-        }
-        updateScorersSection();
+    if (topScorers.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-4">No goals have been scored yet.</td></tr>`;
+        return;
     }
 
-    function updateScorersSection() {
-        const matchSelect = document.getElementById('match-select');
-        const selectedMatchId = matchSelect.value;
-        const score1Input = document.getElementById('score1');
-        const score2Input = document.getElementById('score2');
-        const scorersSection = document.getElementById('scorers-input-section');
+    topScorers.forEach((scorer, index) => {
+        tableBody.innerHTML += `
+            <tr class="hover:bg-gray-50">
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.name}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.team}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-yellow-800">${scorer.goals}</td>
+            </tr>`;
+    });
+}
 
-        scorersSection.innerHTML = '';
-        scorersSection.classList.add('hidden');
+function populateAdminMatchSelector() {
+    const matchSelect = document.getElementById('match-select');
+    const selectedValue = matchSelect.value;
+    matchSelect.innerHTML = '<option value="">-- Select a Match --</option>';
+    if (!matchesData) return;
 
-        if (!selectedMatchId) return;
+    const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+    sortedMatches.forEach(match => {
+        const statusText = match.status === 'upcoming' ? ' (Upcoming)' : ' (Finished)';
+        const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
+        matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${formatDate_YYYYMMDD(match.date)})${scoreText}${statusText}</option>`;
+    });
+    matchSelect.value = selectedValue;
+}
+function handleMatchSelectionChange() {
+    const selectedMatchId = document.getElementById('match-select').value;
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const score1Label = document.getElementById('score1-label');
+    const score2Label = document.getElementById('score2-label');
+    const dateInput = document.getElementById('match-date');
+    const timeInput = document.getElementById('match-time');
+    const dateTimeContainer = document.getElementById('date-time-inputs');
 
+    if (selectedMatchId) {
         const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
-        if (!selectedMatch) return;
-
-        const score1 = parseInt(score1Input.value, 10);
-        const score2 = parseInt(score2Input.value, 10);
-
-        if (!isNaN(score1) && !isNaN(score2) && score1 >= 0 && score2 >= 0) {
-            scorersSection.classList.remove('hidden');
-            scorersSection.innerHTML = `<h4 class="text-lg font-semibold mb-2">تسجيل الهدافين</h4>
-                                       <div id="team1-scorers" class="mb-4"></div>
-                                       <div id="team2-scorers" class="mb-4"></div>`;
-            renderScorerInputs(selectedMatch, 'team1', score1);
-            renderScorerInputs(selectedMatch, 'team2', score2);
+        if (selectedMatch) {
+            dateTimeContainer.style.display = 'grid';
+            score1Label.textContent = `Score ${selectedMatch.team1}`;
+            score2Label.textContent = `Score ${selectedMatch.team2}`;
+            score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : '';
+            score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : '';
+            dateInput.value = selectedMatch.date || '';
+            timeInput.value = selectedMatch.time || '';
         }
+    } else {
+        dateTimeContainer.style.display = 'none';
+        score1Label.textContent = 'Team 1 Score';
+        score2Label.textContent = 'Team 2 Score';
+        score1Input.value = '';
+        score2Input.value = '';
+        dateInput.value = '';
+        timeInput.value = '';
     }
+    updateScorersSection();
+}
 
-    function renderScorerInputs(match, teamKey, score) {
-        const container = document.getElementById(`${teamKey}-scorers`);
-        const teamName = match[teamKey];
-        const team = teamsData.find(t => t.name === teamName);
-        if (!team || !team.players || score === 0) {
-            container.innerHTML = '';
-            return;
-        };
+function updateScorersSection() {
+    const matchSelect = document.getElementById('match-select');
+    const selectedMatchId = matchSelect.value;
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const scorersSection = document.getElementById('scorers-input-section');
 
-        let content = `<h5 class="font-semibold text-gray-700 mb-2">هدافين فريق ${teamName} (${score} أهداف)</h5>`;
-        for (let i = 0; i < score; i++) {
-            content += `<div class="flex items-center gap-2 mb-2">
-                          <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 scorer-player" data-team="${teamKey}">
-                            <option value="">اختر اللاعب</option>
-                            ${team.players.map(p => `<option value="${p}">${p}</option>`).join('')}
-                          </select>
-                        </div>`;
-        }
-        container.innerHTML = content;
+    scorersSection.innerHTML = '';
+    scorersSection.classList.add('hidden');
+
+    if (!selectedMatchId) return;
+
+    const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+    if (!selectedMatch) return;
+
+    const score1 = parseInt(score1Input.value, 10);
+    const score2 = parseInt(score2Input.value, 10);
+
+    if (!isNaN(score1) && !isNaN(score2) && score1 >= 0 && score2 >= 0) {
+        scorersSection.classList.remove('hidden');
+        scorersSection.innerHTML = `<h4 class="text-lg font-semibold mb-2">Register Scorers</h4><div id="team1-scorers" class="mb-4"></div><div id="team2-scorers" class="mb-4"></div>`;
+        renderScorerInputs(selectedMatch, 'team1', score1);
+        renderScorerInputs(selectedMatch, 'team2', score2);
     }
+}
 
-    function renderAllActiveSections() {
-        const activeSection = document.querySelector('.page-section.active');
-        if (!activeSection) {
-            showSection('home');
-            return;
-        }
-        const sectionId = activeSection.id;
+function renderScorerInputs(match, teamKey, score) {
+    const container = document.getElementById(`${teamKey}-scorers`);
+    const teamName = match[teamKey];
+    const team = teamsData.find(t => t.name === teamName);
+    if (!team || !team.players || score === 0) {
+        container.innerHTML = '';
+        return;
+    };
 
-        if (sectionId === 'teams') renderTeams();
-        else if (sectionId === 'matches') renderMatches();
-        else if (sectionId === 'standings') {
-            calculateStandings();
-            renderStandings();
-        } else if (sectionId === 'scorers') {
-            renderTopScorers();
-        } else if (sectionId === 'admin' && adminAuthenticated) {
+    let content = `<h5 class="font-semibold text-gray-700 mb-2">Scorers for ${teamName} (${score} goals)</h5>`;
+    for (let i = 0; i < score; i++) {
+        content += `
+            <div class="flex items-center gap-2 mb-2">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 scorer-player" data-team="${teamKey}">
+                    <option value="">Select Player</option>
+                    ${team.players.map(p => `<option value="${p}">${p}</option>`).join('')}
+                </select>
+            </div>`;
+    }
+    container.innerHTML = content;
+}
+
+function renderAllActiveSections() {
+    const activeSection = document.querySelector('.page-section.active');
+    if (!activeSection) {
+        showSection('home');
+        return;
+    }
+    const sectionId = activeSection.id;
+
+    if (sectionId === 'teams') renderTeams();
+    else if (sectionId === 'matches') renderMatches();
+    else if (sectionId === 'standings') {
+        calculateStandings();
+        renderStandings();
+    } else if (sectionId === 'scorers') {
+        renderTopScorers();
+    } else if (sectionId === 'admin' && adminAuthenticated) {
+        populateAdminMatchSelector();
+        handleMatchSelectionChange();
+    }
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+
+    if (sectionId === 'admin') {
+        if (adminAuthenticated) {
+            document.getElementById('admin-password-prompt').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
             populateAdminMatchSelector();
             handleMatchSelectionChange();
-        }
-    }
-
-    function showSection(sectionId) {
-        document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
-
-        if (sectionId === 'admin') {
-            if (adminAuthenticated) {
-                document.getElementById('admin-password-prompt').style.display = 'none';
-                document.getElementById('admin-content').style.display = 'block';
-                populateAdminMatchSelector();
-                handleMatchSelectionChange();
-            } else {
-                document.getElementById('admin-password-prompt').style.display = 'block';
-                document.getElementById('admin-content').style.display = 'none';
-            }
         } else {
-            renderAllActiveSections();
+            document.getElementById('admin-password-prompt').style.display = 'block';
+            document.getElementById('admin-content').style.display = 'none';
         }
+    } else {
+        renderAllActiveSections();
     }
+}
 
-    // --- EVENT LISTENERS ---
-    document.querySelectorAll('.nav-button[data-target]').forEach(button => {
-        button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
-    });
+// --- EVENT LISTENERS ---
+document.querySelectorAll('.nav-button[data-target]').forEach(button => {
+    button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
+});
 
-    document.getElementById('admin-login-button').addEventListener('click', async () => {
-        const email = document.getElementById('admin-email').value;
-        const password = document.getElementById('admin-password').value;
-        const errorMsg = document.getElementById('admin-password-error');
-        errorMsg.style.display = 'none';
+document.getElementById('admin-login-button').addEventListener('click', async () => {
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    const errorMsg = document.getElementById('admin-password-error');
+    errorMsg.style.display = 'none';
 
-        if (!email || !password) {
-            errorMsg.textContent = "الرجاء إدخال البريد الإلكتروني وكلمة المرور.";
-            errorMsg.style.display = 'block';
-            return;
-        }
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            showModal('تم تسجيل الدخول بنجاح كمسؤول!');
-            showSection('admin');
-        } catch (error) {
-            errorMsg.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-            errorMsg.style.display = 'block';
-        }
-    });
+    if (!email || !password) {
+        errorMsg.textContent = "Please enter email and password.";
+        errorMsg.style.display = 'block';
+        return;
+    }
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showModal('Logged in successfully as admin!');
+        showSection('admin');
+    } catch (error) {
+        errorMsg.textContent = 'Incorrect email or password.';
+        errorMsg.style.display = 'block';
+    }
+});
 
-    document.getElementById('admin-logout-button').addEventListener('click', () => {
-        signOut(auth).then(() => {
-            showModal('تم تسجيل الخروج بنجاح.');
-            showSection('home');
-        }).catch((error) => console.error('Sign out error', error));
-    });
+document.getElementById('admin-logout-button').addEventListener('click', () => {
+    signOut(auth).then(() => {
+        showModal('Logged out successfully.');
+        showSection('home');
+    }).catch((error) => console.error('Sign out error', error));
+});
 
-    document.getElementById('update-score-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const matchId = document.getElementById('match-select').value;
-        if (!matchId) {
-            showModal('الرجاء اختيار مباراة.');
-            return;
-        }
-        const score1Input = document.getElementById('score1');
-        const score2Input = document.getElementById('score2');
-        const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
+document.getElementById('update-score-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const matchId = document.getElementById('match-select').value;
+    if (!matchId) {
+        showModal('Please select a match.');
+        return;
+    }
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const dateInput = document.getElementById('match-date');
+    const timeInput = document.getElementById('match-time');
+    const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
+    
+    let dataToUpdate = {
+        date: dateInput.value,
+        time: timeInput.value
+    };
+
+    if (resetMatchCheckbox.checked) {
+        dataToUpdate.status = 'upcoming';
+        dataToUpdate.score1 = null;
+        dataToUpdate.score2 = null;
+        dataToUpdate.scorers = { team1: [], team2: [] };
+    } else {
+        const newScore1 = parseInt(score1Input.value, 10);
+        const newScore2 = parseInt(score2Input.value, 10);
         
-        let dataToUpdate = {};
-
-        if (resetMatchCheckbox.checked) {
-            dataToUpdate = {
-                status: 'upcoming',
-                score1: null,
-                score2: null,
-                scorers: { team1: [], team2: [] }
-            };
-        } else {
-            const newScore1 = parseInt(score1Input.value, 10);
-            const newScore2 = parseInt(score2Input.value, 10);
-            if (isNaN(newScore1) || isNaN(newScore2)) {
-                showModal('الرجاء إدخال نتيجة رقمية صحيحة.');
-                return;
-            }
-            
-            // Collect scorers
+        // Only update score if values are entered
+        if (!isNaN(newScore1) && !isNaN(newScore2)) {
             const team1ScorersList = document.querySelectorAll('#team1-scorers .scorer-player');
             const team2ScorersList = document.querySelectorAll('#team2-scorers .scorer-player');
-
             const team1Scorers = Array.from(team1ScorersList).map(s => s.value).filter(Boolean);
             const team2Scorers = Array.from(team2ScorersList).map(s => s.value).filter(Boolean);
 
             if (team1Scorers.length !== newScore1 || team2Scorers.length !== newScore2) {
-                showModal('الرجاء اختيار لاعب لكل هدف مسجل.');
+                showModal('Please select a player for each goal scored.');
                 return;
             }
 
@@ -989,77 +1003,79 @@
                 return Object.entries(counts).map(([name, goals]) => ({ name, goals }));
             };
 
-            dataToUpdate = {
-                status: 'finished',
-                score1: newScore1,
-                score2: newScore2,
-                scorers: {
-                    team1: aggregateScorers(team1Scorers),
-                    team2: aggregateScorers(team2Scorers)
-                }
+            dataToUpdate.status = 'finished';
+            dataToUpdate.score1 = newScore1;
+            dataToUpdate.score2 = newScore2;
+            dataToUpdate.scorers = {
+                team1: aggregateScorers(team1Scorers),
+                team2: aggregateScorers(team2Scorers)
             };
+        } else if (score1Input.value || score2Input.value) {
+            // If one is filled but not the other, or not a number
+            showModal('Please enter a valid numeric score for both teams to record the result.');
+            return;
         }
+    }
 
-        await updateMatchInFirestore(matchId, dataToUpdate);
-        document.getElementById('update-score-form').reset();
-        handleMatchSelectionChange();
-        showModal('تم تحديث المباراة بنجاح!');
-    });
-    
-    document.getElementById('match-select').addEventListener('change', handleMatchSelectionChange);
-    document.getElementById('score1').addEventListener('input', updateScorersSection);
-    document.getElementById('score2').addEventListener('input', updateScorersSection);
+    await updateMatchInFirestore(matchId, dataToUpdate);
+    document.getElementById('update-score-form').reset();
+    handleMatchSelectionChange();
+    showModal('Match updated successfully!');
+});
+document.getElementById('match-select').addEventListener('change', handleMatchSelectionChange);
+document.getElementById('score1').addEventListener('input', updateScorersSection);
+document.getElementById('score2').addEventListener('input', updateScorersSection);
 
-    document.getElementById('close-modal-button').addEventListener('click', hideModal);
-    document.getElementById('modal-ok-button').addEventListener('click', hideModal);
-    window.addEventListener('click', (event) => {
-        if (event.target === document.getElementById('message-modal')) {
-            hideModal();
-        }
-    });
+document.getElementById('close-modal-button').addEventListener('click', hideModal);
+document.getElementById('modal-ok-button').addEventListener('click', hideModal);
+window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('message-modal')) {
+        hideModal();
+    }
+});
 
-    document.getElementById('confirm-ok-button').addEventListener('click', () => {
-        if (confirmCallback) {
-            confirmCallback();
-        }
-        hideConfirmModal();
-    });
+document.getElementById('confirm-ok-button').addEventListener('click', () => {
+    if (confirmCallback) {
+        confirmCallback();
+    }
+    hideConfirmModal();
+});
 
-    document.getElementById('confirm-cancel-button').addEventListener('click', hideConfirmModal);
+document.getElementById('confirm-cancel-button').addEventListener('click', hideConfirmModal);
 
-    document.getElementById('reset-data-button').addEventListener('click', () => {
-        showConfirmModal(
-            'هل أنت متأكد من رغبتك في إعادة تهيئة البيانات؟ سيتم حذف جميع الفرق والمباريات الحالية بشكل نهائي.',
-            async () => {
-                showModal("جاري إعادة تهيئة البيانات...");
-                try {
-                    const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-                    const matchesSnapshot = await getDocs(matchesCollectionRef);
-                    for (const doc of matchesSnapshot.docs) {
-                        await deleteDoc(doc.ref);
-                    }
-                    console.log("All matches deleted.");
-
-                    const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-                    const teamsSnapshot = await getDocs(teamsCollectionRef);
-                    for (const doc of teamsSnapshot.docs) {
-                        await deleteDoc(doc.ref);
-                    }
-                    console.log("All teams deleted.");
-
-                    await initializeDefaultData();
-                    showModal('تمت إعادة تهيئة البيانات بنجاح!');
-                } catch (error) {
-                    console.error("Error resetting data:", error);
-                    showModal('حدث خطأ أثناء إعادة تهيئة البيانات: ' + error.message);
+document.getElementById('reset-data-button').addEventListener('click', () => {
+    showConfirmModal(
+        'Are you sure you want to reset the data? All current teams and matches will be permanently deleted.',
+        async () => {
+            showModal("Resetting data...");
+            try {
+                const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+                const matchesSnapshot = await getDocs(matchesCollectionRef);
+                for (const doc of matchesSnapshot.docs) {
+                    await deleteDoc(doc.ref);
                 }
-            }
-        );
-    });
+                console.log("All matches deleted.");
 
-    // --- INITIALIZATION ---
-    document.addEventListener('DOMContentLoaded', initializeFirebase);
+                const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+                const teamsSnapshot = await getDocs(teamsCollectionRef);
+                for (const doc of teamsSnapshot.docs) {
+                    await deleteDoc(doc.ref);
+                }
+                console.log("All teams deleted.");
+
+                await initializeDefaultData();
+                showModal('Data has been reset successfully!');
+            } catch (error) {
+                console.error("Error resetting data:", error);
+                showModal('An error occurred while resetting data: ' + error.message);
+            }
+        }
+    );
+});
+
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', initializeFirebase);
 
 </script>
 </body>
-</ht
+</html>
