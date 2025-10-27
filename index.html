@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
     <style>
         body {
             font-family: 'Inter', 'Cairo', sans-serif;
@@ -53,7 +58,6 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
-<!-- Navigation Bar -->
 <nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
     <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
         <a href="#" onclick="showSection('home'); return false;" class="text-white text-center sm:text-left text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
@@ -68,11 +72,9 @@
     </div>
 </nav>
 
-<!-- Main Content -->
 <main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
     <div class="text-center mb-4 text-gray-600 text-sm">User ID: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">Loading...</span></div>
 
-    <!-- Home Section -->
     <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
         <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">Welcome to the Eritrean International League!</h2>
         <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">Here you can follow everything related to the Eritrean Embassy League.</p>
@@ -95,32 +97,26 @@
         </div>
     </section>
 
-    <!-- Teams Section -->
     <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
         <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Participating Teams</h2>
         <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-            <!-- Team cards will be inserted here by JavaScript -->
-        </div>
+            </div>
     </section>
 
-    <!-- Matches Section -->
     <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
         <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Match Schedule & Results</h2>
         <div>
             <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">Match Results</h3>
             <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Past match cards will be inserted here -->
-            </div>
+                </div>
         </div>
         <div class="mt-6 sm:mt-8">
             <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">Upcoming Matches</h3>
             <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Upcoming match cards will be inserted here -->
-            </div>
+                </div>
         </div>
     </section>
 
-    <!-- Standings Section -->
     <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
         <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">League Standings</h2>
         <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
@@ -140,13 +136,11 @@
                     </tr>
                 </thead>
                 <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
-                    <!-- Standings rows will be inserted here -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </section>
 
-    <!-- Scorers Section -->
     <section id="scorers" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
         <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Top Scorers</h2>
         <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
@@ -160,13 +154,11 @@
                     </tr>
                 </thead>
                 <tbody id="scorers-table-body" class="bg-white divide-y divide-gray-200">
-                    <!-- Scorers rows will be inserted here -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </section>
 
-    <!-- Admin Section -->
     <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
         <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Admin Control Panel</h2>
         <div id="admin-password-prompt" class="max-w-md mx-auto">
@@ -186,7 +178,6 @@
                     <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 sm:p-3"></select>
                 </div>
                 
-                <!-- Date and Time inputs -->
                 <div id="date-time-inputs" class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label for="match-date" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Match Date</label>
@@ -198,7 +189,6 @@
                     </div>
                 </div>
 
-                <!-- Score inputs -->
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Team 1 Score</label>
@@ -211,8 +201,7 @@
                 </div>
 
                 <div id="scorers-input-section" class="hidden mt-4 border-t pt-4">
-                    <!-- Scorer inputs will be rendered here -->
-                </div>
+                    </div>
                 <div class="mb-4 flex items-center">
                     <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
                     <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900">Reset Match (make it upcoming)</label>
@@ -230,14 +219,12 @@
 
 </main>
 
-<!-- Footer -->
 <footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
     <div class="container mx-auto">
         <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. All rights reserved.</p>
     </div>
 </footer>
 
-<!-- Message Modal -->
 <div id="message-modal" class="modal">
     <div class="modal-content p-4 sm:p-6">
         <span class="close-button" id="close-modal-button">&times;</span>
@@ -246,11 +233,9 @@
     </div>
 </div>
 
-<!-- Team Info Modal -->
 <div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 text-left">
         <h2 id="teamModalTitle" class="text-xl font-bold mb-4"></h2>
-        <!-- Tabs -->
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-4" aria-label="Tabs">
                 <button onclick="showTeamModalTab('players')" id="players-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Players</button>
@@ -258,19 +243,14 @@
             </nav>
         </div>
 
-        <!-- Tab Content -->
         <div class="mt-4 max-h-64 overflow-y-auto">
-            <!-- Players Panel -->
             <div id="players-panel" class="team-modal-panel">
                 <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
-                    <!-- Player names will be added here -->
-                </ul>
+                    </ul>
             </div>
-            <!-- Matches Panel -->
             <div id="matches-panel" class="team-modal-panel hidden">
                 <div id="teamMatchesList" class="space-y-3">
-                    <!-- Team matches will be added here -->
-                </div>
+                    </div>
             </div>
         </div>
 
@@ -278,7 +258,6 @@
     </div>
 </div>
 
-<!-- Confirmation Modal -->
 <div id="confirm-modal" class="modal">
     <div class="modal-content p-4 sm:p-6">
         <p id="confirm-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
@@ -290,12 +269,7 @@
 </div>
 
 
-<script type="module">
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, signInWithEmailAndPassword, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, updateDoc, collection, onSnapshot, addDoc, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+<script>
 // --- GLOBAL VARIABLES ---
 let app, db, auth;
 let userId;
@@ -319,11 +293,12 @@ async function initializeFirebase() {
             appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
         };
 
-        app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        app = firebase.initializeApp(firebaseConfig);
+        db = app.firestore();
+        auth = app.auth();
 
-        onAuthStateChanged(auth, (user) => {
+        auth.onAuthStateChanged((user) => {
             const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
 
             if (user) {
@@ -343,10 +318,11 @@ async function initializeFirebase() {
             } else {
                 adminAuthenticated = false;
                 document.getElementById('user-id-display').textContent = 'Authenticating...';
-                signInAnonymously(auth).catch(error => {
+                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+                auth.signInAnonymously().catch(error => {
                     console.error("Anonymous sign in failed", error);
                     if (error.code === 'auth/network-request-failed') {
-                         showModal("Login failed. The website's domain might not be authorized in your Firebase project's authentication settings. Please check your project configuration and add the domain.");
+                        showModal("Login failed. The website's domain might not be authorized in your Firebase project's authentication settings. Please check your project configuration and add the domain.");
                     } else {
                         showModal("Anonymous sign in failed: " + error.message);
                     }
@@ -442,24 +418,26 @@ window.closeTeamModal = closeTeamModal;
 
 // --- FIRESTORE LISTENERS ---
 function setupFirestoreListeners() {
-    const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-    onSnapshot(teamsCollectionRef, (snapshot) => {
+    // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+    const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+    teamsCollectionRef.onSnapshot((snapshot) => {
         teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderAllActiveSections(); 
+        renderAllActiveSections();  
     }, (error) => console.error("Error listening to teams:", error));
 
-    const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-    onSnapshot(matchesCollectionRef, (snapshot) => {
+    const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
+    matchesCollectionRef.onSnapshot((snapshot) => {
         matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderAllActiveSections(); 
+        renderAllActiveSections();  
     }, (error) => console.error("Error listening to matches:", error));
 }
 
 // --- DATA INITIALIZATION ---
 async function checkAndCreateInitialData() {
     try {
-        const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-        const teamsSnapshot = await getDocs(teamsCollectionRef);
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+        const teamsSnapshot = await teamsCollectionRef.get();
         if (teamsSnapshot.empty) {
             console.log("No teams found. Initializing default data...");
             await initializeDefaultData();
@@ -470,33 +448,34 @@ async function checkAndCreateInitialData() {
 }
 async function initializeDefaultData() {
     try {
-        const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
         const defaultTeams = [
             { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "اكرم", players: ["محمود", "مالك", "فيصل", "عبدالله", "عبدالعزيز", "اكرم","ارمياس"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "بلال ابيض", players: ["بلال ابيض","حسن", "بلال", "احمد", "موها", "حسين", "رائد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة"،"سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة"،"سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "سليم", players: ["سليم", "زبير", "حسن", "رامي", "ريان", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة"،"سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة"،"سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "10A", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
         ];
         let teamNames = [];
         for (const team of defaultTeams) {
-            await addDoc(teamsCollectionRef, team);
+            await teamsCollectionRef.add(team); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
             teamNames.push(team.name);
         }
         console.log("Default teams initialized.");
 
-        const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
+        const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
         const generatedMatches = generateRoundRobinSchedule(teamNames);
         for (const match of generatedMatches) {
-            await addDoc(matchesCollectionRef, match);
+            await matchesCollectionRef.add(match); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
         }
         console.log("Default matches initialized.");
 
@@ -507,8 +486,9 @@ async function initializeDefaultData() {
 // --- DATABASE UPDATES ---
 async function updateMatchInFirestore(matchId, dataToUpdate) {
     try {
-        const matchRef = doc(db, `artifacts/${appId}/public/data/matches`, matchId);
-        await updateDoc(matchRef, dataToUpdate);
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        const matchRef = db.collection(`artifacts/${appId}/public/data/matches`).doc(matchId);
+        await matchRef.update(dataToUpdate);
     } catch (error) {
         console.error("Error updating match:", error);
         showModal("Failed to update match. Ensure you are logged in as an admin. Error: " + error.message);
@@ -555,7 +535,7 @@ function formatTimeForDisplay(time24) {
 
 function generateRoundRobinSchedule(teamNames) {
     const teams = [...teamNames];
-    if (teams.length % 2 !== 0) teams.push('BYE'); 
+    if (teams.length % 2 !== 0) teams.push('BYE');  
     const numTeams = teams.length;
     const allMatches = [];
     let currentDate = new Date('2025-09-01T00:00:00');
@@ -944,7 +924,8 @@ document.getElementById('admin-login-button').addEventListener('click', async ()
         return;
     }
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        await auth.signInWithEmailAndPassword(email, password);
         showModal('Logged in successfully as admin!');
         showSection('admin');
     } catch (error) {
@@ -954,7 +935,8 @@ document.getElementById('admin-login-button').addEventListener('click', async ()
 });
 
 document.getElementById('admin-logout-button').addEventListener('click', () => {
-    signOut(auth).then(() => {
+    // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+    auth.signOut().then(() => {
         showModal('Logged out successfully.');
         showSection('home');
     }).catch((error) => console.error('Sign out error', error));
@@ -1051,17 +1033,18 @@ document.getElementById('reset-data-button').addEventListener('click', () => {
         async () => {
             showModal("Resetting data...");
             try {
-                const matchesCollectionRef = collection(db, `artifacts/${appId}/public/data/matches`);
-                const matchesSnapshot = await getDocs(matchesCollectionRef);
+                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+                const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
+                const matchesSnapshot = await matchesCollectionRef.get();
                 for (const doc of matchesSnapshot.docs) {
-                    await deleteDoc(doc.ref);
+                    await doc.ref.delete();
                 }
                 console.log("All matches deleted.");
 
-                const teamsCollectionRef = collection(db, `artifacts/${appId}/public/data/teams`);
-                const teamsSnapshot = await getDocs(teamsCollectionRef);
+                const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+                const teamsSnapshot = await teamsCollectionRef.get();
                 for (const doc of teamsSnapshot.docs) {
-                    await deleteDoc(doc.ref);
+                    await doc.ref.delete();
                 }
                 console.log("All teams deleted.");
 
