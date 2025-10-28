@@ -10,7 +10,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-698T955PXX');
+      gtag('config', 'G-698T955PXX'); // **هذا هو المعرف الخاص بك**
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -284,68 +284,64 @@ let userId;
 let adminAuthenticated = false;
 let teamsData = [];
 let matchesData = [];
-let firebaseInitialized = false; 
-const appId = 'eritrea-league-app-gh'; 
+let firebaseInitialized = false; // Flag to prevent multiple initializations
+const appId = 'eritrea-league-app-gh'; // Fallback App ID for GitHub Pages
 let confirmCallback = null;
-let currentSelectedMatch = null; 
 
-// --- UTILITY FUNCTIONS (Modal/Date/Time) ---
-function showModal(message) {
-    const modal = document.getElementById('message-modal');
-    document.getElementById('modal-message').textContent = message;
-    modal.style.display = 'flex';
-    document.getElementById('modal-ok-button').onclick = () => modal.style.display = 'none';
-    document.getElementById('close-modal-button').onclick = () => modal.style.display = 'none';
-}
-function showConfirmModal(message, callback) {
-    const modal = document.getElementById('confirm-modal');
-    document.getElementById('confirm-message').textContent = message;
-    modal.style.display = 'flex';
-    confirmCallback = callback;
-    document.getElementById('confirm-ok-button').onclick = () => {
-        modal.style.display = 'none';
-        if (confirmCallback) confirmCallback(true);
-    };
-    document.getElementById('confirm-cancel-button').onclick = () => {
-        modal.style.display = 'none';
-        if (confirmCallback) confirmCallback(false);
-    };
-}
-function formatDate_YYYYMMDD(dateString) {
-    const date = new Date(dateString);
-    if (isNaN(date)) return dateString;
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-}
-function formatTimeForDisplay(timeString) {
-    if (!timeString) return 'TBD';
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-}
-function showSection(sectionId) {
-    document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active');
-    });
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.add('active');
-        if (sectionId !== 'admin') {
-            document.getElementById('admin-content').style.display = 'none';
-            document.getElementById('admin-password-prompt').style.display = 'block';
-        }
-        renderAllActiveSections(); 
+// --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+async function initializeFirebase() {
+    try {
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
+            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
+            projectId: "eritrean-international-l-7bc64",
+            storageBucket: "eritrean-international-l-7bc64.appspot.com",
+            messagingSenderId: "188029452555",
+            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
+        };
+
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        app = firebase.initializeApp(firebaseConfig);
+        db = app.firestore();
+        auth = app.auth();
+
+        auth.onAuthStateChanged((user) => {
+            const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
+
+            if (user) {
+                userId = user.uid;
+                document.getElementById('user-id-display').textContent = userId;
+
+                if (user.uid === adminUID) {
+                    adminAuthenticated = true;
+                } else {
+                    adminAuthenticated = false;
+                }
+                if (!firebaseInitialized) {
+                    setupFirestoreListeners();
+                    checkAndCreateInitialData();
+                    firebaseInitialized = true;
+                }
+            } else {
+                adminAuthenticated = false;
+                document.getElementById('user-id-display').textContent = 'Authenticating...';
+                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+                auth.signInAnonymously().catch(error => {
+                    console.error("Anonymous sign in failed", error);
+                    if (error.code === 'auth/network-request-failed') {
+                        showModal("Login failed. The website's domain might not be authorized in your Firebase project's authentication settings. Please check your project configuration and add the domain.");
+                    } else {
+                        showModal("Anonymous sign in failed: " + error.message);
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Error initializing Firebase:", error);
+        showModal("Error initializing the application: " + error.message);
     }
 }
-function renderAllActiveSections() {
-    if (document.getElementById('teams').classList.contains('active')) renderTeams();
-    if (document.getElementById('matches').classList.contains('active')) renderMatches();
-    if (document.getElementById('standings').classList.contains('active')) renderStandings();
-    if (document.getElementById('scorers').classList.contains('active')) renderTopScorers();
-    if (document.getElementById('admin').classList.contains('active') && adminAuthenticated) populateAdminMatchSelect();
-}
-
 
 // --- TEAM INFO MODAL FUNCTIONS ---
 function showTeamModalTab(tabName) {
@@ -401,12 +397,14 @@ async function openTeamModal(teamName) {
                 if (isWinner) bgColor = 'bg-green-100 border-green-400';
                 if (isLoser) bgColor = 'bg-red-100 border-red-400';
 
+                // 🌟 تمت إعادة إضافة سطر التاريخ (المباريات المنتهية)
                 matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
                     <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)}</p>
                     <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
                     <p class="text-xs font-bold text-gray-600">Finished</p>
                 </div>`;
             } else {
+                // 🌟 تمت إعادة إضافة سطر التاريخ والوقت (المباريات القادمة)
                 matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
                     <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)} - ${formatTimeForDisplay(match.time)}</p>
                     <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
@@ -430,14 +428,13 @@ window.closeTeamModal = closeTeamModal;
 
 // --- FIRESTORE LISTENERS ---
 function setupFirestoreListeners() {
-    // الاستماع لتغييرات الفرق
+    // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
     const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
     teamsCollectionRef.onSnapshot((snapshot) => {
         teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderAllActiveSections();  
     }, (error) => console.error("Error listening to teams:", error));
 
-    // الاستماع لتغييرات المباريات
     const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
     matchesCollectionRef.onSnapshot((snapshot) => {
         matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -445,74 +442,23 @@ function setupFirestoreListeners() {
     }, (error) => console.error("Error listening to matches:", error));
 }
 
-
-// --- DATA INITIALIZATION & ADMIN LOGIC ---
-
-// 🗑️ وظيفة حذف جميع البيانات
-async function deleteAllCollections() {
-    // وظيفة مساعدة لحذف جميع الوثائق في مجموعة معينة
-    const deleteCollection = async (collectionPath) => {
-        const collectionRef = db.collection(collectionPath);
-        const snapshot = await collectionRef.get();
-        const batch = db.batch();
-        snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref);
-        });
-        if (snapshot.docs.length > 0) {
-             await batch.commit();
+// --- DATA INITIALIZATION ---
+async function checkAndCreateInitialData() {
+    try {
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+        const teamsSnapshot = await teamsCollectionRef.get();
+        if (teamsSnapshot.empty) {
+            console.log("No teams found. Initializing default data...");
+            await initializeDefaultData();
         }
-    };
-
-    const teamsPath = `artifacts/${appId}/public/data/teams`;
-    const matchesPath = `artifacts/${appId}/public/data/matches`;
-    
-    await deleteCollection(matchesPath);
-    await deleteCollection(teamsPath);
-    console.log("All tournament data cleared.");
-}
-
-// 🏆 دالة إنشاء جدول دوري شامل (Round Robin)
-function generateRoundRobinSchedule(teams) {
-    const matches = [];
-    const n = teams.length;
-    if (n < 2) return matches;
-
-    // لضمان وجود عدد زوجي من الفرق (لتبسيط الجدول)
-    const teamsArray = [...teams];
-    if (n % 2 !== 0) {
-        teamsArray.push(null); // 'Bye' team for odd number of teams
+    } catch (error) {
+        console.error("Error checking for initial data:", error);
     }
-    const totalTeams = teamsArray.length;
-    const rounds = totalTeams - 1;
-
-    for (let round = 0; round < rounds; round++) {
-        for (let i = 0; i < totalTeams / 2; i++) {
-            const team1 = teamsArray[i];
-            const team2 = teamsArray[totalTeams - 1 - i];
-
-            if (team1 && team2) { // Skip matches with 'Bye'
-                matches.push({
-                    team1: team1,
-                    team2: team2,
-                    score1: 0,
-                    score2: 0,
-                    date: '2025-11-01', // Default date
-                    time: '18:00',      // Default time
-                    location: 'TBD',
-                    status: 'upcoming',
-                    scorers: { team1: [], team2: [] }
-                });
-            }
-        }
-        // Rotate teams (except the first one)
-        teamsArray.splice(1, 0, teamsArray.pop());
-    }
-    return matches;
 }
-
-// ⚙️ دالة تهيئة البيانات الافتراضية
 async function initializeDefaultData() {
     try {
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
         const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
         const defaultTeams = [
             { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
@@ -526,13 +472,12 @@ async function initializeDefaultData() {
             { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "سليم", players: ["سليم", "زبير", "حسن", "رامي", "ريان", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            // 🌟 الشعارات المصححة 🌟
-            { name: "12E", logo: "https://placehold.co/100x100/5CAD48/000000?text=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10A", logo: "https://placehold.co/100x100/5CAD48/000000?text=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10A", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
         ];
         let teamNames = [];
         for (const team of defaultTeams) {
-            await teamsCollectionRef.add(team);
+            await teamsCollectionRef.add(team); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
             teamNames.push(team.name);
         }
         console.log("Default teams initialized.");
@@ -540,7 +485,7 @@ async function initializeDefaultData() {
         const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
         const generatedMatches = generateRoundRobinSchedule(teamNames);
         for (const match of generatedMatches) {
-            await matchesCollectionRef.add(match);
+            await matchesCollectionRef.add(match); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
         }
         console.log("Default matches initialized.");
 
@@ -548,50 +493,204 @@ async function initializeDefaultData() {
         console.error("Error initializing default data:", error);
     }
 }
-
-// ❌ إيقاف التحقق التلقائي هنا لمنع التكرار
-async function checkAndCreateInitialData() {
-    console.log("Initialization check skipped. Initial data must be created via Admin > Reset Tournament Data.");
-    // 💡 تم إزالة الكود الذي كان يقوم بـ: teamsSnapshot.empty.
+// --- DATABASE UPDATES ---
+async function updateTeamStatsInFirestore(teamId, dataToUpdate) {
+    try {
+        const teamRef = db.collection(`artifacts/${appId}/public/data/teams`).doc(teamId);
+        await teamRef.update(dataToUpdate);
+    } catch (error) {
+        console.error("Error updating team stats:", error);
+        showModal("Failed to update team statistics. Error: " + error.message);
+    }
+}
+async function updateMatchInFirestore(matchId, dataToUpdate) {
+    try {
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+        const matchRef = db.collection(`artifacts/${appId}/public/data/matches`).doc(matchId);
+        await matchRef.update(dataToUpdate);
+    } catch (error) {
+        console.error("Error updating match:", error);
+        showModal("Failed to update match. Ensure you are logged in as an admin. Error: " + error.message);
+    }
 }
 
-// ⚠️ دالة إعادة التعيين (زر الأدمن) - المسؤولة الآن عن الإنشاء
-async function resetTournamentData() {
-    showConfirmModal("Are you sure you want to delete all data and reset the tournament? This cannot be undone.", async (confirmed) => {
-        if (!confirmed) return;
-        try {
-            document.getElementById('reset-data-button').textContent = "Resetting...";
-            document.getElementById('reset-data-button').disabled = true;
+// --- UI & MODAL ---
+function showModal(message) {
+    document.getElementById('modal-message').textContent = message;
+    document.getElementById('message-modal').style.display = 'flex';
+}
 
-            await deleteAllCollections(); 
-            await initializeDefaultData(); 
+function hideModal() {
+    document.getElementById('message-modal').style.display = 'none';
+}
 
-            document.getElementById('reset-data-button').textContent = "Reset Tournament Data";
-            document.getElementById('reset-data-button').disabled = false;
-            showModal("Tournament data has been successfully reset and default data has been created.");
-        } catch (error) {
-            document.getElementById('reset-data-button').textContent = "Reset Tournament Data";
-            document.getElementById('reset-data-button').disabled = false;
-            console.error("Error during full reset:", error);
-            showModal("Failed to reset tournament data: " + error.message);
+function showConfirmModal(message, onConfirm) {
+    document.getElementById('confirm-message').textContent = message;
+    confirmCallback = onConfirm;
+    document.getElementById('confirm-modal').style.display = 'flex';
+}
+
+function hideConfirmModal() {
+    document.getElementById('confirm-modal').style.display = 'none';
+    confirmCallback = null;
+}
+
+
+// --- LOGIC & CALCULATIONS ---
+function formatDate_YYYYMMDD(dateString) {
+    if (!dateString) return '';
+    // The date is already in YYYY-MM-DD format, so just replace hyphens with slashes.
+    return dateString.replace(/-/g, '/');
+}
+
+function formatTimeForDisplay(time24) {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':');
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const formattedHours = h % 12 || 12;
+    return `${formattedHours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+}
+
+// 🏆 الدالة المساعدة الجديدة لعرض الهدافين (New Helper Function)
+function formatScorers(scorers) {
+    if (!scorers || scorers.length === 0) return '—';
+    // تنسيق: (الاسم: عدد الأهداف)
+    return scorers.map(s => `${s.name} (${s.goals})`).join(', ');
+}
+
+function generateRoundRobinSchedule(teamNames) {
+    const teams = [...teamNames];
+    if (teams.length % 2 !== 0) teams.push('BYE');  
+    const numTeams = teams.length;
+    const allMatches = [];
+    let currentDate = new Date('2025-09-01T00:00:00');
+    const times = ['09:00', '09:40']; // Use 24-hour format
+    let timeIndex = 0;
+    let matchesOnCurrentDay = 0;
+
+    for (let round = 0; round < numTeams - 1; round++) {
+        for (let i = 0; i < numTeams / 2; i++) {
+            const team1 = teams[i];
+            const team2 = teams[numTeams - 1 - i];
+
+            if (team1 === 'BYE' || team2 === 'BYE') continue;
+
+            while (currentDate.getDay() === 5 || currentDate.getDay() === 6) { // Skip Friday and Saturday
+                currentDate.setDate(currentDate.getDate() + 1);
+                timeIndex = 0;
+                matchesOnCurrentDay = 0;
+            }
+
+            allMatches.push({
+                team1,
+                team2,
+                date: currentDate.toISOString().slice(0, 10),
+                time: times[timeIndex],
+                location: "Main Stadium",
+                status: "upcoming",
+                score1: null, score2: null,
+                scorers: { team1: [], team2: [] },
+                round: round + 1
+            });
+            
+            matchesOnCurrentDay++;
+            if (matchesOnCurrentDay >= 2) { 
+                matchesOnCurrentDay = 0;
+                timeIndex = 0;
+                currentDate.setDate(currentDate.getDate() + 1);
+            } else {
+                timeIndex++;
+            }
+        }
+        teams.splice(1, 0, teams.pop());
+    }
+    return allMatches;
+}
+
+function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
+    const team = teamsData.find(t => t.name === teamName);
+    const opponent = teamsData.find(t => t.name === opponentName);
+    if (!team || !opponent) return;
+
+    team.matchesPlayed++;
+    opponent.matchesPlayed++;
+    team.goalsFor += scoreTeam;
+    team.goalsAgainst += scoreOpponent;
+    opponent.goalsFor += scoreOpponent;
+    opponent.goalsAgainst += scoreTeam;
+
+    if (scoreTeam > scoreOpponent) {
+        team.wins++; team.points += 3; opponent.losses++;
+    } else if (scoreTeam < scoreOpponent) {
+        team.losses++; opponent.wins++; opponent.points += 3;
+    } else {
+        team.draws++; opponent.draws++; team.points += 1; opponent.points += 1;
+    }
+}
+
+function calculateStandings() {
+    teamsData.forEach(team => {
+        team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0;
+        team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
+    });
+
+    matchesData.forEach(match => {
+        if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
+            updateTeamStats(match.team1, match.team2, match.score1, match.score2);
         }
     });
+
+    teamsData.forEach(team => {
+        team.goalDifference = team.goalsFor - team.goalsAgainst;
+    });
+}
+function calculateTopScorers() {
+    const playerGoals = {};
+
+    matchesData.forEach(match => {
+        if (match.status === 'finished' && match.scorers) {
+            // Process scorers for team1
+            if (match.scorers.team1) {
+                match.scorers.team1.forEach(scorer => {
+                    if (!playerGoals[scorer.name]) {
+                        playerGoals[scorer.name] = { goals: 0, team: match.team1 };
+                    }
+                    playerGoals[scorer.name].goals += scorer.goals;
+                });
+            }
+            // Process scorers for team2
+            if (match.scorers.team2) {
+                match.scorers.team2.forEach(scorer => {
+                    if (!playerGoals[scorer.name]) {
+                        playerGoals[scorer.name] = { goals: 0, team: match.team2 };
+                    }
+                    playerGoals[scorer.name].goals += scorer.goals;
+                });
+            }
+        }
+    });
+
+    // Convert to array and sort
+    return Object.entries(playerGoals)
+        .map(([name, data]) => ({ name, ...data }))
+        .sort((a, b) => b.goals - a.goals);
 }
 
-
 // --- RENDER FUNCTIONS ---
-
 function renderTeams() {
     const container = document.getElementById('teams-container');
     container.innerHTML = '';
-    
+    if (!teamsData || teamsData.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-500 col-span-full">No teams.</p>`;
+        return;
+    }
     teamsData.forEach(team => {
         container.innerHTML += `
-            <div class="bg-white rounded-xl card-shadow p-4 sm:p-6 text-center border-t-4 border-blue-500 hover:border-blue-700 cursor-pointer" onclick="openTeamModal('${team.name}')">
-                <img src="${team.logo || 'https://placehold.co/100x100/aaaaaa/000000?text=Logo'}" alt="${team.name} Logo" class="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-3 object-cover">
-                <h3 class="text-xl sm:text-2xl font-bold text-gray-900">${team.name}</h3>
-                <p class="text-sm text-gray-600">Captain: ${team.captain || 'TBD'}</p>
-                <div class="mt-3 text-sm font-medium text-blue-600">${team.players ? team.players.length : 0} Players</div>
+            <div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200">
+                <img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
+                <h3 class="text-2xl font-bold text-blue-800"><span class="hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></h3>
+                <p class="text-lg text-gray-700">Captain: <span class="font-semibold">${team.captain}</span></p>
             </div>`;
     });
 }
@@ -612,19 +711,13 @@ function renderMatches() {
     const upcomingMatches = matchesData.filter(m => m.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
     const pastMatches = matchesData.filter(m => m.status === 'finished').sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    // Helper to format scorers for display
-    const formatScorers = (scorers) => {
-        if (!scorers || scorers.length === 0) return '—';
-        return scorers.map(s => `${s.name} (${s.goals})`).join(', ');
-    };
-
-
     if (pastMatches.length === 0) {
         pastContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No past matches.</p>`;
     } else {
         pastMatches.forEach(match => {
             const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
             
+            // 🌟 استدعاء الدالة الجديدة لعرض الهدافين 🌟
             const team1Scorers = formatScorers(match.scorers?.team1);
             const team2Scorers = formatScorers(match.scorers?.team2);
 
@@ -647,8 +740,10 @@ function renderMatches() {
         });
     }
 
-    // جزء المباريات القادمة (مخفي، لكن يتم رندرة بياناته في حالة الحاجة لها مستقبلاً)
-    if (upcomingMatches.length > 0) {
+    // جزء المباريات القادمة (مخفي)
+    if (upcomingMatches.length === 0) {
+        upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No upcoming matches.</p>`;
+    } else {
         upcomingMatches.forEach(match => {
             const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
             upcomingContainer.innerHTML += `
@@ -666,377 +761,347 @@ function renderMatches() {
     }
 }
 
-function calculateStandings(teams, matches) {
-    const standings = teams.map(team => ({
-        ...team,
-        points: 0,
-        matchesPlayed: 0,
-        wins: 0,
-        draws: 0,
-        losses: 0,
-        goalsFor: 0,
-        goalsAgainst: 0,
-        goalDifference: 0,
-    }));
 
-    matches.filter(m => m.status === 'finished').forEach(match => {
-        const team1Stats = standings.find(s => s.name === match.team1);
-        const team2Stats = standings.find(s => s.name === match.team2);
+function renderStandings() {
+    const tableBody = document.getElementById('standings-table-body');
+    tableBody.innerHTML = '';
+    if (!teamsData || teamsData.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">No data available.</td></tr>`;
+        return;
+    }
 
-        if (!team1Stats || !team2Stats) return;
-
-        // Update matches played
-        team1Stats.matchesPlayed++;
-        team2Stats.matchesPlayed++;
-
-        // Update goals
-        team1Stats.goalsFor += match.score1;
-        team1Stats.goalsAgainst += match.score2;
-        team2Stats.goalsFor += match.score2;
-        team2Stats.goalsAgainst += match.score1;
-
-        // Determine result and points
-        if (match.score1 > match.score2) { // Team 1 wins
-            team1Stats.wins++;
-            team1Stats.points += 3;
-            team2Stats.losses++;
-        } else if (match.score1 < match.score2) { // Team 2 wins
-            team2Stats.wins++;
-            team2Stats.points += 3;
-            team1Stats.losses++;
-        } else { // Draw
-            team1Stats.draws++;
-            team2Stats.draws++;
-            team1Stats.points += 1;
-            team2Stats.points += 1;
-        }
-
-        // Calculate goal difference
-        team1Stats.goalDifference = team1Stats.goalsFor - team1Stats.goalsAgainst;
-        team2Stats.goalDifference = team2Stats.goalsFor - team2Stats.goalsAgainst;
-    });
-
-    // Sort standings: Points (desc), Goal Difference (desc), Goals For (desc)
-    standings.sort((a, b) => {
+    const sortedTeams = [...teamsData].sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
         if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
         return b.goalsFor - a.goalsFor;
     });
 
-    return standings;
-}
-
-function renderStandings() {
-    const standings = calculateStandings(teamsData, matchesData);
-    const tbody = document.getElementById('standings-table-body');
-    tbody.innerHTML = '';
-
-    if (standings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" class="px-6 py-4 text-center text-gray-500">No teams or match data available.</td></tr>`;
-        return;
-    }
-
-    standings.forEach((team, index) => {
-        const rank = index + 1;
-        const rankClass = rank <= 3 ? 'bg-yellow-100 font-bold' : 'bg-white';
-        
-        tbody.innerHTML += `
-            <tr class="${rankClass} hover:bg-gray-50 transition">
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${rank}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap flex items-center">
-                    <img src="${team.logo || 'https://placehold.co/30x30/aaaaaa/000000?text=L'}" alt="Logo" class="w-6 h-6 rounded-full mr-2 object-cover">
-                    <span class="font-semibold hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span>
-                </td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.matchesPlayed}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.wins}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.draws}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.losses}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.goalsFor}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.goalsAgainst}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${team.goalDifference}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap text-lg font-extrabold text-green-700">${team.points}</td>
+    sortedTeams.forEach((team, index) => {
+        tableBody.innerHTML += `
+            <tr class="hover:bg-gray-50">
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap"><span class="text-blue-600 hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td>
             </tr>`;
     });
 }
-
 function renderTopScorers() {
-    const scorersMap = new Map();
-
-    matchesData.filter(m => m.status === 'finished' && m.scorers).forEach(match => {
-        ['team1', 'team2'].forEach(teamKey => {
-            if (match.scorers[teamKey]) {
-                match.scorers[teamKey].forEach(scorer => {
-                    const teamName = teamKey === 'team1' ? match.team1 : match.team2;
-                    const key = scorer.name + '|' + teamName;
-                    
-                    const currentGoals = scorersMap.get(key) ? scorersMap.get(key).goals : 0;
-                    
-                    scorersMap.set(key, {
-                        name: scorer.name,
-                        team: teamName,
-                        goals: currentGoals + scorer.goals
-                    });
-                });
-            }
-        });
-    });
-
-    // Convert map values to array and sort (Goals desc, then Name asc)
-    const topScorers = Array.from(scorersMap.values()).sort((a, b) => {
-        if (b.goals !== a.goals) return b.goals - a.goals;
-        return a.name.localeCompare(b.name);
-    });
-
-    const tbody = document.getElementById('scorers-table-body');
-    tbody.innerHTML = '';
+    const tableBody = document.getElementById('scorers-table-body');
+    tableBody.innerHTML = '';
+    const topScorers = calculateTopScorers();
 
     if (topScorers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No scoring data has been recorded yet.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-4">No goals have been scored yet.</td></tr>`;
         return;
     }
 
     topScorers.forEach((scorer, index) => {
-        const rank = index + 1;
-        const rankClass = rank <= 3 ? 'bg-yellow-100 font-bold' : 'bg-white';
-        
-        tbody.innerHTML += `
-            <tr class="${rankClass} hover:bg-gray-50 transition">
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${rank}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">${scorer.name}</td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap">
-                    <span class="text-xs font-semibold bg-blue-100 p-1 rounded">${scorer.team}</span>
-                </td>
-                <td class="px-1 sm:px-6 py-3 whitespace-nowrap text-lg font-extrabold text-red-700">${scorer.goals}</td>
+        tableBody.innerHTML += `
+            <tr class="hover:bg-gray-50">
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.name}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.team}</td>
+                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-yellow-800">${scorer.goals}</td>
             </tr>`;
     });
 }
 
-// --- ADMIN SPECIFIC FUNCTIONS ---
+function populateAdminMatchSelector() {
+    const matchSelect = document.getElementById('match-select');
+    const selectedValue = matchSelect.value;
+    matchSelect.innerHTML = '<option value="">-- Select a Match --</option>';
+    if (!matchesData) return;
 
-async function adminLogin(event) {
-    event.preventDefault();
+    const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
+    sortedMatches.forEach(match => {
+        const statusText = match.status === 'upcoming' ? ' (Upcoming)' : ' (Finished)';
+        const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
+        matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${formatDate_YYYYMMDD(match.date)})${scoreText}${statusText}</option>`;
+    });
+    matchSelect.value = selectedValue;
+}
+function handleMatchSelectionChange() {
+    const selectedMatchId = document.getElementById('match-select').value;
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const score1Label = document.getElementById('score1-label');
+    const score2Label = document.getElementById('score2-label');
+    const dateInput = document.getElementById('match-date');
+    const timeInput = document.getElementById('match-time');
+    const dateTimeContainer = document.getElementById('date-time-inputs');
+
+    if (selectedMatchId) {
+        const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+        if (selectedMatch) {
+            dateTimeContainer.style.display = 'grid';
+            score1Label.textContent = `Score ${selectedMatch.team1}`;
+            score2Label.textContent = `Score ${selectedMatch.team2}`;
+            score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : '';
+            score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : '';
+            dateInput.value = selectedMatch.date || '';
+            timeInput.value = selectedMatch.time || '';
+        }
+    } else {
+        dateTimeContainer.style.display = 'none';
+        score1Label.textContent = 'Team 1 Score';
+        score2Label.textContent = 'Team 2 Score';
+        score1Input.value = '';
+        score2Input.value = '';
+        dateInput.value = '';
+        timeInput.value = '';
+    }
+    updateScorersSection();
+}
+
+function updateScorersSection() {
+    const matchSelect = document.getElementById('match-select');
+    const selectedMatchId = matchSelect.value;
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const scorersSection = document.getElementById('scorers-input-section');
+
+    scorersSection.innerHTML = '';
+    scorersSection.classList.add('hidden');
+
+    if (!selectedMatchId) return;
+
+    const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
+    if (!selectedMatch) return;
+
+    const score1 = parseInt(score1Input.value, 10);
+    const score2 = parseInt(score2Input.value, 10);
+
+    if (!isNaN(score1) && !isNaN(score2) && score1 >= 0 && score2 >= 0) {
+        scorersSection.classList.remove('hidden');
+        scorersSection.innerHTML = `<h4 class="text-lg font-semibold mb-2">Register Scorers</h4><div id="team1-scorers" class="mb-4"></div><div id="team2-scorers" class="mb-4"></div>`;
+        renderScorerInputs(selectedMatch, 'team1', score1);
+        renderScorerInputs(selectedMatch, 'team2', score2);
+    }
+}
+
+function renderScorerInputs(match, teamKey, score) {
+    const container = document.getElementById(`${teamKey}-scorers`);
+    const teamName = match[teamKey];
+    const team = teamsData.find(t => t.name === teamName);
+    if (!team || !team.players || score === 0) {
+        container.innerHTML = '';
+        return;
+    };
+
+    let content = `<h5 class="font-semibold text-gray-700 mb-2">Scorers for ${teamName} (${score} goals)</h5>`;
+    for (let i = 0; i < score; i++) {
+        content += `
+            <div class="flex items-center gap-2 mb-2">
+                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 scorer-player" data-team="${teamKey}">
+                    <option value="">Select Player</option>
+                    ${team.players.map(p => `<option value="${p}">${p}</option>`).join('')}
+                </select>
+            </div>`;
+    }
+    container.innerHTML = content;
+}
+
+function renderAllActiveSections() {
+    const activeSection = document.querySelector('.page-section.active');
+    if (!activeSection) {
+        showSection('home');
+        return;
+    }
+    const sectionId = activeSection.id;
+
+    if (sectionId === 'teams') renderTeams();
+    else if (sectionId === 'matches') renderMatches();
+    else if (sectionId === 'standings') {
+        calculateStandings();
+        renderStandings();
+    } else if (sectionId === 'scorers') {
+        renderTopScorers();
+    } else if (sectionId === 'admin' && adminAuthenticated) {
+        populateAdminMatchSelector();
+        handleMatchSelectionChange();
+    }
+}
+
+function showSection(sectionId) {
+    document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+
+    if (sectionId === 'admin') {
+        if (adminAuthenticated) {
+            document.getElementById('admin-password-prompt').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            populateAdminMatchSelector();
+            handleMatchSelectionChange();
+        } else {
+            document.getElementById('admin-password-prompt').style.display = 'block';
+            document.getElementById('admin-content').style.display = 'none';
+        }
+    } else {
+        renderAllActiveSections();
+    }
+}
+
+// --- EVENT LISTENERS ---
+document.querySelectorAll('.nav-button[data-target]').forEach(button => {
+    button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
+});
+
+document.getElementById('admin-login-button').addEventListener('click', async () => {
     const email = document.getElementById('admin-email').value;
     const password = document.getElementById('admin-password').value;
-    const errorEl = document.getElementById('admin-password-error');
+    const errorMsg = document.getElementById('admin-password-error');
+    errorMsg.style.display = 'none';
 
-    errorEl.textContent = '';
-    
+    if (!email || !password) {
+        errorMsg.textContent = "Please enter email and password.";
+        errorMsg.style.display = 'block';
+        return;
+    }
     try {
+        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
         await auth.signInWithEmailAndPassword(email, password);
-        // Authentication state change listener handles UI update
-        errorEl.textContent = 'Logged in successfully! Loading admin panel...';
+        showModal('Logged in successfully as admin!');
+        showSection('admin');
     } catch (error) {
-        errorEl.textContent = `Login failed: ${error.message.replace('Firebase:', '').trim()}`;
+        errorMsg.textContent = 'Incorrect email or password.';
+        errorMsg.style.display = 'block';
     }
-}
-
-function adminLogout() {
-    auth.signOut();
-    adminAuthenticated = false;
-    document.getElementById('admin-content').style.display = 'none';
-    document.getElementById('admin-password-prompt').style.display = 'block';
-    document.getElementById('admin-email').value = '';
-    document.getElementById('admin-password').value = '';
-    showModal("Logged out successfully.");
-}
-
-function populateAdminMatchSelect() {
-    const select = document.getElementById('match-select');
-    select.innerHTML = '';
-    
-    // Sort matches by status (upcoming first) and then by date
-    const sortedMatches = [...matchesData].sort((a, b) => {
-        if (a.status === 'upcoming' && b.status === 'finished') return -1;
-        if (a.status === 'finished' && b.status === 'upcoming') return 1;
-        return new Date(a.date) - new Date(b.date);
-    });
-
-    if (sortedMatches.length === 0) {
-        select.innerHTML = '<option value="">No matches available</option>';
-        return;
-    }
-
-    sortedMatches.forEach(match => {
-        const statusText = match.status === 'finished' ? `(Finished: ${match.score1}-${match.score2})` : '(Upcoming)';
-        const option = document.createElement('option');
-        option.value = match.id;
-        option.textContent = `${match.date} ${formatTimeForDisplay(match.time)} - ${match.team1} vs ${match.team2} ${statusText}`;
-        select.appendChild(option);
-    });
-
-    document.getElementById('admin-content').style.display = 'block';
-    document.getElementById('admin-password-prompt').style.display = 'none';
-    
-    // Trigger change event to load initial match data
-    loadMatchDataForAdmin(); 
-}
-
-function loadMatchDataForAdmin() {
-    const matchId = document.getElementById('match-select').value;
-    currentSelectedMatch = matchesData.find(m => m.id === matchId);
-    
-    if (currentSelectedMatch) {
-        document.getElementById('score1-label').textContent = `${currentSelectedMatch.team1} Score`;
-        document.getElementById('score2-label').textContent = `${currentSelectedMatch.team2} Score`;
-        document.getElementById('score1').value = currentSelectedMatch.score1;
-        document.getElementById('score2').value = currentSelectedMatch.score2;
-        document.getElementById('match-date').value = currentSelectedMatch.date || '';
-        document.getElementById('match-time').value = currentSelectedMatch.time || '';
-        document.getElementById('reset-match-checkbox').checked = currentSelectedMatch.status === 'upcoming';
-        
-        // Render Scorers Input
-        renderScorersInput(currentSelectedMatch);
-
-    } else {
-        // Reset inputs if no match is selected or found
-        document.getElementById('score1').value = '';
-        document.getElementById('score2').value = '';
-        document.getElementById('match-date').value = '';
-        document.getElementById('match-time').value = '';
-        document.getElementById('scorers-input-section').innerHTML = '';
-        document.getElementById('scorers-input-section').classList.add('hidden');
-    }
-}
-
-function renderScorersInput(match) {
-    const container = document.getElementById('scorers-input-section');
-    container.innerHTML = '';
-    container.classList.remove('hidden');
-
-    const team1 = teamsData.find(t => t.name === match.team1);
-    const team2 = teamsData.find(t => t.name === match.team2);
-
-    if (!team1 || !team2) {
-        container.innerHTML = '<p class="text-red-500">Error: Team data not found.</p>';
-        return;
-    }
-    
-    const renderTeamScorers = (team, scoreKey, scorersKey, currentScore) => {
-        const currentScorers = match.scorers?.[scorersKey] || [];
-        const maxGoals = parseInt(currentScore, 10) || 0;
-
-        let html = `<div class="mb-6 p-4 border rounded-lg bg-gray-50">
-            <h4 class="font-bold text-lg mb-2">${team.name} Goals (${currentScore})</h4>`;
-
-        for(let i = 0; i < maxGoals; i++) {
-            const currentScorer = currentScorers[i] || { name: '', goals: 1 };
-            
-            html += `<div class="flex items-center space-x-2 mb-2">
-                <select name="${scorersKey}_name" data-index="${i}" class="scorer-name-select block w-3/4 rounded-md border-gray-300 shadow-sm p-2 text-sm">
-                    <option value="">-- Select Player --</option>`;
-            
-            team.players.forEach(player => {
-                const selected = player === currentScorer.name ? 'selected' : '';
-                html += `<option value="${player}" ${selected}>${player}</option>`;
-            });
-
-            html += `</select>
-                <input type="number" name="${scorersKey}_goals" data-index="${i}" value="${currentScorer.goals}" min="1" class="scorer-goals-input block w-1/4 rounded-md border-gray-300 shadow-sm p-2 text-sm text-center" readonly>
-            </div>`;
-        }
-        
-        if (maxGoals === 0) {
-             html += `<p class="text-gray-500 text-sm">No goals to record.</p>`;
-        }
-        
-        html += `</div>`;
-        return html;
-    };
-
-    container.innerHTML += renderTeamScorers(team1, 'score1', 'team1', document.getElementById('score1').value);
-    container.innerHTML += renderTeamScorers(team2, 'score2', 'team2', document.getElementById('score2').value);
-    
-    // Add event listeners to score inputs to dynamically update the scorers section
-    document.getElementById('score1').onchange = () => renderScorersInput(match);
-    document.getElementById('score2').onchange = () => renderScorersInput(match);
-}
-
-async function updateMatchScore(event) {
-    event.preventDefault();
-
-    if (!currentSelectedMatch) {
-        showModal("Please select a match first.");
-        return;
-    }
-
-    const matchId = currentSelectedMatch.id;
-    const score1 = parseInt(document.getElementById('score1').value) || 0;
-    const score2 = parseInt(document.getElementById('score2').value) || 0;
-    const matchDate = document.getElementById('match-date').value;
-    const matchTime = document.getElementById('match-time').value;
-    const resetMatch = document.getElementById('reset-match-checkbox').checked;
-
-    let status = resetMatch ? 'upcoming' : 'finished';
-    
-    // --- Collect Scorers Data ---
-    const newScorers = { team1: [], team2: [] };
-    const scorerNameInputs = document.querySelectorAll('.scorer-name-select');
-
-    scorerNameInputs.forEach(select => {
-        const teamKey = select.name.split('_')[0]; // 'team1' or 'team2'
-        const playerIndex = select.dataset.index;
-        const playerName = select.value;
-        const goalsInput = document.querySelector(`input[name="${teamKey}_goals"][data-index="${playerIndex}"]`);
-        const goals = parseInt(goalsInput?.value) || 1;
-
-        if (playerName && goals > 0) {
-             // We simplify: one goal per input field (since we create N inputs for N goals)
-            newScorers[teamKey].push({ name: playerName, goals: 1 });
-        }
-    });
-
-    const updateData = {
-        score1: score1,
-        score2: score2,
-        date: matchDate,
-        time: matchTime,
-        status: status,
-        scorers: newScorers
-    };
-
-    const team1DocRef = db.collection(`artifacts/${appId}/public/data/teams`).doc(teamsData.find(t => t.name === currentSelectedMatch.team1)?.id);
-    const team2DocRef = db.collection(`artifacts/${appId}/public/data/teams`).doc(teamsData.find(t => t.name === currentSelectedMatch.team2)?.id);
-    const matchDocRef = db.collection(`artifacts/${appId}/public/data/matches`).doc(matchId);
-
-    try {
-        await matchDocRef.update(updateData);
-        
-        // Since we are using real-time listeners, the team data will be automatically
-        // recalculated and updated when the match data changes.
-        // We ensure team documents are touched to trigger re-calculation if needed (e.g., if a previous manual update failed)
-        await team1DocRef.update({ lastUpdated: new Date().toISOString() });
-        await team2DocRef.update({ lastUpdated: new Date().toISOString() });
-        
-        showModal("Match data updated successfully. Standings recalculating...");
-        // Re-populate select to show new score/status
-        populateAdminMatchSelect(); 
-    } catch (error) {
-        console.error("Error updating match data:", error);
-        showModal("Failed to update match data: " + error.message);
-    }
-}
-
-
-// --- Event Listeners and Initial Call ---
-document.addEventListener('DOMContentLoaded', () => {
-    // Nav button listeners
-    document.querySelectorAll('.nav-button').forEach(button => {
-        button.addEventListener('click', () => {
-            showSection(button.dataset.target);
-        });
-    });
-
-    // Admin listeners
-    document.getElementById('admin-login-button').addEventListener('click', adminLogin);
-    document.getElementById('admin-logout-button').addEventListener('click', adminLogout);
-    document.getElementById('match-select').addEventListener('change', loadMatchDataForAdmin);
-    document.getElementById('update-score-form').addEventListener('submit', updateMatchScore);
-    document.getElementById('reset-data-button').addEventListener('click', resetTournamentData); // ربط دالة إعادة التعيين
-
-    // Set initial section
-    showSection('home');
-    initializeFirebase();
 });
+
+document.getElementById('admin-logout-button').addEventListener('click', () => {
+    // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+    auth.signOut().then(() => {
+        showModal('Logged out successfully.');
+        showSection('home');
+    }).catch((error) => console.error('Sign out error', error));
+});
+
+document.getElementById('update-score-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const matchId = document.getElementById('match-select').value;
+    if (!matchId) {
+        showModal('Please select a match.');
+        return;
+    }
+    const score1Input = document.getElementById('score1');
+    const score2Input = document.getElementById('score2');
+    const dateInput = document.getElementById('match-date');
+    const timeInput = document.getElementById('match-time');
+    const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
+    
+    let dataToUpdate = {
+        date: dateInput.value,
+        time: timeInput.value
+    };
+
+    if (resetMatchCheckbox.checked) {
+        dataToUpdate.status = 'upcoming';
+        dataToUpdate.score1 = null;
+        dataToUpdate.score2 = null;
+        dataToUpdate.scorers = { team1: [], team2: [] };
+    } else {
+        const newScore1 = parseInt(score1Input.value, 10);
+        const newScore2 = parseInt(score2Input.value, 10);
+        
+        // Only update score if values are entered
+        if (!isNaN(newScore1) && !isNaN(newScore2)) {
+            const team1ScorersList = document.querySelectorAll('#team1-scorers .scorer-player');
+            const team2ScorersList = document.querySelectorAll('#team2-scorers .scorer-player');
+            const team1Scorers = Array.from(team1ScorersList).map(s => s.value).filter(Boolean);
+            const team2Scorers = Array.from(team2ScorersList).map(s => s.value).filter(Boolean);
+
+            if (team1Scorers.length !== newScore1 || team2Scorers.length !== newScore2) {
+                showModal('Please select a player for each goal scored.');
+                return;
+            }
+
+            const aggregateScorers = (scorersList) => {
+                const counts = {};
+                scorersList.forEach(player => { counts[player] = (counts[player] || 0) + 1; });
+                return Object.entries(counts).map(([name, goals]) => ({ name, goals }));
+            };
+
+            dataToUpdate.status = 'finished';
+            dataToUpdate.score1 = newScore1;
+            dataToUpdate.score2 = newScore2;
+            dataToUpdate.scorers = {
+                team1: aggregateScorers(team1Scorers),
+                team2: aggregateScorers(team2Scorers)
+            };
+        } else if (score1Input.value || score2Input.value) {
+            // If one is filled but not the other, or not a number
+            showModal('Please enter a valid numeric score for both teams to record the result.');
+            return;
+        }
+    }
+
+    await updateMatchInFirestore(matchId, dataToUpdate);
+    document.getElementById('update-score-form').reset();
+    handleMatchSelectionChange();
+    showModal('Match updated successfully!');
+});
+document.getElementById('match-select').addEventListener('change', handleMatchSelectionChange);
+document.getElementById('score1').addEventListener('input', updateScorersSection);
+document.getElementById('score2').addEventListener('input', updateScorersSection);
+
+document.getElementById('close-modal-button').addEventListener('click', hideModal);
+document.getElementById('modal-ok-button').addEventListener('click', hideModal);
+window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('message-modal')) {
+        hideModal();
+    }
+});
+
+document.getElementById('confirm-ok-button').addEventListener('click', () => {
+    if (confirmCallback) {
+        confirmCallback();
+    }
+    hideConfirmModal();
+});
+
+document.getElementById('confirm-cancel-button').addEventListener('click', hideConfirmModal);
+
+document.getElementById('reset-data-button').addEventListener('click', () => {
+    showConfirmModal(
+        'Are you sure you want to reset the data? All current teams and matches will be permanently deleted.',
+        async () => {
+            showModal("Resetting data...");
+            try {
+                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+                const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
+                const matchesSnapshot = await matchesCollectionRef.get();
+                for (const doc of matchesSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+                console.log("All matches deleted.");
+
+                const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+                const teamsSnapshot = await teamsCollectionRef.get();
+                for (const doc of teamsSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+                console.log("All teams deleted.");
+
+                await initializeDefaultData();
+                showModal('Data has been reset successfully!');
+            } catch (error) {
+                console.error("Error resetting data:", error);
+                showModal('An error occurred while resetting data: ' + error.message);
+            }
+        }
+    );
+});
+
+// --- INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', initializeFirebase);
+
 </script>
 </body>
 </html>
