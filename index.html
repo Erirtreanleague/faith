@@ -397,12 +397,14 @@ async function openTeamModal(teamName) {
                 if (isWinner) bgColor = 'bg-green-100 border-green-400';
                 if (isLoser) bgColor = 'bg-red-100 border-red-400';
 
+                // 🌟 تمت إعادة إضافة سطر التاريخ (المباريات المنتهية)
                 matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
                     <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)}</p>
                     <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
                     <p class="text-xs font-bold text-gray-600">Finished</p>
                 </div>`;
             } else {
+                // 🌟 تمت إعادة إضافة سطر التاريخ والوقت (المباريات القادمة)
                 matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
                     <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)} - ${formatTimeForDisplay(match.time)}</p>
                     <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
@@ -550,6 +552,13 @@ function formatTimeForDisplay(time24) {
     return `${formattedHours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
 }
 
+// 🏆 الدالة المساعدة الجديدة لعرض الهدافين (New Helper Function)
+function formatScorers(scorers) {
+    if (!scorers || scorers.length === 0) return '—';
+    // تنسيق: (الاسم: عدد الأهداف)
+    return scorers.map(s => `${s.name} (${s.goals})`).join(', ');
+}
+
 function generateRoundRobinSchedule(teamNames) {
     const teams = [...teamNames];
     if (teams.length % 2 !== 0) teams.push('BYE');  
@@ -693,12 +702,9 @@ function renderMatches() {
     upcomingContainer.innerHTML = '';
     pastContainer.innerHTML = '';
     
-    // ** 🔴 التعديل لإخفاء المباريات القادمة: Start 🔴 **
-    // جعل القسم العنوان نفسه غير مرئي
+    // ** 🔴 إخفاء المباريات القادمة 🔴 **
     upcomingHeading.style.display = 'none'; 
-    // جعل حاوية المباريات القادمة غير مرئية
     upcomingContainer.style.display = 'none'; 
-    // ** 🔴 التعديل لإخفاء المباريات القادمة: End 🔴 **
 
     if (!matchesData) return;
 
@@ -710,20 +716,31 @@ function renderMatches() {
     } else {
         pastMatches.forEach(match => {
             const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
+            
+            // 🌟 استدعاء الدالة الجديدة لعرض الهدافين 🌟
+            const team1Scorers = formatScorers(match.scorers?.team1);
+            const team2Scorers = formatScorers(match.scorers?.team2);
+
             pastContainer.innerHTML += `
                 <div class="bg-red-50 rounded-xl card-shadow p-4 border-2 border-red-300">
                     <p class="text-sm text-gray-500 mb-2">${day}, ${formatDate_YYYYMMDD(match.date)}</p>
-                    <p class="text-2xl font-bold text-center text-gray-800">
+                    <p class="text-2xl font-bold text-center text-gray-800 mb-2">
                         <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team1}')">${match.team1}</span>&nbsp;
                         <span class="text-red-600">${match.score1}-${match.score2}</span>&nbsp;
                         <span class="hover:underline cursor-pointer" onclick="openTeamModal('${match.team2}')">${match.team2}</span>
                     </p>
-                    <p class="text-lg text-center text-red-700 font-semibold">Finished</p>
+                    <p class="text-lg text-center text-red-700 font-semibold mb-3">Finished</p>
+                    
+                    <div class="text-xs text-left bg-white p-2 rounded-lg border border-gray-200">
+                        <p class="font-semibold text-gray-700 mb-1">Goals Scored:</p>
+                        <p><strong>${match.team1}:</strong> ${team1Scorers}</p>
+                        <p><strong>${match.team2}:</strong> ${team2Scorers}</p>
+                    </div>
                 </div>`;
         });
     }
 
-    // هذا الجزء لم يعد له تأثير في العرض لأنه أصبح مخفياً
+    // جزء المباريات القادمة (مخفي)
     if (upcomingMatches.length === 0) {
         upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No upcoming matches.</p>`;
     } else {
