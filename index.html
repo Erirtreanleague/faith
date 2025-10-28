@@ -467,6 +467,7 @@ async function initializeDefaultData() {
             { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "سليم", players: ["سليم", "زبير", "حسن", "رامي", "ريان", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
@@ -691,6 +692,13 @@ function renderMatches() {
     const upcomingHeading = document.getElementById('upcoming-matches-heading');
     upcomingContainer.innerHTML = '';
     pastContainer.innerHTML = '';
+    
+    // ** 🔴 التعديل لإخفاء المباريات القادمة: Start 🔴 **
+    // جعل القسم العنوان نفسه غير مرئي
+    upcomingHeading.style.display = 'none'; 
+    // جعل حاوية المباريات القادمة غير مرئية
+    upcomingContainer.style.display = 'none'; 
+    // ** 🔴 التعديل لإخفاء المباريات القادمة: End 🔴 **
 
     if (!matchesData) return;
 
@@ -715,11 +723,10 @@ function renderMatches() {
         });
     }
 
+    // هذا الجزء لم يعد له تأثير في العرض لأنه أصبح مخفياً
     if (upcomingMatches.length === 0) {
-        upcomingHeading.style.display = 'block';
         upcomingContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full">No upcoming matches.</p>`;
     } else {
-        upcomingHeading.style.display = 'block';
         upcomingMatches.forEach(match => {
             const day = new Date(match.date).toLocaleDateString('en-US', { weekday: 'long' });
             upcomingContainer.innerHTML += `
@@ -736,6 +743,7 @@ function renderMatches() {
         });
     }
 }
+
 
 function renderStandings() {
     const tableBody = document.getElementById('standings-table-body');
