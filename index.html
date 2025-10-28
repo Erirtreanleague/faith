@@ -456,6 +456,8 @@ async function checkAndCreateInitialData() {
         console.error("Error checking for initial data:", error);
     }
 }
+
+// 🏆 الدالة initializeDefaultData بعد تصحيح روابط الشعارات 🏆
 async function initializeDefaultData() {
     try {
         // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
@@ -472,8 +474,9 @@ async function initializeDefaultData() {
             { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "سليم", players: ["سليم", "زبير", "حسن", "رامي", "ريان", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
             { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10A", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            // 🌟 تم تصحيح الأخطاء الإملائية هنا (المثال: placehold.co بدلاً من placehold,co و text بدلاً من texxt)
+            { name: "12E", logo: "https://placehold.co/100x100/5CAD48/000000?text=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+            { name: "10A", logo: "https://placehold.co/100x100/5CAD48/000000?text=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
         ];
         let teamNames = [];
         for (const team of defaultTeams) {
@@ -493,208 +496,17 @@ async function initializeDefaultData() {
         console.error("Error initializing default data:", error);
     }
 }
-// --- DATABASE UPDATES ---
-async function updateTeamStatsInFirestore(teamId, dataToUpdate) {
-    try {
-        const teamRef = db.collection(`artifacts/${appId}/public/data/teams`).doc(teamId);
-        await teamRef.update(dataToUpdate);
-    } catch (error) {
-        console.error("Error updating team stats:", error);
-        showModal("Failed to update team statistics. Error: " + error.message);
-    }
-}
-async function updateMatchInFirestore(matchId, dataToUpdate) {
-    try {
-        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-        const matchRef = db.collection(`artifacts/${appId}/public/data/matches`).doc(matchId);
-        await matchRef.update(dataToUpdate);
-    } catch (error) {
-        console.error("Error updating match:", error);
-        showModal("Failed to update match. Ensure you are logged in as an admin. Error: " + error.message);
-    }
-}
+// ... باقي الدوال المساعدة ...
 
-// --- UI & MODAL ---
-function showModal(message) {
-    document.getElementById('modal-message').textContent = message;
-    document.getElementById('message-modal').style.display = 'flex';
-}
-
-function hideModal() {
-    document.getElementById('message-modal').style.display = 'none';
-}
-
-function showConfirmModal(message, onConfirm) {
-    document.getElementById('confirm-message').textContent = message;
-    confirmCallback = onConfirm;
-    document.getElementById('confirm-modal').style.display = 'flex';
-}
-
-function hideConfirmModal() {
-    document.getElementById('confirm-modal').style.display = 'none';
-    confirmCallback = null;
-}
-
-
-// --- LOGIC & CALCULATIONS ---
-function formatDate_YYYYMMDD(dateString) {
-    if (!dateString) return '';
-    // The date is already in YYYY-MM-DD format, so just replace hyphens with slashes.
-    return dateString.replace(/-/g, '/');
-}
-
-function formatTimeForDisplay(time24) {
-    if (!time24) return '';
-    const [hours, minutes] = time24.split(':');
-    const h = parseInt(hours, 10);
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    const formattedHours = h % 12 || 12;
-    return `${formattedHours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
-}
-
-// 🏆 الدالة المساعدة الجديدة لعرض الهدافين (New Helper Function)
+// --- الدالة المساعدة الجديدة لعرض الهدافين (New Helper Function) ---
 function formatScorers(scorers) {
     if (!scorers || scorers.length === 0) return '—';
     // تنسيق: (الاسم: عدد الأهداف)
     return scorers.map(s => `${s.name} (${s.goals})`).join(', ');
 }
 
-function generateRoundRobinSchedule(teamNames) {
-    const teams = [...teamNames];
-    if (teams.length % 2 !== 0) teams.push('BYE');  
-    const numTeams = teams.length;
-    const allMatches = [];
-    let currentDate = new Date('2025-09-01T00:00:00');
-    const times = ['09:00', '09:40']; // Use 24-hour format
-    let timeIndex = 0;
-    let matchesOnCurrentDay = 0;
 
-    for (let round = 0; round < numTeams - 1; round++) {
-        for (let i = 0; i < numTeams / 2; i++) {
-            const team1 = teams[i];
-            const team2 = teams[numTeams - 1 - i];
-
-            if (team1 === 'BYE' || team2 === 'BYE') continue;
-
-            while (currentDate.getDay() === 5 || currentDate.getDay() === 6) { // Skip Friday and Saturday
-                currentDate.setDate(currentDate.getDate() + 1);
-                timeIndex = 0;
-                matchesOnCurrentDay = 0;
-            }
-
-            allMatches.push({
-                team1,
-                team2,
-                date: currentDate.toISOString().slice(0, 10),
-                time: times[timeIndex],
-                location: "Main Stadium",
-                status: "upcoming",
-                score1: null, score2: null,
-                scorers: { team1: [], team2: [] },
-                round: round + 1
-            });
-            
-            matchesOnCurrentDay++;
-            if (matchesOnCurrentDay >= 2) { 
-                matchesOnCurrentDay = 0;
-                timeIndex = 0;
-                currentDate.setDate(currentDate.getDate() + 1);
-            } else {
-                timeIndex++;
-            }
-        }
-        teams.splice(1, 0, teams.pop());
-    }
-    return allMatches;
-}
-
-function updateTeamStats(teamName, opponentName, scoreTeam, scoreOpponent) {
-    const team = teamsData.find(t => t.name === teamName);
-    const opponent = teamsData.find(t => t.name === opponentName);
-    if (!team || !opponent) return;
-
-    team.matchesPlayed++;
-    opponent.matchesPlayed++;
-    team.goalsFor += scoreTeam;
-    team.goalsAgainst += scoreOpponent;
-    opponent.goalsFor += scoreOpponent;
-    opponent.goalsAgainst += scoreTeam;
-
-    if (scoreTeam > scoreOpponent) {
-        team.wins++; team.points += 3; opponent.losses++;
-    } else if (scoreTeam < scoreOpponent) {
-        team.losses++; opponent.wins++; opponent.points += 3;
-    } else {
-        team.draws++; opponent.draws++; team.points += 1; opponent.points += 1;
-    }
-}
-
-function calculateStandings() {
-    teamsData.forEach(team => {
-        team.matchesPlayed = 0; team.wins = 0; team.draws = 0; team.losses = 0;
-        team.goalsFor = 0; team.goalsAgainst = 0; team.points = 0;
-    });
-
-    matchesData.forEach(match => {
-        if (match.status === 'finished' && typeof match.score1 === 'number' && typeof match.score2 === 'number') {
-            updateTeamStats(match.team1, match.team2, match.score1, match.score2);
-        }
-    });
-
-    teamsData.forEach(team => {
-        team.goalDifference = team.goalsFor - team.goalsAgainst;
-    });
-}
-function calculateTopScorers() {
-    const playerGoals = {};
-
-    matchesData.forEach(match => {
-        if (match.status === 'finished' && match.scorers) {
-            // Process scorers for team1
-            if (match.scorers.team1) {
-                match.scorers.team1.forEach(scorer => {
-                    if (!playerGoals[scorer.name]) {
-                        playerGoals[scorer.name] = { goals: 0, team: match.team1 };
-                    }
-                    playerGoals[scorer.name].goals += scorer.goals;
-                });
-            }
-            // Process scorers for team2
-            if (match.scorers.team2) {
-                match.scorers.team2.forEach(scorer => {
-                    if (!playerGoals[scorer.name]) {
-                        playerGoals[scorer.name] = { goals: 0, team: match.team2 };
-                    }
-                    playerGoals[scorer.name].goals += scorer.goals;
-                });
-            }
-        }
-    });
-
-    // Convert to array and sort
-    return Object.entries(playerGoals)
-        .map(([name, data]) => ({ name, ...data }))
-        .sort((a, b) => b.goals - a.goals);
-}
-
-// --- RENDER FUNCTIONS ---
-function renderTeams() {
-    const container = document.getElementById('teams-container');
-    container.innerHTML = '';
-    if (!teamsData || teamsData.length === 0) {
-        container.innerHTML = `<p class="text-center text-gray-500 col-span-full">No teams.</p>`;
-        return;
-    }
-    teamsData.forEach(team => {
-        container.innerHTML += `
-            <div class="bg-blue-50 rounded-xl card-shadow p-4 text-center border-2 border-blue-200">
-                <img src="${team.logo || 'https://placehold.co/100x100/ccc/000?text=Logo'}" alt="${team.name} Logo" class="mx-auto mb-2 rounded-full border-4 border-blue-400 w-24 h-24 object-cover">
-                <h3 class="text-2xl font-bold text-blue-800"><span class="hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></h3>
-                <p class="text-lg text-gray-700">Captain: <span class="font-semibold">${team.captain}</span></p>
-            </div>`;
-    });
-}
-
+// --- الدالة renderMatches بعد التعديلات ---
 function renderMatches() {
     const upcomingContainer = document.getElementById('upcoming-matches');
     const pastContainer = document.getElementById('past-matches');
@@ -760,348 +572,24 @@ function renderMatches() {
         });
     }
 }
+// ... باقي الدوال ...
 
+// --- RENDER FUNCTIONS ---
+function renderTeams() {
+    // ... (هنا ستظهر الشعارات المصححة بعد إعادة تعيين البيانات) ...
+}
 
 function renderStandings() {
-    const tableBody = document.getElementById('standings-table-body');
-    tableBody.innerHTML = '';
-    if (!teamsData || teamsData.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="10" class="text-center text-gray-500 py-4">No data available.</td></tr>`;
-        return;
-    }
-
-    const sortedTeams = [...teamsData].sort((a, b) => {
-        if (b.points !== a.points) return b.points - a.points;
-        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
-        return b.goalsFor - a.goalsFor;
-    });
-
-    sortedTeams.forEach((team, index) => {
-        tableBody.innerHTML += `
-            <tr class="hover:bg-gray-50">
-                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap"><span class="text-blue-600 hover:underline cursor-pointer" onclick="openTeamModal('${team.name}')">${team.name}</span></td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.matchesPlayed}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.wins}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.draws}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.losses}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsFor}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalsAgainst}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4">${team.goalDifference}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-blue-800">${team.points}</td>
-            </tr>`;
-    });
+    // ...
 }
+
 function renderTopScorers() {
-    const tableBody = document.getElementById('scorers-table-body');
-    tableBody.innerHTML = '';
-    const topScorers = calculateTopScorers();
-
-    if (topScorers.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-4">No goals have been scored yet.</td></tr>`;
-        return;
-    }
-
-    topScorers.forEach((scorer, index) => {
-        tableBody.innerHTML += `
-            <tr class="hover:bg-gray-50">
-                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${index + 1}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.name}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4 whitespace-nowrap">${scorer.team}</td>
-                <td class="px-1 py-2 sm:px-6 sm:py-4 font-bold text-yellow-800">${scorer.goals}</td>
-            </tr>`;
-    });
+    // ...
 }
 
-function populateAdminMatchSelector() {
-    const matchSelect = document.getElementById('match-select');
-    const selectedValue = matchSelect.value;
-    matchSelect.innerHTML = '<option value="">-- Select a Match --</option>';
-    if (!matchesData) return;
-
-    const sortedMatches = [...matchesData].sort((a, b) => new Date(a.date) - new Date(b.date));
-    sortedMatches.forEach(match => {
-        const statusText = match.status === 'upcoming' ? ' (Upcoming)' : ' (Finished)';
-        const scoreText = match.status === 'finished' ? ` (${match.score1} - ${match.score2})` : '';
-        matchSelect.innerHTML += `<option value="${match.id}">${match.team1} vs ${match.team2} (${formatDate_YYYYMMDD(match.date)})${scoreText}${statusText}</option>`;
-    });
-    matchSelect.value = selectedValue;
-}
-function handleMatchSelectionChange() {
-    const selectedMatchId = document.getElementById('match-select').value;
-    const score1Input = document.getElementById('score1');
-    const score2Input = document.getElementById('score2');
-    const score1Label = document.getElementById('score1-label');
-    const score2Label = document.getElementById('score2-label');
-    const dateInput = document.getElementById('match-date');
-    const timeInput = document.getElementById('match-time');
-    const dateTimeContainer = document.getElementById('date-time-inputs');
-
-    if (selectedMatchId) {
-        const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
-        if (selectedMatch) {
-            dateTimeContainer.style.display = 'grid';
-            score1Label.textContent = `Score ${selectedMatch.team1}`;
-            score2Label.textContent = `Score ${selectedMatch.team2}`;
-            score1Input.value = selectedMatch.status === 'finished' ? selectedMatch.score1 ?? '' : '';
-            score2Input.value = selectedMatch.status === 'finished' ? selectedMatch.score2 ?? '' : '';
-            dateInput.value = selectedMatch.date || '';
-            timeInput.value = selectedMatch.time || '';
-        }
-    } else {
-        dateTimeContainer.style.display = 'none';
-        score1Label.textContent = 'Team 1 Score';
-        score2Label.textContent = 'Team 2 Score';
-        score1Input.value = '';
-        score2Input.value = '';
-        dateInput.value = '';
-        timeInput.value = '';
-    }
-    updateScorersSection();
-}
-
-function updateScorersSection() {
-    const matchSelect = document.getElementById('match-select');
-    const selectedMatchId = matchSelect.value;
-    const score1Input = document.getElementById('score1');
-    const score2Input = document.getElementById('score2');
-    const scorersSection = document.getElementById('scorers-input-section');
-
-    scorersSection.innerHTML = '';
-    scorersSection.classList.add('hidden');
-
-    if (!selectedMatchId) return;
-
-    const selectedMatch = matchesData.find(m => m.id == selectedMatchId);
-    if (!selectedMatch) return;
-
-    const score1 = parseInt(score1Input.value, 10);
-    const score2 = parseInt(score2Input.value, 10);
-
-    if (!isNaN(score1) && !isNaN(score2) && score1 >= 0 && score2 >= 0) {
-        scorersSection.classList.remove('hidden');
-        scorersSection.innerHTML = `<h4 class="text-lg font-semibold mb-2">Register Scorers</h4><div id="team1-scorers" class="mb-4"></div><div id="team2-scorers" class="mb-4"></div>`;
-        renderScorerInputs(selectedMatch, 'team1', score1);
-        renderScorerInputs(selectedMatch, 'team2', score2);
-    }
-}
-
-function renderScorerInputs(match, teamKey, score) {
-    const container = document.getElementById(`${teamKey}-scorers`);
-    const teamName = match[teamKey];
-    const team = teamsData.find(t => t.name === teamName);
-    if (!team || !team.players || score === 0) {
-        container.innerHTML = '';
-        return;
-    };
-
-    let content = `<h5 class="font-semibold text-gray-700 mb-2">Scorers for ${teamName} (${score} goals)</h5>`;
-    for (let i = 0; i < score; i++) {
-        content += `
-            <div class="flex items-center gap-2 mb-2">
-                <select class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 scorer-player" data-team="${teamKey}">
-                    <option value="">Select Player</option>
-                    ${team.players.map(p => `<option value="${p}">${p}</option>`).join('')}
-                </select>
-            </div>`;
-    }
-    container.innerHTML = content;
-}
-
-function renderAllActiveSections() {
-    const activeSection = document.querySelector('.page-section.active');
-    if (!activeSection) {
-        showSection('home');
-        return;
-    }
-    const sectionId = activeSection.id;
-
-    if (sectionId === 'teams') renderTeams();
-    else if (sectionId === 'matches') renderMatches();
-    else if (sectionId === 'standings') {
-        calculateStandings();
-        renderStandings();
-    } else if (sectionId === 'scorers') {
-        renderTopScorers();
-    } else if (sectionId === 'admin' && adminAuthenticated) {
-        populateAdminMatchSelector();
-        handleMatchSelectionChange();
-    }
-}
-
-function showSection(sectionId) {
-    document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-
-    if (sectionId === 'admin') {
-        if (adminAuthenticated) {
-            document.getElementById('admin-password-prompt').style.display = 'none';
-            document.getElementById('admin-content').style.display = 'block';
-            populateAdminMatchSelector();
-            handleMatchSelectionChange();
-        } else {
-            document.getElementById('admin-password-prompt').style.display = 'block';
-            document.getElementById('admin-content').style.display = 'none';
-        }
-    } else {
-        renderAllActiveSections();
-    }
-}
-
-// --- EVENT LISTENERS ---
-document.querySelectorAll('.nav-button[data-target]').forEach(button => {
-    button.addEventListener('click', (e) => showSection(e.currentTarget.dataset.target));
-});
-
-document.getElementById('admin-login-button').addEventListener('click', async () => {
-    const email = document.getElementById('admin-email').value;
-    const password = document.getElementById('admin-password').value;
-    const errorMsg = document.getElementById('admin-password-error');
-    errorMsg.style.display = 'none';
-
-    if (!email || !password) {
-        errorMsg.textContent = "Please enter email and password.";
-        errorMsg.style.display = 'block';
-        return;
-    }
-    try {
-        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-        await auth.signInWithEmailAndPassword(email, password);
-        showModal('Logged in successfully as admin!');
-        showSection('admin');
-    } catch (error) {
-        errorMsg.textContent = 'Incorrect email or password.';
-        errorMsg.style.display = 'block';
-    }
-});
-
-document.getElementById('admin-logout-button').addEventListener('click', () => {
-    // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-    auth.signOut().then(() => {
-        showModal('Logged out successfully.');
-        showSection('home');
-    }).catch((error) => console.error('Sign out error', error));
-});
-
-document.getElementById('update-score-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const matchId = document.getElementById('match-select').value;
-    if (!matchId) {
-        showModal('Please select a match.');
-        return;
-    }
-    const score1Input = document.getElementById('score1');
-    const score2Input = document.getElementById('score2');
-    const dateInput = document.getElementById('match-date');
-    const timeInput = document.getElementById('match-time');
-    const resetMatchCheckbox = document.getElementById('reset-match-checkbox');
-    
-    let dataToUpdate = {
-        date: dateInput.value,
-        time: timeInput.value
-    };
-
-    if (resetMatchCheckbox.checked) {
-        dataToUpdate.status = 'upcoming';
-        dataToUpdate.score1 = null;
-        dataToUpdate.score2 = null;
-        dataToUpdate.scorers = { team1: [], team2: [] };
-    } else {
-        const newScore1 = parseInt(score1Input.value, 10);
-        const newScore2 = parseInt(score2Input.value, 10);
-        
-        // Only update score if values are entered
-        if (!isNaN(newScore1) && !isNaN(newScore2)) {
-            const team1ScorersList = document.querySelectorAll('#team1-scorers .scorer-player');
-            const team2ScorersList = document.querySelectorAll('#team2-scorers .scorer-player');
-            const team1Scorers = Array.from(team1ScorersList).map(s => s.value).filter(Boolean);
-            const team2Scorers = Array.from(team2ScorersList).map(s => s.value).filter(Boolean);
-
-            if (team1Scorers.length !== newScore1 || team2Scorers.length !== newScore2) {
-                showModal('Please select a player for each goal scored.');
-                return;
-            }
-
-            const aggregateScorers = (scorersList) => {
-                const counts = {};
-                scorersList.forEach(player => { counts[player] = (counts[player] || 0) + 1; });
-                return Object.entries(counts).map(([name, goals]) => ({ name, goals }));
-            };
-
-            dataToUpdate.status = 'finished';
-            dataToUpdate.score1 = newScore1;
-            dataToUpdate.score2 = newScore2;
-            dataToUpdate.scorers = {
-                team1: aggregateScorers(team1Scorers),
-                team2: aggregateScorers(team2Scorers)
-            };
-        } else if (score1Input.value || score2Input.value) {
-            // If one is filled but not the other, or not a number
-            showModal('Please enter a valid numeric score for both teams to record the result.');
-            return;
-        }
-    }
-
-    await updateMatchInFirestore(matchId, dataToUpdate);
-    document.getElementById('update-score-form').reset();
-    handleMatchSelectionChange();
-    showModal('Match updated successfully!');
-});
-document.getElementById('match-select').addEventListener('change', handleMatchSelectionChange);
-document.getElementById('score1').addEventListener('input', updateScorersSection);
-document.getElementById('score2').addEventListener('input', updateScorersSection);
-
-document.getElementById('close-modal-button').addEventListener('click', hideModal);
-document.getElementById('modal-ok-button').addEventListener('click', hideModal);
-window.addEventListener('click', (event) => {
-    if (event.target === document.getElementById('message-modal')) {
-        hideModal();
-    }
-});
-
-document.getElementById('confirm-ok-button').addEventListener('click', () => {
-    if (confirmCallback) {
-        confirmCallback();
-    }
-    hideConfirmModal();
-});
-
-document.getElementById('confirm-cancel-button').addEventListener('click', hideConfirmModal);
-
-document.getElementById('reset-data-button').addEventListener('click', () => {
-    showConfirmModal(
-        'Are you sure you want to reset the data? All current teams and matches will be permanently deleted.',
-        async () => {
-            showModal("Resetting data...");
-            try {
-                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-                const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
-                const matchesSnapshot = await matchesCollectionRef.get();
-                for (const doc of matchesSnapshot.docs) {
-                    await doc.ref.delete();
-                }
-                console.log("All matches deleted.");
-
-                const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
-                const teamsSnapshot = await teamsCollectionRef.get();
-                for (const doc of teamsSnapshot.docs) {
-                    await doc.ref.delete();
-                }
-                console.log("All teams deleted.");
-
-                await initializeDefaultData();
-                showModal('Data has been reset successfully!');
-            } catch (error) {
-                console.error("Error resetting data:", error);
-                showModal('An error occurred while resetting data: ' + error.message);
-            }
-        }
-    );
-});
-
-// --- INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', initializeFirebase);
-
+// ... باقي الكود بما فيه الدوال الإدارية (Admin) ...
+// ... (تم حذف الكود المكرر للدوال التي لم تتغير لتجنب الإطالة) ...
+// ... يرجى لصق الكود الكامل الذي أرسلته لك في ردي السابق مع التعديل على initializeDefaultData فقط ...
 </script>
 </body>
 </html>
