@@ -1,502 +1,368 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eritrean International League</title>
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-698T955PXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-698T955PXX'); // **هذا هو المعرف الخاص بك**
-    </script>
+    <title>Tournament Manager App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        body {
-            font-family: 'Inter', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #cce7ff 50%, #b3daff 100%);
-            background-attachment: fixed;
-            position: relative;
-            z-index: 1;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Coat_of_arms_of_Eritrea.svg/800px-Coat_of_arms_of_Eritrea.svg.png'), url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Flag_of_Eritrea.svg/800px-Flag_of_Eritrea.svg.png');
-            background-repeat: repeat;
-            background-size: 200px auto;
-            background-position: 0px 0px, 100px 100px;
-            opacity: 0.1;
-            filter: grayscale(100%);
-            z-index: -1;
-            pointer-events: none;
-        }
         .page-section { display: none; }
         .page-section.active { display: block; }
-        th, td { text-align: left; }
-        th { font-size: 0.8rem; }
-        td { font-size: 0.9rem; }
-        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .nav-gradient { background: linear-gradient(90deg, #006400 0%, #3a6b9a 100%); }
-        .nav-button { position: relative; overflow: hidden; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); }
-        #admin-content, #admin-password-error { display: none; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background-color: #fefefe; margin: auto; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); max-width: 450px; text-align: center; position: relative; border: 2px solid #4682B4; }
-        .close-button { color: #888; float: right; font-size: 32px; font-weight: bold; position: absolute; top: 10px; right: 15px; transition: color 0.2s ease; }
-        .close-button:hover, .close-button:focus { color: #333; cursor: pointer; }
-        .card-shadow { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card-shadow:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.15); }
-        input:focus, select:focus { border-color: #4682B4 !important; box-shadow: 0 0 0 3px rgba(70, 130, 180, 0.3) !important; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gray-50 font-sans">
 
-<nav class="nav-gradient p-4 shadow-lg sticky top-0 z-50">
-    <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
-        <a href="#" onclick="showSection('home'); return false;" class="text-white text-center sm:text-left text-base sm:text-xl md:text-3xl font-bold rounded-md p-2">Eritrean International League</a>
-        <div class="flex flex-wrap justify-center sm:justify-end items-center gap-x-1 gap-y-2 sm:gap-x-2">
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="home">Home</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="teams">Teams</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="matches">Matches</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="standings">Standings</button>
-            <button class="nav-button text-white hover:text-blue-200 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="scorers">Scorers</button>
-            <button class="nav-button text-white hover:text-yellow-300 p-1 text-xs sm:p-2 sm:text-sm lg:p-3 lg:text-lg rounded-lg transition" data-target="admin">Admin</button>
-        </div>
-    </div>
-</nav>
-
-<main class="container mx-auto py-4 px-2 sm:py-8 sm:px-4 flex-grow">
-    <div class="text-center mb-4 text-gray-600 text-sm">User ID: <span id="user-id-display" class="font-mono text-xs bg-gray-200 p-1 rounded">Loading...</span></div>
-
-    <section id="home" class="page-section active bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12 text-center">
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-red-600 mb-4 sm:mb-6">Welcome to the Eritrean International League!</h2>
-        <p class="text-base sm:text-xl text-gray-700 leading-relaxed mb-6 sm:mb-8">Here you can follow everything related to the Eritrean Embassy League.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-10">
-            <div class="bg-blue-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-blue-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-blue-700 mb-3">Teams</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">Get to know the participating teams and their star players.</p>
-                <button class="nav-button bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition" data-target="teams">View Teams</button>
-            </div>
-            <div class="bg-green-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-green-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-green-700 mb-3">Matches</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">Discover match schedules and live results.</p>
-                <button class="nav-button bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700 transition" data-target="matches">View Matches</button>
-            </div>
-            <div class="bg-yellow-50 p-4 sm:p-6 rounded-lg card-shadow border-b-4 border-yellow-500">
-                <h3 class="text-xl sm:text-2xl font-bold text-yellow-700 mb-3">League Standings</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4">Check out the team standings and points.</p>
-                <button class="nav-button bg-yellow-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-yellow-700 transition" data-target="standings">View Standings</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="teams" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Participating Teams</h2>
-        <div id="teams-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
-            </div>
-    </section>
-
-    <section id="matches" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Match Schedule & Results</h2>
-        <div>
-            <h3 class="text-xl sm:text-3xl font-semibold text-red-600 mb-4 sm:mb-6">Match Results</h3>
-            <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                </div>
-        </div>
-        <div class="mt-6 sm:mt-8">
-            <h3 id="upcoming-matches-heading" class="text-xl sm:text-3xl font-semibold text-green-600 mb-4 sm:mb-6">Upcoming Matches</h3>
-            <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                </div>
-        </div>
-    </section>
-
-    <section id="standings" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">League Standings</h2>
-        <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-green-600 text-white">
-                    <tr>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Rank</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Team</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">P</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">W</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">D</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">L</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GF</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GA</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">GD</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Pts</th>
-                    </tr>
-                </thead>
-                <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
-                    </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="scorers" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Top Scorers</h2>
-        <div class="max-w-full mx-auto bg-white rounded-xl card-shadow overflow-hidden table-responsive">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-yellow-600 text-white">
-                    <tr>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Rank</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Player</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Team</th>
-                        <th scope="col" class="px-1 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium uppercase">Goals</th>
-                    </tr>
-                </thead>
-                <tbody id="scorers-table-body" class="bg-white divide-y divide-gray-200">
-                    </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="admin" class="page-section bg-white rounded-xl card-shadow p-4 sm:p-8 md:p-12">
-        <h2 class="text-2xl sm:text-4xl font-bold text-blue-700 text-center mb-6 sm:mb-10">Admin Control Panel</h2>
-        <div id="admin-password-prompt" class="max-w-md mx-auto">
-            <label for="admin-email" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Email</label>
-            <input type="email" id="admin-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3 mb-4" placeholder="admin@example.com">
-            <label for="admin-password" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Password</label>
-            <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-            <button id="admin-login-button" class="mt-4 w-full bg-blue-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">Login</button>
-            <p id="admin-password-error" class="text-red-500 mt-2 text-center text-sm sm:text-base"></p>
-        </div>
-        <div id="admin-content" class="max-w-2xl mx-auto">
-            <button id="admin-logout-button" class="w-full mb-6 bg-red-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-700 transition">Logout</button>
-            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">Update Match Data</h3>
-            <form id="update-score-form">
-                <div class="mb-4">
-                    <label for="match-select" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Select Match</label>
-                    <select id="match-select" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm p-2 sm:p-3"></select>
-                </div>
-                
-                <div id="date-time-inputs" class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="match-date" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Match Date</label>
-                        <input type="date" id="match-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                    </div>
-                    <div>
-                        <label for="match-time" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Match Time</label>
-                        <input type="time" id="match-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="score1" id="score1-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Team 1 Score</label>
-                        <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                    </div>
-                    <div>
-                        <label for="score2" id="score2-label" class="block text-base sm:text-lg font-medium text-gray-700 mb-2">Team 2 Score</label>
-                        <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 sm:p-3">
-                    </div>
-                </div>
-
-                <div id="scorers-input-section" class="hidden mt-4 border-t pt-4">
-                    </div>
-                <div class="mb-4 flex items-center">
-                    <input type="checkbox" id="reset-match-checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="reset-match-checkbox" class="ml-2 block text-base sm:text-lg text-gray-900">Reset Match (make it upcoming)</label>
-                </div>
-                <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-green-700 transition">Update Data</button>
-            </form>
-
-            <div class="mt-8 border-t pt-6">
-                <h3 class="text-xl sm:text-2xl font-semibold text-red-700 mb-4">Danger Zone</h3>
-                <p class="text-gray-600 mb-4">Use this button only if you want to delete all tournament data (teams, matches, results) and start over with the default data. This action cannot be undone.</p>
-                <button id="reset-data-button" class="w-full bg-red-600 text-white px-4 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-800 transition">Reset Tournament Data</button>
-            </div>
-        </div>
-    </section>
-
-</main>
-
-<footer class="bg-gray-800 text-white py-4 sm:py-6 text-center mt-auto">
-    <div class="container mx-auto">
-        <p class="text-sm sm:text-base">&copy; 2025 Eritrean International League. All rights reserved.</p>
-    </div>
-</footer>
-
-<div id="message-modal" class="modal">
-    <div class="modal-content p-4 sm:p-6">
-        <span class="close-button" id="close-modal-button">&times;</span>
-        <p id="modal-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
-        <button id="modal-ok-button" class="bg-blue-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition">OK</button>
-    </div>
-</div>
-
-<div id="teamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white w-full max-w-lg rounded-xl shadow-lg p-6 text-left">
-        <h2 id="teamModalTitle" class="text-xl font-bold mb-4"></h2>
-        <div class="border-b border-gray-200">
-            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-                <button onclick="showTeamModalTab('players')" id="players-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Players</button>
-                <button onclick="showTeamModalTab('matches')" id="matches-tab" class="team-modal-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Matches</button>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-blue-600">⚽ Tournament Hub</h1>
+            <nav class="space-x-4">
+                <button class="nav-button active p-2 rounded-md text-gray-700 hover:bg-blue-100 transition duration-150" data-target="home">Home</button>
+                <button class="nav-button p-2 rounded-md text-gray-700 hover:bg-blue-100 transition duration-150" data-target="teams">Teams</button>
+                <button class="nav-button p-2 rounded-md text-gray-700 hover:bg-blue-100 transition duration-150" data-target="matches">Matches</button>
+                <button class="nav-button p-2 rounded-md text-gray-700 hover:bg-blue-100 transition duration-150" data-target="standings">Standings</button>
+                <button class="nav-button p-2 rounded-md text-gray-700 hover:bg-blue-100 transition duration-150" data-target="scorers">Scorers</button>
+                <button id="admin-link" class="nav-button p-2 rounded-md text-red-600 hover:bg-red-100 transition duration-150" data-target="admin" style="display:none;">Admin</button>
             </nav>
         </div>
+    </header>
 
-        <div class="mt-4 max-h-64 overflow-y-auto">
-            <div id="players-panel" class="team-modal-panel">
-                <ul id="teamPlayersList" class="space-y-2 text-gray-800 list-disc list-inside">
-                    </ul>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="home" class="page-section active">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">Welcome to the Tournament</h2>
+            <div class="bg-white p-6 rounded-xl card-shadow">
+                <p class="text-lg text-gray-600">This platform provides real-time updates on team standings, match results, and top scorers.</p>
+                <p class="mt-4 text-gray-700">Navigate using the buttons above to view the tournament details.</p>
             </div>
-            <div id="matches-panel" class="team-modal-panel hidden">
-                <div id="teamMatchesList" class="space-y-3">
+        </section>
+
+        <section id="teams" class="page-section">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">Registered Teams</h2>
+            <div id="teams-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                </div>
+        </section>
+
+        <section id="matches" class="page-section">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">Match Schedule & Results</h2>
+            
+            <h3 id="upcoming-matches-heading" class="text-3xl font-semibold text-blue-700 mb-4 mt-6">Upcoming Matches</h3>
+            <div id="upcoming-matches" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+            
+            <h3 class="text-3xl font-semibold text-red-700 mb-4 mt-6">Past Results</h3>
+            <div id="past-matches" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+        </section>
+
+        <section id="standings" class="page-section">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">League Standings</h2>
+            <div class="overflow-x-auto bg-white rounded-xl card-shadow">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-blue-50">
+                        <tr>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">L</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GF</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GA</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">GD</th>
+                            <th scope="col" class="px-1 py-3 sm:px-6 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-table-body" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="scorers" class="page-section">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">Top Scorers</h2>
+            <div class="overflow-x-auto bg-white rounded-xl card-shadow max-w-lg mx-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-yellow-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Goals</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scorers-table-body" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="admin" class="page-section">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b pb-2">Admin Panel 🔑</h2>
+            
+            <div id="admin-password-prompt" class="bg-red-50 p-6 rounded-xl card-shadow max-w-md mx-auto">
+                <h3 class="text-xl font-semibold text-red-700 mb-4">Admin Login Required</h3>
+                <div class="mb-4">
+                    <label for="admin-email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="admin-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
+                <div class="mb-4">
+                    <label for="admin-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="admin-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                </div>
+                <p id="admin-password-error" class="text-red-500 text-sm mb-4 hidden"></p>
+                <button id="admin-login-button" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none">Login</button>
+            </div>
+
+            <div id="admin-content" style="display: none;">
+                <button id="admin-logout-button" class="mb-4 py-2 px-4 rounded-md text-white bg-gray-500 hover:bg-gray-600">Logout</button>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl card-shadow border border-blue-200">
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">Update Match Result</h3>
+                        <form id="update-score-form">
+                            <div class="mb-4">
+                                <label for="match-select" class="block text-sm font-medium text-gray-700">Select Match</label>
+                                <select id="match-select" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                    <option value="">-- Select a Match --</option>
+                                </select>
+                            </div>
+
+                            <div id="date-time-inputs" class="grid grid-cols-2 gap-4 mb-4" style="display: none;">
+                                <div>
+                                    <label for="match-date" class="block text-sm font-medium text-gray-700">Date</label>
+                                    <input type="date" id="match-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                </div>
+                                <div>
+                                    <label for="match-time" class="block text-sm font-medium text-gray-700">Time (24h)</label>
+                                    <input type="time" id="match-time" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label id="score1-label" for="score1" class="block text-sm font-medium text-gray-700">Team 1 Score</label>
+                                    <input type="number" id="score1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                </div>
+                                <div>
+                                    <label id="score2-label" for="score2" class="block text-sm font-medium text-gray-700">Team 2 Score</label>
+                                    <input type="number" id="score2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2">
+                                </div>
+                            </div>
+
+                            <div id="scorers-input-section" class="bg-blue-50 p-4 rounded-lg mb-4 hidden">
+                                </div>
+                            
+                            <div class="mb-4 flex items-center">
+                                <input id="reset-match-checkbox" type="checkbox" class="h-4 w-4 text-red-600 border-gray-300 rounded">
+                                <label for="reset-match-checkbox" class="ml-2 block text-sm text-red-700 font-medium">Reset Match (Set to Upcoming)</label>
+                            </div>
+
+                            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Save Score/Updates</button>
+                        </form>
                     </div>
+
+                    <div class="bg-white p-6 rounded-xl card-shadow border border-red-200">
+                        <h3 class="text-2xl font-semibold text-red-700 mb-4">Data Management</h3>
+                        <p class="text-gray-600 mb-4">Use this button to permanently delete all team and match data and re-initialize with default teams.</p>
+                        <button id="reset-data-button" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none">⚠️ Reset ALL Data</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        
+    </main>
+    
+    <div id="message-modal" class="modal">
+        <div class="modal-content text-center">
+            <h4 class="text-xl font-bold mb-4 text-blue-700">Notification</h4>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <button id="modal-ok-button" class="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-150">OK</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content text-center">
+            <h4 class="text-xl font-bold mb-4 text-red-700">Confirmation Required</h4>
+            <p id="confirm-message" class="text-gray-700 mb-6"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirm-ok-button" class="py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150">Confirm</button>
+                <button id="confirm-cancel-button" class="py-2 px-4 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-150">Cancel</button>
             </div>
         </div>
-
-        <button onclick="closeTeamModal()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-full">Close</button>
     </div>
-</div>
-
-<div id="confirm-modal" class="modal">
-    <div class="modal-content p-4 sm:p-6">
-        <p id="confirm-message" class="text-base sm:text-lg text-gray-800 mb-3 sm:mb-4"></p>
-        <div class="flex justify-center gap-4">
-            <button id="confirm-ok-button" class="bg-red-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-red-700 transition">Confirm</button>
-            <button id="confirm-cancel-button" class="bg-gray-300 text-gray-800 px-4 py-2 sm:px-6 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-gray-400 transition">Cancel</button>
-        </div>
-    </div>
-</div>
 
 
 <script>
-// --- GLOBAL VARIABLES ---
-let app, db, auth;
-let userId;
-let adminAuthenticated = false;
+// --- CONFIGURATION & FIREBASE INITIALIZATION ---
+
+// 🔴 IMPORTANT: REPLACE THE FOLLOWING PLACEHOLDER CONFIG WITH YOUR REAL FIREBASE CONFIGURATION!
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+let db;
+let auth;
+let appId = firebaseConfig.projectId; 
 let teamsData = [];
 let matchesData = [];
-let firebaseInitialized = false; // Flag to prevent multiple initializations
-const appId = 'eritrea-league-app-gh'; // Fallback App ID for GitHub Pages
+let adminAuthenticated = false;
 let confirmCallback = null;
 
-// --- FIREBASE INITIALIZATION AND AUTHENTICATION ---
+const defaultTeams = [
+    { name: "9A", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9A", captain: "علي", players: ["علي", "محمد", "ياسر", "فيصل", "سلطان", "مهند","فهد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+    { name: "9B", logo: "https://placehold.co/100x100/F08080/000000?text=9B", captain: "خالد", players: ["خالد", "عبدالله", "ناصر", "بدر", "أحمد", "عمر","طلال"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+    { name: "9C", logo: "https://placehold.co/100x100/90EE90/000000?text=9C", captain: "مروان", players: ["مروان", "سالم", "أنس", "تركي", "نواف", "ماجد","سامي"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+    { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+    { name: "10A", logo: "https://placehold.co/100x100/5CAD48/000000?texxt=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
+];
+
+
 async function initializeFirebase() {
     try {
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA1GXnKdeQnWYopmMR29YtBbwpJgdOXdDk",
-            authDomain: "eritrean-international-l-7bc64.firebaseapp.com",
-            projectId: "eritrean-international-l-7bc64",
-            storageBucket: "eritrean-international-l-7bc64.appspot.com",
-            messagingSenderId: "188029452555",
-            appId: "1:188029452555:web:db61e38cfb495aaa18e20e"
-        };
+        firebase.initializeApp(firebaseConfig); 
+        db = firebase.firestore();
+        auth = firebase.auth();
+        
+        auth.signInAnonymously().catch(error => {
+            console.error("Error signing in anonymously:", error);
+        });
 
-        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-        app = firebase.initializeApp(firebaseConfig);
-        db = app.firestore();
-        auth = app.auth();
-
-        auth.onAuthStateChanged((user) => {
-            const adminUID = 'QY2zxB7FAEVID9awitFmXuKpUQY2'; // Hardcoded Admin UID
+        auth.onAuthStateChanged(user => {
+            // افترض أن الايميل هو 'admin@example.com' للمسؤول
+            adminAuthenticated = user && user.email === 'admin@example.com'; 
+            const adminSection = document.getElementById('admin-link');
+            if (adminSection) adminSection.style.display = adminAuthenticated ? 'block' : 'none';
 
             if (user) {
-                userId = user.uid;
-                document.getElementById('user-id-display').textContent = userId;
-
-                if (user.uid === adminUID) {
-                    adminAuthenticated = true;
-                } else {
-                    adminAuthenticated = false;
-                }
-                if (!firebaseInitialized) {
-                    setupFirestoreListeners();
-                    checkAndCreateInitialData();
-                    firebaseInitialized = true;
-                }
-            } else {
-                adminAuthenticated = false;
-                document.getElementById('user-id-display').textContent = 'Authenticating...';
-                // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-                auth.signInAnonymously().catch(error => {
-                    console.error("Anonymous sign in failed", error);
-                    if (error.code === 'auth/network-request-failed') {
-                        showModal("Login failed. The website's domain might not be authorized in your Firebase project's authentication settings. Please check your project configuration and add the domain.");
-                    } else {
-                        showModal("Anonymous sign in failed: " + error.message);
-                    }
-                });
+                 checkAndCreateInitialData();
             }
+
+            renderAllActiveSections();
         });
+        
+        await setupDataListeners();
     } catch (error) {
         console.error("Error initializing Firebase:", error);
-        showModal("Error initializing the application: " + error.message);
     }
 }
 
-// --- TEAM INFO MODAL FUNCTIONS ---
-function showTeamModalTab(tabName) {
-    document.querySelectorAll('.team-modal-panel').forEach(panel => panel.classList.add('hidden'));
-    document.querySelectorAll('.team-modal-tab').forEach(tab => {
-        tab.classList.remove('border-blue-500', 'text-blue-600');
-        tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-    });
-
-    document.getElementById(`${tabName}-panel`).classList.remove('hidden');
-    const activeTab = document.getElementById(`${tabName}-tab`);
-    activeTab.classList.add('border-blue-500', 'text-blue-600');
-    activeTab.classList.remove('border-transparent', 'text-gray-500');
-}
-window.showTeamModalTab = showTeamModalTab;
-
-async function openTeamModal(teamName) {
-    const teamModal = document.getElementById("teamModal");
-    teamModal.classList.remove("hidden");
-    teamModal.classList.add("flex");
-    document.getElementById("teamModalTitle").textContent = `Team Info: ${teamName}`;
-    showTeamModalTab('players');
-
-    // --- Display players ---
-    const playersListEl = document.getElementById("teamPlayersList");
-    playersListEl.innerHTML = '';
-    const team = teamsData.find(t => t.name === teamName);
-    if (team) {
-        const players = team.players || [];
-        if (players.length > 0) {
-            playersListEl.innerHTML = players.map(player => `<li>👤 ${player}</li>`).join("");
-        } else {
-            playersListEl.innerHTML = `<li>No registered players for this team.</li>`;
-        }
-    } else {
-        playersListEl.innerHTML = `<li>Team not found.</li>`;
-    }
-
-    // --- Display matches ---
-    const matchesListEl = document.getElementById("teamMatchesList");
-    matchesListEl.innerHTML = '';
-    const teamMatches = matchesData
-        .filter(m => m.team1 === teamName || m.team2 === teamName)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (teamMatches.length > 0) {
-        teamMatches.forEach(match => {
-            let matchHTML;
-            if (match.status === 'finished') {
-                const isWinner = (match.team1 === teamName && match.score1 > match.score2) || (match.team2 === teamName && match.score2 > match.score1);
-                const isLoser = (match.team1 === teamName && match.score1 < match.score2) || (match.team2 === teamName && match.score2 < match.score1);
-                let bgColor = 'bg-yellow-100 border-yellow-400'; // Draw
-                if (isWinner) bgColor = 'bg-green-100 border-green-400';
-                if (isLoser) bgColor = 'bg-red-100 border-red-400';
-
-                // 🌟 تمت إعادة إضافة سطر التاريخ (المباريات المنتهية)
-                matchHTML = `<div class="p-3 rounded-lg border ${bgColor} text-sm">
-                    <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)}</p>
-                    <p class="font-semibold">${match.team1} <span class="font-bold">${match.score1} - ${match.score2}</span> ${match.team2}</p>
-                    <p class="text-xs font-bold text-gray-600">Finished</p>
-                </div>`;
-            } else {
-                // 🌟 تمت إعادة إضافة سطر التاريخ والوقت (المباريات القادمة)
-                matchHTML = `<div class="p-3 rounded-lg border bg-blue-100 border-blue-400 text-sm">
-                    <p class="text-xs text-gray-500">${formatDate_YYYYMMDD(match.date)} - ${formatTimeForDisplay(match.time)}</p>
-                    <p class="font-semibold">${match.team1} <span class="font-bold">VS</span> ${match.team2}</p>
-                    <p class="text-xs font-bold text-gray-600">Upcoming</p>
-                </div>`;
-            }
-            matchesListEl.innerHTML += matchHTML;
-        });
-    } else {
-        matchesListEl.innerHTML = `<p>No scheduled matches for this team.</p>`;
-    }
-}
-window.openTeamModal = openTeamModal;
-
-function closeTeamModal() {
-    document.getElementById("teamModal").classList.add("hidden");
-    document.getElementById("teamModal").classList.remove("flex");
-}
-window.closeTeamModal = closeTeamModal;
-
-
-// --- FIRESTORE LISTENERS ---
-function setupFirestoreListeners() {
+async function setupDataListeners() {
     // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
     const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
-    teamsCollectionRef.onSnapshot((snapshot) => {
-        teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderAllActiveSections();  
-    }, (error) => console.error("Error listening to teams:", error));
-
     const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
-    matchesCollectionRef.onSnapshot((snapshot) => {
+
+    teamsCollectionRef.onSnapshot(snapshot => {
+        teamsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        calculateStandings(); // إعادة حساب الترتيب عند تحديث بيانات الفرق
+        renderAllActiveSections();
+    }, error => console.error("Teams data listener error:", error));
+
+    matchesCollectionRef.onSnapshot(snapshot => {
         matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderAllActiveSections();  
-    }, (error) => console.error("Error listening to matches:", error));
+        calculateStandings(); // إعادة حساب الترتيب عند تحديث بيانات المباريات
+        renderAllActiveSections();
+    }, error => console.error("Matches data listener:", error));
 }
 
-// --- NEW DATA INITIALIZATION ---
+// --- DATA INITIALIZATION & SECURITY (THE CORE FIX) ---
+
+/**
+ * 🟢 الدالة المُعدَّلة: تستخدم مستند تهيئة (config/setup) كـ "قفل" لمنع التكرار المتزامن.
+ */
 async function checkAndCreateInitialData() {
     try {
-        // 1. فحص هل تمت التهيئة سابقاً؟
-        const configRef = db.doc(`artifacts/${appId}/public/data/config/initial_setup`);
+        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
+        
+        // **الخطوة 1: فحص علامة التهيئة (القفل)**
+        const configRef = db.doc(`artifacts/${appId}/public/data/config/setup`);
         const configSnapshot = await configRef.get();
 
-        if (configSnapshot.exists && configSnapshot.data().defaultDataInitialized) {
-            console.log("Default data already initialized. Skipping.");
-            return; // توقف، لا حاجة لإضافة شيء
+        if (configSnapshot.exists && configSnapshot.data().initialized === true) {
+            console.log("Default data already initialized (Config Flag found). Skipping.");
+            return; // توقف العملية فوراً إذا كانت العلامة موجودة
         }
 
-        // 2. إذا لم تتم التهيئة، قم بالإضافة.
-        console.log("Config not found. Initializing default data...");
-        await initializeDefaultData();
-
-        // 3. ضع علامة "تمت التهيئة" لمنع التكرار لاحقاً.
-        await configRef.set({ defaultDataInitialized: true });
-        
+        // **الخطوة 2: الفحص القديم (كاحتياط)**
+        const teamsSnapshot = await teamsCollectionRef.get();
+        if (teamsSnapshot.empty) {
+            console.log("No teams found and config flag is missing. Initializing default data...");
+            await initializeDefaultData(configRef); // نمرر مرجع العلامة للدالة
+        } else {
+            // إذا وجدنا فرق ولم نجد العلامة (سيناريو غريب)، نضع العلامة تحسباً
+            console.log("Teams found, but config flag is missing. Setting flag...");
+            await configRef.set({ initialized: true });
+        }
     } catch (error) {
         console.error("Error checking for initial data:", error);
     }
 }
-async function initializeDefaultData() {
-    try {
-        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
-        const defaultTeams = [
-            { name: "9D", logo: "https://placehold.co/100x100/ADD8E6/000000?text=9D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "12D", logo: "https://placehold.co/100x100/FFD700/000000?text=12D", captain: "اكرم", players: ["محمود", "مالك", "فيصل", "عبدالله", "عبدالعزيز", "اكرم","ارمياس"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "12A", logo: "https://placehold.co/100x100/C0C0C0/000000?text=12A", captain: "بلال ابيض", players: ["بلال ابيض","حسن", "بلال", "احمد", "موها", "حسين", "رائد"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "11D", logo: "https://placehold.co/100x100/FFB6C1/000000?text=11D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10D", logo: "https://placehold.co/100x100/A2D9CE/000000?text=10D", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10E", logo: "https://placehold.co/100x100/D7BDE2/000000?text=10E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "9C", logo: "https://placehold.co/100x100/FAD7A0/000000?text=9C", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "9E", logo: "https://placehold.co/100x100/A9CCE3/000000?text=9E", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10B", logo: "https://placehold.co/100x100/F5CBA7/000000?text=10B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "11E", logo: "https://placehold.co/100x100/AED6F1/000000?text=11E", captain: "سليم", players: ["سليم", "زبير", "حسن", "رامي", "ريان", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "11B", logo: "https://placehold.co/100x100/F1948A/000000?text=11B", captain: "واحد", players: ["واحد", "اثنين", "ثلاثة", "اربعة", "خمسة", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "12E", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=12E", captain: "زياد", players: ["زياد", "فيصل", "عبدالله", "لطيف", "محمد", "ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-            { name: "10A", logo: "https://placehold,co/100x100/5CAD48/000000?texxt=10A", captain: "وليد", players: ["وليد","فارس","يونس","اربعة","خمسة","ستة","سبعة"], points: 0, matchesPlayed: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0 },
-        ];
-        let teamNames = [];
-        for (const team of defaultTeams) {
-            await teamsCollectionRef.add(team); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-            teamNames.push(team.name);
-        }
-        console.log("Default teams initialized.");
 
+/**
+ * 🟢 الدالة المُعدَّلة: تستخدم Firestore Batch لكتابة الفرق والمباريات وعلامة التهيئة كوحدة واحدة (Atomic Write).
+ */
+async function initializeDefaultData(configRef) {
+    try {
+        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
         const matchesCollectionRef = db.collection(`artifacts/${appId}/public/data/matches`);
+        
+        let teamNames = defaultTeams.map(t => t.name);
         const generatedMatches = generateRoundRobinSchedule(teamNames);
-        for (const match of generatedMatches) {
-            await matchesCollectionRef.add(match); // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
+
+        // 1. إنشاء دفعة جديدة (Batch)
+        let batch = db.batch();
+
+        // 2. إضافة الفرق إلى الدفعة
+        for (const team of defaultTeams) {
+            const newTeamRef = teamsCollectionRef.doc(); // Firestore generates ID locally
+            batch.set(newTeamRef, team);
         }
-        console.log("Default matches initialized.");
+        
+        // 3. إضافة المباريات إلى الدفعة
+        for (const match of generatedMatches) {
+            const newMatchRef = matchesCollectionRef.doc();
+            batch.set(newMatchRef, match);
+        }
+        
+        // 4. إضافة علامة التهيئة إلى الدفعة!
+        batch.set(configRef, { initialized: true });
+
+        // 5. تنفيذ الدفعة (كل العمليات دفعة واحدة)
+        await batch.commit();
+
+        console.log("Default data (Teams, Matches, and Setup Flag) initialized successfully.");
 
     } catch (error) {
         console.error("Error initializing default data:", error);
@@ -542,6 +408,12 @@ function showConfirmModal(message, onConfirm) {
 function hideConfirmModal() {
     document.getElementById('confirm-modal').style.display = 'none';
     confirmCallback = null;
+}
+
+// Placeholder function for opening team modal
+function openTeamModal(teamName) {
+    showModal(`Displaying details for team: ${teamName}`);
+    // Implement your actual team modal logic here
 }
 
 
@@ -919,11 +791,13 @@ function renderScorerInputs(match, teamKey, score) {
 
 function renderAllActiveSections() {
     const activeSection = document.querySelector('.page-section.active');
-    if (!activeSection) {
-        showSection('home');
-        return;
-    }
-    const sectionId = activeSection.id;
+    // Default to 'home' if no section is active (e.g., initial load)
+    const sectionId = activeSection ? activeSection.id : 'home'; 
+
+    // Update navigation button active state
+    document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
+    const activeButton = document.querySelector(`.nav-button[data-target="${sectionId}"]`);
+    if (activeButton) activeButton.classList.add('active');
 
     if (sectionId === 'teams') renderTeams();
     else if (sectionId === 'matches') renderMatches();
@@ -955,6 +829,9 @@ function showSection(sectionId) {
     } else {
         renderAllActiveSections();
     }
+    // Update active navigation button after the section is shown/rendered
+    document.querySelectorAll('.nav-button').forEach(button => button.classList.remove('active'));
+    document.querySelector(`.nav-button[data-target="${sectionId}"]`).classList.add('active');
 }
 
 // --- EVENT LISTENERS ---
@@ -1097,9 +974,15 @@ document.getElementById('reset-data-button').addEventListener('click', () => {
                     await doc.ref.delete();
                 }
                 console.log("All teams deleted.");
+                
+                // 🟢 الخطوة الإضافية: حذف علامة التهيئة للسماح بـ checkAndCreateInitialData بالعمل مرة أخرى
+                const configRef = db.doc(`artifacts/${appId}/public/data/config/setup`);
+                await configRef.delete();
+                console.log("Setup flag deleted.");
 
-                await initializeDefaultData();
-                showModal('Data has been reset successfully!');
+                // إعادة التهيئة مباشرة بعد الحذف
+                await initializeDefaultData(configRef); 
+                showModal('Data has been reset and re-initialized successfully!');
             } catch (error) {
                 console.error("Error resetting data:", error);
                 showModal('An error occurred while resetting data: ' + error.message);
