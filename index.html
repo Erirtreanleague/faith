@@ -442,16 +442,25 @@ function setupFirestoreListeners() {
     }, (error) => console.error("Error listening to matches:", error));
 }
 
-// --- DATA INITIALIZATION ---
+// --- NEW DATA INITIALIZATION ---
 async function checkAndCreateInitialData() {
     try {
-        // 💡 التعديل هنا: استخدام الصيغة المتوافقة (Compat)
-        const teamsCollectionRef = db.collection(`artifacts/${appId}/public/data/teams`);
-        const teamsSnapshot = await teamsCollectionRef.get();
-        if (teamsSnapshot.empty) {
-            console.log("No teams found. Initializing default data...");
-            await initializeDefaultData();
+        // 1. فحص هل تمت التهيئة سابقاً؟
+        const configRef = db.doc(`artifacts/${appId}/public/data/config/initial_setup`);
+        const configSnapshot = await configRef.get();
+
+        if (configSnapshot.exists && configSnapshot.data().defaultDataInitialized) {
+            console.log("Default data already initialized. Skipping.");
+            return; // توقف، لا حاجة لإضافة شيء
         }
+
+        // 2. إذا لم تتم التهيئة، قم بالإضافة.
+        console.log("Config not found. Initializing default data...");
+        await initializeDefaultData();
+
+        // 3. ضع علامة "تمت التهيئة" لمنع التكرار لاحقاً.
+        await configRef.set({ defaultDataInitialized: true });
+        
     } catch (error) {
         console.error("Error checking for initial data:", error);
     }
