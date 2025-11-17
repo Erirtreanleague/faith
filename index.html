@@ -71,7 +71,8 @@
             <div class="mt-4 p-3 bg-white/20 rounded-xl text-center shadow-md">
                 <h3 class="text-lg font-bold mb-2">Admin Login</h3>
                 <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="password" id="admin-code-input" placeholder="Enter Admin Secret Code (Default: 1234)" class="flex-grow p-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400" autocomplete="off">
+                    <!-- تم إزالة الرمز السري من الـ placeholder وكتابة إرشاد عام بدلاً منه -->
+                    <input type="password" id="admin-code-input" placeholder="Enter Admin Secret Code" class="flex-grow p-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400" autocomplete="off">
                     <button id="admin-login-button" onclick="adminLogin()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition duration-200 shadow-lg">
                         Login
                     </button>
@@ -212,19 +213,19 @@
         
         // Admin state and code
         window.isAdmin = false;
-        const ADMIN_CODE = '1234'; // Admin secret code
+        // تم تحديث الرمز السري هنا
+        const ADMIN_CODE = 'SecureLeagueAdmin2025'; // Admin secret code 
 
         // ----------------------------------------------------------------------
-        // 1. Firebase Configuration for GitHub Pages (REPLACE WITH YOUR OWN)
-        //    (You must replace YOUR_..._HERE with your actual Firebase project credentials)
+        // 1. Firebase Configuration (NOW USING USER'S PROJECT CONFIG)
         // ----------------------------------------------------------------------
         const YOUR_FIREBASE_CONFIG = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_AUTH_DOMAIN_HERE",
-            projectId: "YOUR_PROJECT_ID_HERE", // Example: "school-league-123"
-            storageBucket: "...",
-            messagingSenderId: "...",
-            appId: "..."
+            apiKey: "AIzaSyCsbLq2Qz2o8Xm4Urc3Wp2P3Y0gK-iJz90k",
+            authDomain: "eritrean-international-l-7bc6d.firebaseapp.com",
+            projectId: "eritrean-international-l-7bc6d", 
+            storageBucket: "eritrean-international-l-7bc6d.appspot.com",
+            messagingSenderId: "331889814429",
+            appId: "1:331889814429:web:cba9c4a5203362e"
         };
         // ----------------------------------------------------------------------
 
