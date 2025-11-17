@@ -71,7 +71,7 @@
             <div class="mt-4 p-3 bg-white/20 rounded-xl text-center shadow-md">
                 <h3 class="text-lg font-bold mb-2">Admin Login</h3>
                 <div class="flex flex-col sm:flex-row gap-2">
-                    <!-- تم إزالة الرمز السري من الـ placeholder وكتابة إرشاد عام بدلاً منه -->
+                    <!-- تم إزالة الرمز السري من الـ placeholder ليظل مخفياً -->
                     <input type="password" id="admin-code-input" placeholder="Enter Admin Secret Code" class="flex-grow p-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400" autocomplete="off">
                     <button id="admin-login-button" onclick="adminLogin()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition duration-200 shadow-lg">
                         Login
@@ -193,6 +193,23 @@
                     </button>
                 </div>
             </div>
+            
+             <!-- Confirmation Modal for Deletion -->
+            <div id="confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+                <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm">
+                    <h4 class="text-lg font-bold mb-3 text-gray-800">Confirmation</h4>
+                    <!-- Note: The message will be set dynamically via JS's showConfirmModal -->
+                    <p class="text-gray-600 mb-6" id="confirm-modal-body">Are you sure you want to proceed with this action?</p>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="window.currentConfirmCallback(false)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition">
+                            Cancel
+                        </button>
+                        <button onclick="window.currentConfirmCallback(true)" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         </main>
 
@@ -202,7 +219,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // تم إضافة deleteDoc هنا
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, serverTimestamp, setLogLevel, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables for Firebase
         window.app = null;
@@ -213,8 +231,11 @@
         
         // Admin state and code
         window.isAdmin = false;
-        // تم تحديث الرمز السري هنا
-        const ADMIN_CODE = 'SecureLeagueAdmin2025'; // Admin secret code 
+        // الرمز السري للمسؤول
+        const ADMIN_CODE = 'SecureLeagueAdmin2025'; 
+        
+        // Global variables for confirmation callback
+        window.currentConfirmCallback = null; // Used by showConfirmModal
 
         // ----------------------------------------------------------------------
         // 1. Firebase Configuration (NOW USING USER'S PROJECT CONFIG)
@@ -305,6 +326,19 @@
             document.getElementById('message-modal').classList.add('hidden');
             document.getElementById('message-modal').classList.remove('flex');
         };
+        
+        // دالة جديدة لعرض نافذة التأكيد المنبثقة
+        window.showConfirmModal = (message, callback) => {
+            document.getElementById('confirm-modal-body').textContent = message;
+            window.currentConfirmCallback = (result) => {
+                document.getElementById('confirmation-modal').classList.add('hidden');
+                document.getElementById('confirmation-modal').classList.remove('flex');
+                callback(result);
+            };
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+            document.getElementById('confirmation-modal').classList.add('flex');
+        };
+
 
         window.changeTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -338,6 +372,8 @@
                 tabMatches.classList.add('hidden');
                 tabTeams.classList.add('hidden');
             }
+            // إعادة عرض قائمة المباريات لتفعيل/إلغاء تفعيل أزرار الحذف
+            renderMatchList(window.matchesList);
         }
         
         // Initial call to disable features until login
@@ -450,12 +486,40 @@
                 });
                 document.getElementById('match-scoreA').value = '';
                 document.getElementById('match-scoreB').value = '';
-                showModal('Success', `Match result logged successfully: ${teamA} (${scoreA}) - ${teamB} (${scoreB})`);
+                // رسالة النجاح الجديدة المطلوبة
+                showModal('Success', 'تم تسجيل النتيجة بنجاح.');
             } catch (e) {
                 console.error("Error adding match: ", e);
                 showModal('Error', 'An error occurred while logging the result.');
             }
         };
+        
+        // --- Deletion Functionality (جديد) ---
+        window.deleteMatchResult = (matchId) => {
+             if (!window.isAdmin) {
+                showModal('Permission Denied', 'You are not authorized to delete results. Please log in as administrator.');
+                return;
+            }
+            if (!window.db || !window.isAuthReady) {
+                showModal('Error', 'Service is not ready. Please wait or check your connection.');
+                return;
+            }
+            
+            // استخدام نافذة التأكيد المنبثقة
+            showConfirmModal('هل أنت متأكد أنك تريد حذف نتيجة المباراة هذه؟ لا يمكن التراجع عن هذا الإجراء.', async (isConfirmed) => {
+                if (!isConfirmed) return; // User clicked Cancel
+
+                try {
+                    const matchDocRef = doc(window.db, MATCHES_PATH, matchId);
+                    await deleteDoc(matchDocRef);
+                    showModal('Success', 'تم حذف النتيجة بنجاح.'); 
+                } catch (e) {
+                    console.error("Error deleting match: ", e);
+                    showModal('Error', 'حدث خطأ أثناء حذف النتيجة.');
+                }
+            });
+        };
+
 
         // --- Standings Calculation ---
 
@@ -565,6 +629,8 @@
                 return;
             }
 
+            // يتم تخزين قائمة المباريات العالمية (لأنه يتم استخدامها في toggleAdminFeatures)
+            window.matchesList = matches; 
             matches.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0)); // Sort newest first
 
             matches.forEach(match => {
@@ -572,7 +638,6 @@
                 const date = match.date ? new Date(match.date.seconds * 1000).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) : 'Date N/A';
                 const teamAWin = match.scoreA > match.scoreB;
                 const teamBWin = match.scoreB > match.scoreA;
-                // const draw = match.scoreA === match.scoreB;
                 
                 const item = document.createElement('div');
                 item.className = 'bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center';
@@ -589,6 +654,13 @@
                             ${match.teamB}
                         </span>
                     </div>
+                    <!-- زر الحذف يظهر فقط إذا كان المسؤول مسجلاً دخوله -->
+                    ${window.isAdmin ? `
+                        <button onclick="deleteMatchResult('${match.id}')" 
+                                class="mt-2 sm:mt-0 text-sm font-semibold text-red-600 hover:text-red-800 p-2 rounded-lg transition duration-200 hover:bg-red-50">
+                            حذف (Admin)
+                        </button>
+                    ` : ''}
                 `;
                 listEl.appendChild(item);
             });
@@ -653,11 +725,12 @@
 
             // 2. Matches Listener
             onSnapshot(collection(window.db, MATCHES_PATH), (snapshot) => {
-                window.matchesList = []; // Reset global match list
+                let currentMatchesList = []; // Local list for this update
                 snapshot.forEach((doc) => {
-                    window.matchesList.push({ id: doc.id, ...doc.data() });
+                    currentMatchesList.push({ id: doc.id, ...doc.data() });
                 });
-                console.log("Matches updated. Total:", window.matchesList.length);
+                console.log("Matches updated. Total:", currentMatchesList.length);
+                window.matchesList = currentMatchesList; // Update global list
                 renderMatchList(window.matchesList);
                 // Recalculate standings when teams or matches change
                 calculateStandings();
