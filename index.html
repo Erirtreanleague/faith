@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eritrean Internationl School League </title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 */
+            --accent-color: #10b981; /* Emerald 500 */
+            --bg-color: #f9fafb; /* Gray 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+        }
+        .tab-button.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        /* Custom scrollbar style */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+        .admin-disabled-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #ef4444; /* Red 500 */
+            z-index: 10;
+            border-radius: 0.75rem; /* rounded-xl */
+            cursor: not-allowed;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-blue-400 p-6 text-white">
+            <h1 class="text-3xl font-extrabold text-center">School League Management System</h1>
+            <p class="text-sm text-center mt-1 opacity-90">League Dashboard & Statistics</p>
+            <p class="text-xs text-center mt-3 bg-white/20 rounded-lg p-1">
+                User ID (for sharing): <span id="user-id-display" class="font-mono text-xs">Loading...</span>
+            </p>
+            <!-- Admin Panel for Authentication -->
+            <div class="mt-4 p-3 bg-white/20 rounded-xl text-center shadow-md">
+                <h3 class="text-lg font-bold mb-2">Admin Login</h3>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="password" id="admin-code-input" placeholder="Enter Admin Secret Code (Default: 1234)" class="flex-grow p-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400" autocomplete="off">
+                    <button id="admin-login-button" onclick="adminLogin()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition duration-200 shadow-lg">
+                        Login
+                    </button>
+                </div>
+                <p id="admin-status" class="mt-2 text-sm text-yellow-100 font-semibold hidden">Status: Admin Mode Active. You can now log results and manage teams.</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-gray-200 bg-white">
+            <button id="tab-standings" class="tab-button active flex-1 p-4 text-center text-gray-600 hover:bg-gray-50 transition" onclick="changeTab('standings')">
+                Standings & Matches
+            </button>
+            <!-- Tabs are hidden by default and only shown after admin login -->
+            <button id="tab-matches" class="tab-button flex-1 p-4 text-center text-gray-600 hover:bg-gray-50 transition hidden" onclick="changeTab('matches')">
+                Log Results
+            </button>
+            <button id="tab-teams" class="tab-button flex-1 p-4 text-center text-gray-600 hover:bg-gray-50 transition hidden" onclick="changeTab('teams')">
+                Team Management
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <main class="p-6 custom-scrollbar max-h-[70vh] overflow-y-auto">
+
+            <!-- 1. Standings Tab (Includes Match List for public viewing) -->
+            <div id="content-standings" class="tab-content">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-gray-700">Team Standings</h2>
+                <div id="standings-table-container" class="overflow-x-auto rounded-lg shadow-md">
+                    <table class="min-w-full bg-white text-left">
+                        <thead class="bg-gray-100 border-b border-gray-200">
+                            <tr>
+                                <th class="py-3 px-4 text-sm font-semibold text-left text-gray-600">Rank</th>
+                                <th class="py-3 px-4 text-sm font-semibold text-left text-gray-600">Team Name</th>
+                                <th class="py-3 px-4 text-sm font-semibold text-center text-gray-600">Played</th>
+                                <th class="py-3 px-4 text-sm font-semibold text-center text-gray-600">Wins</th>
+                                <th class="py-3 px-4 text-sm font-semibold text-center text-gray-600">Draws</th>
+                                <th class="py-3 px-4 text-sm font-semibold text-center text-gray-600">Losses</th>
+                                <th class="py-3 px-4 text-sm font-bold text-center text-blue-600">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-body">
+                            <!-- Standings will be populated here -->
+                            <tr><td colspan="7" class="text-center py-4 text-gray-500">Loading Standings...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Match List (Publicly Visible) -->
+                <h3 class="text-xl font-semibold mb-3 mt-8 pt-4 border-t text-gray-700">Match History</h3>
+                <div id="matches-list" class="space-y-3">
+                    <!-- Matches will be populated here -->
+                    <p class="text-center py-4 text-gray-500">Loading match history...</p>
+                </div>
+            </div>
+
+            <!-- 2. Matches Tab (Admin Only - Only entry form remains) -->
+            <div id="content-matches" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-gray-700">Log Match Results</h2>
+                
+                <!-- Match Entry Form -->
+                <div id="match-entry-form" class="bg-indigo-50 p-4 rounded-xl shadow-inner mb-6 relative">
+                     <div id="match-lock-overlay" class="admin-disabled-overlay">
+                        Unauthorized: Please log in as Admin
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-indigo-700">Add New Match Result</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Team A</label>
+                            <select id="match-teamA" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border text-right"></select>
+                            <input type="number" id="match-scoreA" placeholder="Score" class="mt-2 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border text-right" min="0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Team B</label>
+                            <select id="match-teamB" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border text-right"></select>
+                            <input type="number" id="match-scoreB" placeholder="Score" class="mt-2 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border text-right" min="0">
+                        </div>
+                    </div>
+                    <button id="add-match-button" onclick="addMatchResult()" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200 shadow-lg">
+                        Log Result
+                    </button>
+                    <p id="match-message" class="mt-3 text-sm text-red-500 hidden"></p>
+                </div>
+            </div>
+
+            <!-- 3. Teams Tab (Admin lock still inside content, but tab is hidden) -->
+            <div id="content-teams" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2 text-gray-700">Team Management</h2>
+                
+                <!-- Add Team Form -->
+                <div id="add-team-form" class="bg-green-50 p-4 rounded-xl shadow-inner mb-6 relative">
+                     <div id="team-lock-overlay" class="admin-disabled-overlay">
+                        Unauthorized: Please log in as Admin
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-green-700">Add New Team</h3>
+                    <input type="text" id="new-team-name" placeholder="Enter Team Name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2.5 border text-right" maxlength="50">
+                    <button id="add-team-button" onclick="addTeam()" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200 shadow-lg">
+                        Add Team
+                    </button>
+                    <p id="team-message" class="mt-3 text-sm text-red-500 hidden"></p>
+                </div>
+
+                <!-- Team List -->
+                <h3 class="text-xl font-semibold mb-3 mt-8 text-gray-700">Registered Teams (<span id="team-count">0</span>)</h3>
+                <div id="teams-list" class="space-y-2">
+                    <!-- Teams will be populated here -->
+                    <p class="text-center py-4 text-gray-500">Loading registered teams...</p>
+                </div>
+            </div>
+            
+             <!-- Modal for Messages (replaces alert()) -->
+            <div id="message-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center p-4 z-50">
+                <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm">
+                    <h4 id="modal-title" class="text-lg font-bold mb-3 text-gray-800">Message</h4>
+                    <p id="modal-body" class="text-gray-600 mb-4"></p>
+                    <button onclick="closeModal()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition">
+                        OK
+                    </button>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, query, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase
+        window.app = null;
+        window.db = null;
+        window.auth = null;
+        window.userId = null;
+        window.isAuthReady = false;
+        
+        // Admin state and code
+        window.isAdmin = false;
+        const ADMIN_CODE = '1234'; // Admin secret code
+
+        // ----------------------------------------------------------------------
+        // 1. Firebase Configuration for GitHub Pages (REPLACE WITH YOUR OWN)
+        //    (You must replace YOUR_..._HERE with your actual Firebase project credentials)
+        // ----------------------------------------------------------------------
+        const YOUR_FIREBASE_CONFIG = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_AUTH_DOMAIN_HERE",
+            projectId: "YOUR_PROJECT_ID_HERE", // Example: "school-league-123"
+            storageBucket: "...",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+        // ----------------------------------------------------------------------
+
+        // Use the Project ID as the App ID for pathing (crucial for security rules)
+        const appId = YOUR_FIREBASE_CONFIG.projectId; 
+        const firebaseConfig = YOUR_FIREBASE_CONFIG;
+        window.isAuthReady = false; // Reset to false for external environment
+
+        setLogLevel('debug');
+
+        if (firebaseConfig.projectId && firebaseConfig.apiKey !== "YOUR_API_KEY_HERE") { // Check if configuration is set
+            window.app = initializeApp(firebaseConfig);
+            window.db = getFirestore(window.app);
+            window.auth = getAuth(window.app);
+            
+            // Set persistence to local storage to maintain session
+            setPersistence(window.auth, browserLocalPersistence);
+
+            // Authentication Listener
+            onAuthStateChanged(window.auth, (user) => {
+                if (user) {
+                    window.userId = user.uid;
+                    document.getElementById('user-id-display').textContent = window.userId;
+                } else {
+                    // Fallback in case of anonymous sign-in failure, use a random ID
+                    window.userId = crypto.randomUUID();
+                    document.getElementById('user-id-display').textContent = 'Unauthorized - ' + window.userId.substring(0, 8) + '...';
+                }
+                window.isAuthReady = true;
+                console.log("Authentication state ready. User ID:", window.userId);
+
+                // Start listeners now that auth is ready
+                if (window.db) {
+                    startFirestoreListeners();
+                }
+            });
+
+            // The function to authenticate now uses standard Anonymous sign-in
+            async function authenticate() {
+                try {
+                    // We use signInAnonymously because we are running outside the Canvas environment
+                    await signInAnonymously(window.auth);
+                    console.log("Signed in anonymously for public data access.");
+                } catch (error) {
+                    console.error("Firebase Auth Error:", error);
+                }
+            }
+
+            authenticate();
+
+        } else {
+            document.getElementById('user-id-display').textContent = 'Error: Firebase not configured';
+            showModal('Error', 'Firebase settings not found or incomplete. Data will not be saved. Please update YOUR_FIREBASE_CONFIG in the HTML file.');
+        }
+
+
+        // ----------------------------------------------------------------------
+        // Firestore Paths (The paths remain the same, using the projectId as appId)
+        // ----------------------------------------------------------------------
+        const TEAMS_PATH = `artifacts/${appId}/public/data/school_league_teams`;
+        const MATCHES_PATH = `artifacts/${appId}/public/data/school_league_matches`;
+        
+        // --- Shared State ---
+        window.teamsData = {}; // { teamName: { wins: 0, losses: 0, draws: 0, played: 0, points: 0, goalsFor: 0, goalsAgainst: 0 } }
+        window.matchesList = [];
+
+        // --- Core Functions (Accessible globally via window) ---
+
+        window.showModal = (title, body) => {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = body;
+            document.getElementById('message-modal').classList.remove('hidden');
+            document.getElementById('message-modal').classList.add('flex');
+        };
+
+        window.closeModal = () => {
+            document.getElementById('message-modal').classList.add('hidden');
+            document.getElementById('message-modal').classList.remove('flex');
+        };
+
+        window.changeTab = (tabId) => {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        };
+        
+        // Function to toggle the admin features' visibility/activity
+        function toggleAdminFeatures(isAdmin) {
+            window.isAdmin = isAdmin;
+            const matchOverlay = document.getElementById('match-lock-overlay');
+            const teamOverlay = document.getElementById('team-lock-overlay');
+            const statusEl = document.getElementById('admin-status');
+            const tabMatches = document.getElementById('tab-matches');
+            const tabTeams = document.getElementById('tab-teams');
+
+            if (isAdmin) {
+                matchOverlay.classList.add('hidden');
+                teamOverlay.classList.add('hidden');
+                statusEl.classList.remove('hidden');
+                // Show admin tabs
+                tabMatches.classList.remove('hidden');
+                tabTeams.classList.remove('hidden');
+            } else {
+                matchOverlay.classList.remove('hidden');
+                teamOverlay.classList.remove('hidden');
+                statusEl.classList.add('hidden');
+                 // Hide admin tabs
+                tabMatches.classList.add('hidden');
+                tabTeams.classList.add('hidden');
+            }
+        }
+        
+        // Initial call to disable features until login
+        toggleAdminFeatures(false); 
+
+        window.adminLogin = () => {
+            const inputEl = document.getElementById('admin-code-input');
+            const code = inputEl.value.trim();
+
+            if (code === ADMIN_CODE) {
+                toggleAdminFeatures(true);
+                inputEl.value = '';
+                showModal('Login Success', 'You have successfully logged in as administrator. You can now add teams and log results.');
+                // Switch to the admin tab automatically
+                window.changeTab('matches'); 
+                
+            } else {
+                toggleAdminFeatures(false);
+                showModal('Invalid Code', 'The secret code is incorrect. You cannot perform administrative modifications.');
+            }
+        };
+
+        // --- Team Management ---
+
+        window.addTeam = async () => {
+             if (!window.isAdmin) {
+                showModal('Permission Denied', 'You are not authorized to add teams. Please log in as administrator using the secret code.');
+                return;
+            }
+            if (!window.db || !window.isAuthReady) {
+                showModal('Error', 'Service is not ready. Please wait or check your connection.');
+                return;
+            }
+
+            const teamInput = document.getElementById('new-team-name');
+            const teamName = teamInput.value.trim();
+            const messageEl = document.getElementById('team-message');
+            messageEl.classList.add('hidden');
+
+            if (teamName.length < 3) {
+                messageEl.textContent = 'Team name must be at least 3 characters long.';
+                messageEl.classList.remove('hidden');
+                return;
+            }
+            if (window.teamsData[teamName]) {
+                 messageEl.textContent = 'This team is already registered.';
+                 messageEl.classList.remove('hidden');
+                 return;
+            }
+
+            try {
+                // Use team name as a unique identifier (document ID) for simplicity
+                const teamDocRef = doc(window.db, TEAMS_PATH, teamName);
+                await setDoc(teamDocRef, {
+                    teamName: teamName,
+                    createdAt: serverTimestamp(),
+                    createdBy: window.userId
+                });
+                teamInput.value = '';
+                showModal('Success', `Team "${teamName}" has been added successfully.`);
+            } catch (e) {
+                console.error("Error adding team: ", e);
+                showModal('Error', 'An error occurred while adding the team.');
+            }
+        };
+
+        // --- Match Management ---
+
+        window.addMatchResult = async () => {
+            if (!window.isAdmin) {
+                showModal('Permission Denied', 'You are not authorized to log results. Please log in as administrator using the secret code.');
+                return;
+            }
+            if (!window.db || !window.isAuthReady) {
+                showModal('Error', 'Service is not ready. Please wait or check your connection.');
+                return;
+            }
+
+            const teamA = document.getElementById('match-teamA').value;
+            const teamB = document.getElementById('match-teamB').value;
+            const scoreA = parseInt(document.getElementById('match-scoreA').value);
+            const scoreB = parseInt(document.getElementById('match-scoreB').value);
+            const messageEl = document.getElementById('match-message');
+            messageEl.classList.add('hidden');
+
+            if (!teamA || !teamB || isNaN(scoreA) || isNaN(scoreB)) {
+                messageEl.textContent = 'Please select two teams and enter scores correctly.';
+                messageEl.classList.remove('hidden');
+                return;
+            }
+            if (teamA === teamB) {
+                messageEl.textContent = 'A team cannot play against itself.';
+                messageEl.classList.remove('hidden');
+                return;
+            }
+            if (scoreA < 0 || scoreB < 0) {
+                 messageEl.textContent = 'The score must be a positive number.';
+                 messageEl.classList.remove('hidden');
+                 return;
+            }
+
+            try {
+                await addDoc(collection(window.db, MATCHES_PATH), {
+                    teamA: teamA,
+                    teamB: teamB,
+                    scoreA: scoreA,
+                    scoreB: scoreB,
+                    date: serverTimestamp(),
+                    recordedBy: window.userId
+                });
+                document.getElementById('match-scoreA').value = '';
+                document.getElementById('match-scoreB').value = '';
+                showModal('Success', `Match result logged successfully: ${teamA} (${scoreA}) - ${teamB} (${scoreB})`);
+            } catch (e) {
+                console.error("Error adding match: ", e);
+                showModal('Error', 'An error occurred while logging the result.');
+            }
+        };
+
+        // --- Standings Calculation ---
+
+        function calculateStandings() {
+            // 1. Reset statistics for all teams
+            const stats = {};
+            Object.keys(window.teamsData).forEach(teamName => {
+                stats[teamName] = { played: 0, wins: 0, draws: 0, losses: 0, goalsFor: 0, goalsAgainst: 0, points: 0, teamName: teamName };
+            });
+
+            // 2. Process all matches
+            window.matchesList.forEach(match => {
+                const { teamA, teamB, scoreA, scoreB } = match;
+
+                // Ensure both teams exist in the current stats list (in case a team was deleted after a match)
+                if (!stats[teamA] || !stats[teamB]) return;
+
+                stats[teamA].played++;
+                stats[teamB].played++;
+
+                stats[teamA].goalsFor += scoreA;
+                stats[teamA].goalsAgainst += scoreB;
+                stats[teamB].goalsFor += scoreB;
+                stats[teamB].goalsAgainst += scoreA;
+
+                if (scoreA > scoreB) {
+                    // Team A wins
+                    stats[teamA].wins++;
+                    stats[teamB].losses++;
+                    stats[teamA].points += 3;
+                } else if (scoreA < scoreB) {
+                    // Team B wins
+                    stats[teamB].wins++;
+                    stats[teamA].losses++;
+                    stats[teamB].points += 3;
+                } else {
+                    // Draw
+                    stats[teamA].draws++;
+                    stats[teamB].draws++;
+                    stats[teamA].points += 1;
+                    stats[teamB].points += 1;
+                }
+            });
+
+            // 3. Convert to array and sort
+            let sortedStandings = Object.values(stats);
+            sortedStandings.sort((a, b) => {
+                if (b.points !== a.points) return b.points - a.points;
+                const goalDiffA = a.goalsFor - a.goalsAgainst;
+                const goalDiffB = b.goalsFor - b.goalsAgainst;
+                if (goalDiffB !== goalDiffA) return goalDiffB - goalDiffA;
+                return b.goalsFor - a.goalsFor; // Goals For tiebreaker
+            });
+
+            renderStandings(sortedStandings);
+        }
+
+        // --- Rendering Functions ---
+
+        function renderTeamManagement(teams) {
+            const listEl = document.getElementById('teams-list');
+            const selectA = document.getElementById('match-teamA');
+            const selectB = document.getElementById('match-teamB');
+            const teamCountEl = document.getElementById('team-count');
+
+            // 1. Clear previous lists and selects
+            listEl.innerHTML = '';
+            selectA.innerHTML = '<option value="">Select Team</option>';
+            selectB.innerHTML = '<option value="">Select Team</option>';
+            
+            teamCountEl.textContent = teams.length;
+
+            if (teams.length === 0) {
+                listEl.innerHTML = '<p class="text-center py-4 text-gray-500">No teams registered yet. Please add a team.</p>';
+                return;
+            }
+
+            teams.forEach(team => {
+                // Team List
+                const teamItem = document.createElement('div');
+                teamItem.className = 'flex justify-between items-center p-3 bg-white border border-gray-200 rounded-lg shadow-sm';
+                teamItem.innerHTML = `
+                    <span class="font-semibold text-gray-800">${team.teamName}</span>
+                `;
+                listEl.appendChild(teamItem);
+
+                // Match Selects
+                const optionA = document.createElement('option');
+                optionA.value = team.teamName;
+                optionA.textContent = team.teamName;
+                selectA.appendChild(optionA);
+
+                const optionB = document.createElement('option');
+                optionB.value = team.teamName;
+                optionB.textContent = team.teamName;
+                selectB.appendChild(optionB);
+            });
+        }
+
+        function renderMatchList(matches) {
+            // Note: The Match List now resides in the 'content-standings' tab which is always visible
+            const listEl = document.getElementById('matches-list');
+            listEl.innerHTML = '';
+
+            if (matches.length === 0) {
+                listEl.innerHTML = '<p class="text-center py-4 text-gray-500">No matches have been logged yet.</p>';
+                return;
+            }
+
+            matches.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0)); // Sort newest first
+
+            matches.forEach(match => {
+                // Use English locale for date formatting
+                const date = match.date ? new Date(match.date.seconds * 1000).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) : 'Date N/A';
+                const teamAWin = match.scoreA > match.scoreB;
+                const teamBWin = match.scoreB > match.scoreA;
+                // const draw = match.scoreA === match.scoreB;
+                
+                const item = document.createElement('div');
+                item.className = 'bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row justify-between items-center';
+                item.innerHTML = `
+                    <div class="text-sm text-gray-500 mb-2 sm:mb-0">${date}</div>
+                    <div class="flex items-center space-x-2 text-lg font-bold">
+                        <span class="p-1 rounded-md ${teamAWin ? 'bg-green-100 text-green-700' : 'text-gray-700'} transition duration-300">
+                            ${match.teamA}
+                        </span>
+                        <span class="${teamAWin ? 'text-green-600' : teamBWin ? 'text-red-600' : 'text-gray-600'}">${match.scoreA}</span>
+                        <span class="text-gray-500 font-normal mx-2">-</span>
+                        <span class="${teamBWin ? 'text-green-600' : teamAWin ? 'text-red-600' : 'text-gray-600'}">${match.scoreB}</span>
+                        <span class="p-1 rounded-md ${teamBWin ? 'bg-green-100 text-green-700' : 'text-gray-700'} transition duration-300">
+                            ${match.teamB}
+                        </span>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        function renderStandings(standings) {
+            const tbody = document.getElementById('standings-body');
+            tbody.innerHTML = '';
+
+            if (standings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No statistics to display. Please add teams and log results.</td></tr>';
+                return;
+            }
+
+            standings.forEach((team, index) => {
+                const isTop = index < 3;
+                const row = document.createElement('tr');
+                row.className = `border-b transition duration-150 hover:bg-blue-50/50 ${isTop ? 'bg-yellow-50 font-semibold' : 'bg-white'}`;
+                
+                let rankDisplay = index + 1;
+                if (index === 0) rankDisplay = '🥇 ' + rankDisplay;
+                else if (index === 1) rankDisplay = '🥈 ' + rankDisplay;
+                else if (index === 2) rankDisplay = '🥉 ' + rankDisplay;
+
+
+                row.innerHTML = `
+                    <td class="py-3 px-4 text-sm text-left text-gray-800 font-bold">${rankDisplay}</td>
+                    <td class="py-3 px-4 text-sm text-left text-gray-800">${team.teamName}</td>
+                    <td class="py-3 px-4 text-sm text-center text-gray-600">${team.played}</td>
+                    <td class="py-3 px-4 text-sm text-center text-green-600">${team.wins}</td>
+                    <td class="py-3 px-4 text-sm text-center text-yellow-600">${team.draws}</td>
+                    <td class="py-3 px-4 text-sm text-center text-red-600">${team.losses}</td>
+                    <td class="py-3 px-4 text-base font-extrabold text-center text-blue-700">${team.points}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // --- Firestore Real-Time Listeners ---
+
+        function startFirestoreListeners() {
+            if (!window.db) return;
+
+            // 1. Teams Listener
+            onSnapshot(collection(window.db, TEAMS_PATH), (snapshot) => {
+                const teamsArray = [];
+                window.teamsData = {}; // Reset global team data
+                snapshot.forEach((doc) => {
+                    const team = doc.data();
+                    teamsArray.push(team);
+                    // Initialize stats for the team
+                    window.teamsData[team.teamName] = { played: 0, wins: 0, draws: 0, losses: 0, points: 0, goalsFor: 0, goalsAgainst: 0, teamName: team.teamName };
+                });
+                console.log("Teams updated:", teamsArray.map(t => t.teamName));
+                renderTeamManagement(teamsArray);
+                // Recalculate standings when teams or matches change
+                calculateStandings();
+            }, (error) => {
+                console.error("Teams Snapshot Error:", error);
+                showModal('Data Error', 'Failed to load the team list in real time.');
+            });
+
+            // 2. Matches Listener
+            onSnapshot(collection(window.db, MATCHES_PATH), (snapshot) => {
+                window.matchesList = []; // Reset global match list
+                snapshot.forEach((doc) => {
+                    window.matchesList.push({ id: doc.id, ...doc.data() });
+                });
+                console.log("Matches updated. Total:", window.matchesList.length);
+                renderMatchList(window.matchesList);
+                // Recalculate standings when teams or matches change
+                calculateStandings();
+            }, (error) => {
+                console.error("Matches Snapshot Error:", error);
+                showModal('Data Error', 'Failed to load the match history in real time.');
+            });
+        }
+
+    </script>
+</body>
+</html>
